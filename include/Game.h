@@ -32,14 +32,14 @@ private:
     i2v _windowSize;
     unsigned int _tileSize;
 
-    SDL_Window* _window;
-    SDL_Renderer* _renderer;
+    std::unique_ptr<SDL_Window, void(*)(SDL_Window*)>  _window;
+    std::unique_ptr<SDL_Renderer, void(*)(SDL_Renderer*)> _renderer;
 
     float _lastFrameTime;
 
     std::unordered_map<SDL_Keycode, bool> _keyStates;
 
-    Camera* _camera;
+    std::unique_ptr<Camera> _camera;
     std::unique_ptr<Player> _player;
 
     unsigned int _currentLevel;

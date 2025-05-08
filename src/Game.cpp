@@ -16,10 +16,9 @@ Game::Game() :
     _running(false),
     _fullscreen(FULLSCREEN),
     _masterVolume(1),
-    _window(nullptr),
-    _renderer(nullptr),
-    _camera(nullptr) {
-    
+    _window(nullptr, SDL_DestroyWindow),
+    _renderer(nullptr, SDL_DestroyRenderer) {
+
     if(!initSDL()) {
         _running = false;
         return;
@@ -27,11 +26,11 @@ Game::Game() :
     
     _lastFrameTime = SDL_GetTicks();
 
-    MapTextures::getInstance().init(_renderer);
+    MapTextures::getInstance().init(_renderer.get());
     _tileSize = static_cast<unsigned int>(0.1 * _windowSize.y);
 
     _currentLevel = 1;
-    _levels.push_back(Level(_renderer, _currentLevel, _tileSize, _windowSize));
+    _levels.push_back(Level(_renderer.get(), _currentLevel, _tileSize, _windowSize));
 
     f2v playerSize(0.85 * _tileSize, 1.8 * _tileSize);
     f2v playerPos(_windowSize.x * 0.5 - playerSize.x/2.,_windowSize.y * 0.5 - playerSize.y/2.f);
@@ -44,14 +43,14 @@ Game::Game() :
     i2v playerTextureMargin(0, 0);
     float playerDefaultSpeed = 50 * _tileSize;
 
-    _player = std::make_unique<Player>(_renderer, playerPos, playerSize, playerTextureSize, playerAnimationTargetTime, playerFileName, playerDirection, playerTextureCounts, playerSingleTextureSize, playerTextureMargin, playerDefaultSpeed);
+    _player = std::make_unique<Player>(_renderer.get(), playerPos, playerSize, playerTextureSize, playerAnimationTargetTime, playerFileName, playerDirection, playerTextureCounts, playerSingleTextureSize, playerTextureMargin, playerDefaultSpeed);
     _player->setMapGrid(_levels[_currentLevel-1].getMapGrid());
     _player->setTileSize(_tileSize);
 
     i2v cameraPos(static_cast<int>(playerPos.x - playerSize.x/2.f), static_cast<int>(playerPos.y - playerSize.y/2.f));
     float cameraZoom = 0.6f;
 
-    _camera = new Camera(cameraPos, _windowSize, cameraZoom);
+    _camera = std::make_unique<Camera>(cameraPos, _windowSize, cameraZoom);
 
     G_ACC = _tileSize * 20;
 
@@ -60,12 +59,8 @@ Game::Game() :
 }
 
 Game::~Game() {
-    SDL_DestroyWindow(_window);
-    SDL_DestroyRenderer(_renderer);
     SDL_CloseAudio();
     SDL_Quit();
-
-    delete _camera;
 
     std::cout << "Game cleaned!" << std::endl;
 }
@@ -102,13 +97,13 @@ void Game::update() {
 }
 
 void Game::render() {
-    SDL_SetRenderDrawColor(_renderer, 50, 200, 200, 255);
-    SDL_RenderClear(_renderer);
+    SDL_SetRenderDrawColor(_renderer.get(), 50, 200, 200, 255);
+    SDL_RenderClear(_renderer.get());
 
-    _levels[_currentLevel-1].render(_camera);
-    _player->render(_camera);
+    _levels[_currentLevel-1].render(_renderer.get(), *_camera);
+    _player->render(_renderer.get(), *_camera);
 
-    SDL_RenderPresent(_renderer);
+    SDL_RenderPresent(_renderer.get());
 }
 
 bool Game::initSDL() {
@@ -148,7 +143,7 @@ bool Game::initSDL() {
 
     std::cout << "SDL initialized!" << std::endl;
 
-    _window = SDL_CreateWindow(TITLE, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, _windowSize.x, _windowSize.y, flags);
+    _window.reset(SDL_CreateWindow(TITLE, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, _windowSize.x, _windowSize.y, flags));
     if (!_window) {
         std::cerr << "Error: failed to create SDL_Window; " << SDL_GetError() << std::endl;
         return false;
@@ -156,7 +151,7 @@ bool Game::initSDL() {
 
     std::cout << "Window created!" << std::endl;
 
-    _renderer = SDL_CreateRenderer(_window, -1, 0);
+    _renderer.reset(SDL_CreateRenderer(_window.get(), -1, 0));
     if (!_renderer) {
         std::cerr << "Error: failed to create SDL_Renderer; " << SDL_GetError() << std::endl;
         return false;
