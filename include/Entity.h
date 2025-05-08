@@ -12,14 +12,12 @@ public:
     Entity(SDL_Renderer* renderer, f2v& pos, f2v& size, f2v& textureSize, float animationTargetTime, const std::string& fileName, int direction, const std::vector<int>& textureCounts,  i2v& singleSize, i2v& margin);
     ~Entity();
 
-    void render(Camera* camera);
+    void render(SDL_Renderer* renderer, Camera& camera);
 
 private:
-    void loadTextures(const std::string& fileName, const std::vector<int>& textureCounts, const i2v& singleSize, const i2v& margin);
+    void loadTextures(SDL_Renderer* renderer, const std::string& fileName, const std::vector<int>& textureCounts, const i2v& singleSize, const i2v& margin);
 
 protected:
-    SDL_Renderer* _renderer;
-
     f2v _pos;
     f2v _size;
     f2v _textureSize;

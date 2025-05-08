@@ -12,7 +12,7 @@ public:
     ~Level();
 
     void load(int level);
-    void render(Camera* camera);
+    void render(SDL_Renderer* renderer, Camera& camera);
 
     std::vector<std::vector<int>>& getMapGrid() { return _layers[5].getGrid(); }
 

@@ -17,7 +17,7 @@ public:
     void setTileSize(const int& tileSize) { _tileSize = tileSize; } // do usuniecia z atrybutami
 
 public:
-enum State { IDLE, WALKING, RUNNING, ATTACK1, ATTACK2, ATTACK3, PROTECTING, JUMPING, HURT, DEAD };
+    enum State { IDLE, WALKING, RUNNING, ATTACK1, ATTACK2, ATTACK3, PROTECTING, JUMPING, HURT, DEAD };
 
 private:
 
