@@ -1,0 +1,60 @@
+#pragma once
+
+#include "Engine/Layer.h"
+#include "Engine/TexturesManager.h"
+#include "Engine/Camera.h"
+#include "Engine/IMapTextures.h"
+#include "Engine/ITileClassifier.h"
+
+namespace engine {
+
+/// @brief Represents a tile-based layer in the map.
+class TileLayer : public Layer, public ISettingsObserver {
+public:
+    /// @brief Types of tile layers.
+    enum class Type { DECORATION, INTERACTIVE, MAP };
+
+    /// @brief Constructs a TileLayer.
+    /// @param mapTextures Reference to the map textures manager.
+    /// @param type Type of the tile layer.
+    /// @param level Level index to load data from.
+    /// @param tileSize Size of each tile in pixels.
+    TileLayer(IMapTextures&, const ITileClassifier&, Settings&, Type, size_t level);
+
+    ~TileLayer() { _settings.unregisterObserver(*this); }
+    TileLayer(const TileLayer&) = delete;
+    TileLayer& operator=(const TileLayer&) = delete;
+    TileLayer(TileLayer&&) = delete;
+    TileLayer& operator=(TileLayer&&) = delete;
+
+    /// @brief Renders the tile layer.
+    /// @param renderer SDL renderer used for drawing.
+    /// @param camera Camera used for coordinate transformation.
+    void render(SDL_Renderer&, Camera&) const override;
+
+    /// @brief Gets the tile grid data.
+    /// @return 2D grid of tile IDs.
+    const std::vector<std::vector<int>>& getGridView() const;
+
+    void onSettingsChanged() override { _tileSize = _settings.getTileSize(); }
+
+private:
+    /// @brief Gets the CSV path for tile data.
+    /// @return Path to the tile data CSV file.
+    std::string getCSVPath() const;
+
+    /// @brief Loads tile data from a CSV file.
+    /// @param path Path to the CSV file.
+    void loadFromCSV(const std::string& path);
+
+    IMapTextures& _mapTextures;     ///< Reference to the map textures manager.
+    const ITileClassifier& _tileClassifier;
+    Settings& _settings;
+    Type _type;                          ///< Type of the tile layer.
+    size_t _level;                       ///< Level index.
+    size_t _tileSize;                    ///< Size of each tile.
+    std::vector<std::vector<int>> _grid; ///< Grid of tile IDs.
+};
+
+
+}

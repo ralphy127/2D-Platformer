@@ -1,0 +1,64 @@
+#pragma once
+
+#include <Engine/SDLManager.h>
+#include <Engine/WindowManager.h>
+#include <Engine/EventHandler.h>
+#include <Engine/Clock.h>
+#include <Engine/RenderManager.h>
+#include <Engine/Camera.h>
+#include <Engine/Level.h>
+#include "Game/MapTextures.h"
+#include "Game/TiileClassifier.h"
+#include "Game/SimpleTextures.h"
+#include "Game/SpriteTextures.h"
+#include "Game/Player.h"
+
+namespace game {
+
+/// @brief Core class managing the main game loop and essential subsystems.
+class Game {
+public:
+    /// @brief Constructs the Game object and initializes all subsystems.
+    Game();
+
+    Game(const Game&) = delete;
+    Game& operator=(const Game&) = delete;
+    Game(Game&&) = delete;
+    Game& operator=(Game&&) = delete;
+
+    ~Game() { SDL_LogDebug(utils::LOG_CATEGORY_CLEANUP, "Game destroyed"); }
+
+    /// @brief Starts and runs the main game loop.
+    void run();
+
+private:
+    /// @brief Handles user and system events.
+    void handleEvents();
+
+    /// @brief Updates the game state.
+    void update();
+
+    /// @brief Renders the current game frame.
+    void render();
+
+    engine::Settings _settings{};             ///< Stores configuration settings.
+    engine::SDLManager _SDLManager{};         ///< Initializes and shuts down SDL.
+    engine::WindowManager _windowManager;   ///< Manages the SDL window and renderer.
+    engine::EventHandler _eventHandler{};     ///< Handles SDL events.
+    engine::Clock _clock;                   ///< Manages frame timing and delta time.
+    engine::RenderManager _renderManager;   ///< Responsible for clearing and presenting the renderer.
+    engine::Camera _camera;                 ///< Controls the view into the game world.
+    MapTextures _mapTextures;       ///< Manages map-related textures.
+    TileClassifier _tileClassifier{};
+    SimpleTextures _simpleTextures;
+    SpriteTextures _spriteTextures;
+
+    std::vector<engine::Level> _levels{};     ///< Stores loaded levels.
+
+    bool _running{true};                  ///< Indicates if the game loop is active.
+
+    std::unique_ptr<Player> _player;
+    std::vector<std::unique_ptr<engine::DynamicEntity>> _dynamicEntities{};
+};
+
+}
