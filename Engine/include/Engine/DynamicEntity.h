@@ -23,6 +23,20 @@ public:
     /// @param deltaTime Time elapsed since last update.
     void update(float deltaTime) override;
 
+    /// @brief Gets current velocity vector.
+    utils::f2v getVel() const { return _vel; }
+
+    /// @brief Sets current velocity vector.
+    void setVel(utils::f2v vel) { _vel = vel; }
+
+    /// @brief Checks if entity is currently on the ground.
+    /// @return True if entity is on the ground, false otherwise.
+    bool isOnGround() const { return _onGround; }
+
+    /// @brief Sets the on-ground state of the entity.
+    /// @param onGround True if entity is on the ground, false otherwise.
+    void setOnGround(bool onGround) { _onGround = onGround; }
+
 protected:
     /// @brief Sets health value, capped at maxHealth.
     void setHealth(float health) { capHealthIfNeeded(health); }
@@ -54,15 +68,8 @@ protected:
     /// @brief Checks if entity is healthy (> 2/3 health).
     bool isHealthy() const { return _health > _maxHealth / 3 * 2; }
 
-protected:
     /// @brief Clamps health to be within [0, maxHealth].
     void capHealthIfNeeded(float health) { health > _maxHealth ? _health = _maxHealth : _health = health; }
-
-    /// @brief Gets current velocity vector.
-    utils::f2v getVel() const { return _vel; }
-
-    /// @brief Sets current velocity vector.
-    void setVel(utils::f2v vel) { _vel = vel; }
 
     /// @brief Gets default movement speed.
     float getDefaultSpeed() const { return _defaultSpeed; }
@@ -80,11 +87,12 @@ protected:
     void stop() { _vel.x = 0.f; }
 
 private:
-    float _health{};         ///< Current health.
-    float _maxHealth;        ///< Maximum health.
-    float _defaultSpeed;     ///< Normal movement speed.
-    float _sprintSpeed;      ///< Sprint movement speed.
+    float _health{};           ///< Current health.
+    float _maxHealth;          ///< Maximum health.
+    float _defaultSpeed;       ///< Normal movement speed.
+    float _sprintSpeed;        ///< Sprint movement speed.
     utils::f2v _vel{0.f, 0.f}; ///< Current velocity vector.
+    bool _onGround{false};     ///< True if entity is on ground
 };
 
 }

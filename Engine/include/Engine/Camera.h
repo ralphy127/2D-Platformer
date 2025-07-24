@@ -9,7 +9,7 @@
 namespace engine {
 
 /// @brief Camera class for managing viewport and transformations.
-class Camera : ISettingsObserver {
+class Camera : public ISettingsObserver {
 public:
     /// @brief Constructs a Camera with position, zoom factor and reference to settings.
     /// @param pos Initial position of the camera in world coordinates.

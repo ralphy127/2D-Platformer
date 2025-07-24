@@ -5,7 +5,8 @@ namespace game {
 Game::Game()
     : _settings(createDefaultSettingsConfig()),
       _windowManager(_settings),
-      _clock(_settings),
+      _physicsHandler{_settings},
+      _clock(_settings), 
       _renderManager(_windowManager.getWindow()),
       _camera(utils::i2v(0,0), 2.f, _settings),
       _mapTextures(_renderManager.getRenderer()),
@@ -17,6 +18,9 @@ Game::Game()
     
     auto tileSize = static_cast<size_t>(windowSize.y / 40.f);
     _settings.setTileSize(tileSize);
+
+    _physicsHandler.setGAcceleration(20.f * tileSize);
+    _physicsHandler.setFallGMultiplier(1.8f);
 
     size_t levels = 1;
     for (size_t level = 0; level < levels; ++level)

@@ -14,7 +14,7 @@ void Drawable::onSettingsChanged() {
 
     auto newTileSize = getTileSize();
 
-    _textureSize *= (oldTileSize / newTileSize);
+    _textureSize *= (static_cast<float>(oldTileSize) / newTileSize);
 }
 
 }

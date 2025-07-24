@@ -52,7 +52,7 @@ private:
     engine::SDLManager _SDLManager{};           ///< Initializes and shuts down SDL.
     engine::WindowManager _windowManager;       ///< Manages the SDL window and renderer.
     engine::EventHandler _eventHandler{};       ///< Handles SDL events.
-    engine::PhysicsHandler _physicsHandler{};   ///< Manages physics calculations.
+    engine::PhysicsHandler _physicsHandler;     ///< Manages physics calculations.
     engine::Clock _clock;                       ///< Manages frame timing and delta time.
     engine::RenderManager _renderManager;       ///< Responsible for clearing and presenting the renderer.
     engine::Camera _camera;                     ///< Controls the view into the game world.

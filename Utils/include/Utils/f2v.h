@@ -39,10 +39,20 @@ struct f2v {
         x /= scalar; y /= scalar;
         return *this; }
     
-    bool operator>(const f2v& other) const { return x > other.x && y > other.y; }
-    bool operator<(const f2v& other) const { return x < other.x && y < other.y; }
-    bool operator>(f2v&& other) const { return x > other.x && y > other.y; }
-    bool operator<(f2v&& other) const { return x < other.x && y < other.y; }    
+    bool operator>(const f2v& other) const { return length() > other.length(); }
+    bool operator<(const f2v& other) const { return length() < other.length(); }
+    bool operator>(f2v&& other) const { return length() > other.length(); }
+    bool operator<(f2v&& other) const { return length() < other.length(); }  
+
+    bool operator<=(const f2v& other) const { return length() <= other.length(); }
+    bool operator>=(const f2v& other) const { return length() >= other.length(); }
+    bool operator<=(f2v&& other) const { return length() <= other.length(); }
+    bool operator>=(f2v&& other) const { return length() >= other.length(); }
+    
+    bool operator==(const f2v& other) const { return x == other.x && y == other.y; }
+    bool operator==(f2v&& other) const { return x == other.x && y == other.y; }
+    bool operator!=(const f2v& other) const { return x != other.x || y != other.y; }
+    bool operator!=(f2v&& other) const { return x != other.x || y != other.y; }
 
     friend std::ostream& operator<<(std::ostream& os, const f2v& v) { return os << "f2v(" << v.x << ", " << v.y << ")"; }
 };

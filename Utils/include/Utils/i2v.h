@@ -35,15 +35,15 @@ struct i2v {
         x /= scalar; y /= scalar;
         return *this; }
     
-    bool operator>(const i2v& other) const { return x > other.x && y > other.y; }
-    bool operator<(const i2v& other) const { return x < other.x && y < other.y; }
-    bool operator>(i2v&& other) const { return x > other.x && y > other.y; }
-    bool operator<(i2v&& other) const { return x < other.x && y < other.y; }
+    bool operator>(const i2v& other) const { return length() > other.length(); }
+    bool operator<(const i2v& other) const { return length() < other.length(); }
+    bool operator>(i2v&& other) const { return length() > other.length(); }
+    bool operator<(i2v&& other) const { return length() < other.length(); }
 
-    bool operator==(i2v& other) const { return x == other.x && y == other.y; }
+    bool operator==(const i2v& other) const { return x == other.x && y == other.y; }
     bool operator==(i2v&& other) const { return x == other.x && y == other.y; }
-    bool operator!=(i2v& other) const { return !(*this == other); }
-    bool operator!=(i2v&& other) const { return !(*this == other); }
+    bool operator!=(const i2v& other) const { return x != other.x || y != other.y; }
+    bool operator!=(i2v&& other) const { return x != other.x || y != other.y; }
 
     friend std::ostream& operator<<(std::ostream& os, const i2v& v) { return os << "i2v(" << v.x << ", " << v.y << ")"; }
 };
