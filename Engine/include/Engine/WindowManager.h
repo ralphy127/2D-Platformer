@@ -43,18 +43,15 @@ public:
 private:
     /// @brief Initializes window dimensions based on configuration or fullscreen display mode.
     void initFullScreenWindowDimensions();
-    void resetWindow(const std::string& title, int x, int y, int w, int h, Uint32 flags) {
-        _window.reset(SDL_CreateWindow(title.c_str(), x, y, w, h, flags));
 
-        if(!_window)
-            throw std::runtime_error("Failed to create SDL Window: " + std::string(SDL_GetError()));
-    }
+    /// @brief Resets the SDL window with the specified parameters.
+    void resetWindow(const std::string& title, int x, int y, int w, int h, Uint32 flags);
 
     std::unique_ptr<SDL_Window, decltype(&SDL_DestroyWindow)> _window; ///< Managed SDL window pointer
 
-    Settings& _settings;
-    bool _fullscreen; ///< If true, the game runs in fullscreen mode.
-    utils::i2v _windowSize;  ///< Current window size
+    Settings& _settings;            ///< Reference to game settings
+    bool _fullscreen;               ///< If true, the game runs in fullscreen mode.
+    utils::i2v _windowSize;         ///< Current window size
 };
 
 }

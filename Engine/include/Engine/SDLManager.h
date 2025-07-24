@@ -22,10 +22,7 @@ public:
 
     /// @brief Sets the master volume level
     /// @param volume Volume level in range 0 to 10
-    void setVolume(size_t volume) {
-        _volume = volume > 10 ? 10 : volume;
-        Mix_Volume(-1, static_cast<int>((_volume / 10.0) * SDL_MIX_MAXVOLUME));
-    }
+    void setVolume(size_t volume);
 
 private:
     size_t _volume{10UL}; ///< Current volume level

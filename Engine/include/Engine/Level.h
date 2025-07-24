@@ -28,7 +28,7 @@ public:
     void render(SDL_Renderer&, Camera&) const;
 
 private:
-    size_t _level;
+    size_t _level; ///< id of the level
 
     std::vector<std::unique_ptr<Layer>> _layers{}; ///< List of layers in the level.
 };

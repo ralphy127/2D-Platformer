@@ -12,7 +12,8 @@ class Clock : ISettingsObserver {
 public:
     using ClockType = std::chrono::high_resolution_clock;
 
-    /// @brief Constructs Clock and initializes timing variables.
+    /// @brief Constructs Clock and initializes timing variables based on settings.
+    /// @param settings Reference to the settings object (used for target FPS, etc.).
     Clock(Settings&);
 
     ~Clock() { SDL_LogDebug(utils::LOG_CATEGORY_CLEANUP, "Clock destroyed"); }
@@ -22,35 +23,33 @@ public:
     Clock(Clock&&) = delete;
     Clock& operator=(Clock&&) = delete;
 
-    /// @brief Regulates frame rate and updates delta time.
+    /// @brief Regulates frame rate to maintain consistent timing and updates delta time.
     void tickAndWait();
 
-    /// @brief Returns time elapsed since last frame in seconds.
+    /// @brief Returns time elapsed since the last frame in seconds.
     /// @return Delta time in seconds.
     float getDeltaTime() const { return _deltaTime; }
 
-    /// @brief Returns actual fps
-    /// @return Current fps [1/s]
+    /// @brief Returns the actual measured frames per second.
+    /// @return Current frames per second.
     float getFps() const { return _actualFps; }
 
+    /// @brief Responds to settings changes, e.g. updates target FPS.
     void onSettingsChanged() override;
 
-    static ClockType::time_point getTime() { return _now; }
+    /// @brief Returns current high-resolution clock timestamp.
+    /// @return Current time point.
+    ClockType::time_point getTime() { return _now; }
+
 private:
-    Settings& _settings;
+    Settings& _settings;                          ///< Reference to settings.
 
-    float _deltaTime{};                                     ///< Delta time between frames (seconds).
-    ClockType::time_point _lastFrameTime{ClockType::now()}; ///< Timestamp of last frame (milliseconds).
-    float _targetFps;                                       ///< Target frames per second.
-    ClockType::duration _targetFrameDuration;               ///< Target frame duration (milliseconds).
-    float _actualFps{};
-
-    inline static ClockType::time_point _now{ClockType::now()};
-
-    /// Time of last fps log
-    inline static ClockType::time_point _lastLogTime = ClockType::now();
-    /// The delay between FPS log messages in seconds
-    static constexpr ClockType::duration FPS_LOG_DELAY = std::chrono::seconds(1LL);
+    float _deltaTime{};                           ///< Time elapsed between frames in seconds.
+    ClockType::time_point _lastFrameTime{ClockType::now()}; ///< Timestamp of last frame.
+    float _targetFps{};                           ///< Target frames per second (read from settings).
+    ClockType::duration _targetFrameDuration{};  ///< Target duration of a single frame.
+    float _actualFps{};                           ///< Calculated actual FPS.
+    ClockType::time_point _now{ClockType::now()}; ///< timestamp of current frame
 };
 
 }

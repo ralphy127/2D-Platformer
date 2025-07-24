@@ -28,4 +28,9 @@ SDLManager::~SDLManager() {
     SDL_LogDebug(utils::LOG_CATEGORY_CLEANUP, "SDL manager destroyed");
 }
 
+void SDLManager::setVolume(size_t volume) {
+    _volume = volume > 10 ? 10 : volume;
+    Mix_Volume(-1, static_cast<int>((_volume / 10.0) * SDL_MIX_MAXVOLUME));
+}
+
 }

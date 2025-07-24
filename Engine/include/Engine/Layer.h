@@ -8,7 +8,6 @@ namespace engine {
 /// @brief Interface for renderable map layers.
 class Layer {
 public:
-    /// @brief Virtual destructor.
     virtual ~Layer() = default;
 
     /// @brief Renders the layer.

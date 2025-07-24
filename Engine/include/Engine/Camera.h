@@ -11,12 +11,13 @@ namespace engine {
 /// @brief Camera class for managing viewport and transformations.
 class Camera : ISettingsObserver {
 public:
-    /// @brief Constructs a Camera with position, window size and zoom factor.
-    /// @param pos Initial position of the camera.
-    /// @param windowSize Size of the window viewport.
-    /// @param zoom Zoom factor for the camera.
+    /// @brief Constructs a Camera with position, zoom factor and reference to settings.
+    /// @param pos Initial position of the camera in world coordinates.
+    /// @param zoom Initial zoom factor.
+    /// @param settings Reference to settings used for observing window size changes.
     Camera(utils::i2v pos, float zoom, Settings&);
 
+    /// @brief Destructor. Unregisters from settings observer.
     ~Camera();
 
     Camera(const Camera&) = delete;
@@ -25,7 +26,7 @@ public:
     Camera& operator=(Camera&&) = delete;
     
     /// @brief Gets the current viewport rectangle of the camera.
-    /// @return SDL_Rect representing the viewport.
+    /// @return SDL_Rect representing the visible area in world space.
     SDL_Rect getViewport() const;
 
     /// @brief Applies camera transformations to a given position and size.
@@ -35,25 +36,26 @@ public:
     SDL_Rect worldToViewport(const utils::f2v& pos, const utils::f2v& size) const;
 
     /// @brief Centers the camera on a target position.
-    /// @param target The position to center the camera on.
+    /// @param target The position in world space to center the camera on.
     void centerOn(const utils::f2v& target);
 
     /// @brief Sets the zoom factor of the camera.
-    /// @param zoom New zoom factor.
+    /// @param zoom New zoom factor. Clamped internally to reasonable bounds.
     void setZoom(float zoom);
 
     /// @brief Sets the window size of the camera viewport.
-    /// @param windowSize New window size.
+    /// @param windowSize New window size in pixels.
     void setWindowSize(const utils::i2v& windowSize) { _windowSize = windowSize; }
 
+    /// @brief Responds to settings change (e.g. window resized).
     void onSettingsChanged() override { setWindowSize(_settings.getWindowSize()); }
 
 private:
-    Settings& _settings;
+    Settings& _settings;       ///< Reference to global settings.
 
-    utils::i2v _pos;          ///< Current position of the camera.
-    utils::i2v _windowSize{}; ///< Size of the viewport window.
-    float _zoom{};     ///< Zoom factor applied to transformations.
+    utils::i2v _pos;           ///< Current top-left position of the camera in world space.
+    utils::i2v _windowSize{};  ///< Size of the viewport window in pixels.
+    float _zoom{};             ///< Zoom factor applied to camera projection.
 };
 
 }

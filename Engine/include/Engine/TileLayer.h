@@ -47,13 +47,13 @@ private:
     /// @param path Path to the CSV file.
     void loadFromCSV(const std::string& path);
 
-    IMapTextures& _mapTextures;     ///< Reference to the map textures manager.
-    const ITileClassifier& _tileClassifier;
-    Settings& _settings;
-    Type _type;                          ///< Type of the tile layer.
-    size_t _level;                       ///< Level index.
-    size_t _tileSize;                    ///< Size of each tile.
-    std::vector<std::vector<int>> _grid; ///< Grid of tile IDs.
+    IMapTextures& _mapTextures;             ///< Reference to the map textures manager.
+    const ITileClassifier& _tileClassifier; /// Reference to tileClassifier
+    Settings& _settings;                    ///< Reference to game settings
+    Type _type;                             ///< Type of the tile layer.
+    size_t _level;                          ///< Level index.
+    size_t _tileSize;                       ///< Size of each tile.
+    std::vector<std::vector<int>> _grid;    ///< Grid of tile IDs.
 };
 
 

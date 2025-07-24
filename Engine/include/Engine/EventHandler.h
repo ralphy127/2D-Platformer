@@ -35,6 +35,10 @@ public:
     /// @return True if the key is pressed, false if not pressed or not present in the map.
     bool isKeyPressed(SDL_Keycode key) const { return _keyStates.contains(key) && _keyStates.at(key); }
 
+    /// @brief Checks if any of the specified keys is currently pressed.
+    /// @tparam Keys Variadic template parameter pack of SDL_Keycode keys.
+    /// @param keys The keys to check.
+    /// @return True if at least one of the specified keys is pressed, false otherwise.
     template<typename... Keys>
     bool isAnyKeyPressed(Keys... keys) const { return (... || isKeyPressed(keys)); }
 

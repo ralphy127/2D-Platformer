@@ -71,4 +71,11 @@ void WindowManager::initFullScreenWindowDimensions() {
     _windowSize = utils::i2v(displayMode.w, displayMode.h);
 }
 
+void WindowManager::resetWindow(const std::string& title, int x, int y, int w, int h, Uint32 flags) {
+    _window.reset(SDL_CreateWindow(title.c_str(), x, y, w, h, flags));
+
+    if(!_window)
+        throw std::runtime_error("Failed to create SDL Window: " + std::string(SDL_GetError()));
+}
+
 }
