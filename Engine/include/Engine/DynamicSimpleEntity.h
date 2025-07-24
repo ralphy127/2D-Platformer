@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Engine/DynamicEntity.h"
-#include "Engine/EntityTypes.h"
 #include "Engine/ISimpleTextures.h"
 
 namespace engine {
@@ -9,7 +8,7 @@ namespace engine {
 class DynamicSimpleEntity : public DynamicEntity {
 public:
     struct Config : DynamicEntity::Config {
-        EntityTypes::Simple type;
+        
     };
 
     DynamicSimpleEntity(Settings&, ISimpleTextures&, const Config&);
@@ -20,9 +19,6 @@ public:
 
 private:
     ISimpleTextures& _textures;
-    EntityTypes::Simple _type;
-
-
 };
 
 }

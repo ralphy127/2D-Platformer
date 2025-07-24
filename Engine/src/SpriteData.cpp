@@ -2,6 +2,7 @@
 
 #include <stdexcept>
 #include <chrono>
+#include <iostream>
 
 namespace engine {
 
@@ -33,13 +34,10 @@ void SpriteData::setFrame(size_t frame) {
 void SpriteData::updateFrame() {
     auto now = ClockType::now();
 
-    if (now < _lastFrameTime + _targetFrameDuration)
+    if (now - _lastFrameTime < _targetFrameDuration)
         return;
 
-    _currentFrame++;
-    if (_currentFrame >= _framesInCurrentAnimation)
-        _currentFrame = 0;
-
+    _currentFrame = (_currentFrame + 1) % _framesInCurrentAnimation;
     _lastFrameTime = now;
 }
 
@@ -54,7 +52,7 @@ void SpriteData::setAnimation(size_t animation) {
 }
 
 void SpriteData::resetAnimation() {
-    _currentFrame = 0;
+    _currentFrame = 0UL;
     _lastFrameTime = ClockType::now();
 }
 

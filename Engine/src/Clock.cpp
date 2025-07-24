@@ -34,7 +34,6 @@ void Clock::tickAndWait() {
     _lastFrameTime = currentTime;
 
     _actualFps = 1.0f / _deltaTime;
-    logFPS();
 }
 
 void Clock::onSettingsChanged() {
@@ -43,14 +42,6 @@ void Clock::onSettingsChanged() {
     std::chrono::duration<float> secondsPerFrame(1.0f / _targetFps);
     
     _targetFrameDuration = std::chrono::duration_cast<ClockType::duration>(secondsPerFrame);
-}
-
-void Clock::logFPS() {
-    auto now = ClockType::now();
-    if (now - _lastLogTime >= FPS_LOG_DELAY) {
-        SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION, "FPS: %.2f", _actualFps);
-        _lastLogTime = now;
-    }
 }
 
 }

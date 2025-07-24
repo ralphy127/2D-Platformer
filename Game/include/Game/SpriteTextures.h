@@ -2,12 +2,12 @@
 
 #include <unordered_map>
 #include <vector>
-#include <Engine/EntityTypes.h>
 #include <Engine/ISpriteTextures.h>
 #include <Utils/SDLUtils.h>
 #include <Utils/i2v.h>
 #include <Utils/f2v.h>
 #include <Utils/Logging.h>
+#include <Game/EntityTypes.h>
 
 namespace game {
 
@@ -19,8 +19,6 @@ struct TextureDefinition {
 
 class SpriteTextures : public engine::ISpriteTextures {
 public:
-    using Type = engine::EntityTypes::Sprite;
-
     SpriteTextures(SDL_Renderer& renderer);
     
     ~SpriteTextures() { SDL_LogDebug(utils::LOG_CATEGORY_CLEANUP, "Sprite textures destroyed"); }
@@ -30,19 +28,19 @@ public:
     SpriteTextures(SpriteTextures&&) = delete;
     SpriteTextures& operator=(SpriteTextures&&) = delete;
 
-    SDL_Texture& getTexture(Type, size_t animation, size_t frame) override;
+    SDL_Texture& getTexture(engine::Entity::Type, size_t animation, size_t frame) override;
 
 private:
     void loadDefaultSprites();
 
-    void loadSprite(engine::EntityTypes::Sprite);
+    void loadSprite(EntityType);
 
     void defineSprites();
 
     SDL_Renderer& _renderer;
 
-    std::unordered_map<Type, std::vector<std::vector<utils::SDLUtils::TexturePtr>>> _cache{};
-    std::unordered_map<Type, TextureDefinition> _spriteDefinitions{};
+    std::unordered_map<EntityType, std::vector<std::vector<utils::SDLUtils::TexturePtr>>> _cache{};
+    std::unordered_map<EntityType, TextureDefinition> _spriteDefinitions{};
 };
 
 }

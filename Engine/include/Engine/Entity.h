@@ -8,7 +8,15 @@ namespace engine {
 
 class Entity : public ISettingsObserver {
 public:
-    Entity(utils::f2v pos, utils::f2v size, Settings&);
+    using Type = int;
+
+    struct Config {
+        utils::f2v pos;
+        utils::f2v size;
+        Type type;
+    };
+
+    Entity(Settings&, const Config& config);
 
     ~Entity() { _settings.unregisterObserver(*this); }
 
@@ -30,10 +38,9 @@ public:
     /// @param size New size to set.
     void setSize(utils::f2v size) { _size = size; }
 
-    virtual bool isUpdatable() const { return false; }
-    virtual bool isRenderable() const { return false; }
-
 protected:
+    Type getType() const { return _type; }
+
     size_t getTileSize() const { return _tileSize; }
     const Settings& getSettings() const { return _settings; }
 
@@ -42,6 +49,7 @@ private:
     size_t _tileSize;
     utils::f2v _pos;
     utils::f2v _size;
+    Type _type;
 };
 
 }

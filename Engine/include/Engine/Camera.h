@@ -54,8 +54,6 @@ private:
     utils::i2v _pos;          ///< Current position of the camera.
     utils::i2v _windowSize{}; ///< Size of the viewport window.
     float _zoom{};     ///< Zoom factor applied to transformations.
-
-    static constexpr float MAX_ZOOM = 100.0f; ///< Maximum value of zoom
 };
 
 }

@@ -5,8 +5,8 @@ namespace engine {
 Camera::Camera(utils::i2v pos, float zoom, Settings& settings)
     : _settings(settings),
       _pos(pos) {   
-    if (zoom <= 0.0f || zoom > MAX_ZOOM) 
-        throw std::out_of_range("Zoom must be in (0, " + std::to_string(MAX_ZOOM) + "]");
+    if (zoom <= 0.0f) 
+        throw std::invalid_argument("Zoom must be positive");
 
     _windowSize = _settings.getWindowSize();
     _zoom = zoom;
@@ -48,8 +48,8 @@ void Camera::centerOn(const utils::f2v& target) {
 }
 
 void Camera::setZoom(float zoom) { 
-    if (zoom <= 0.0f || zoom > MAX_ZOOM) 
-        throw std::out_of_range("Zoom must be in (0, " + std::to_string(MAX_ZOOM) + "]");
+    if (zoom <= 0.0f) 
+        throw std::invalid_argument("Zoom must be positive");
 
     _zoom = zoom;
 }

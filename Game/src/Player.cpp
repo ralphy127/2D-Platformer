@@ -1,11 +1,13 @@
 #include "Game/Player.h"
 
 #include <chrono>
+#include <Game/EntityTypes.h>
 
 namespace game {
 
-Player::Player(engine::Settings& settings, engine::ISpriteTextures& textures)
-    : DynamicSpriteEntity(settings, textures, initAndGetConfig(settings)) {
+Player::Player(engine::Settings& settings, engine::ISpriteTextures& textures, const engine::EventHandler& eventHandler)
+    : DynamicSpriteEntity(settings, textures, initAndGetConfig(settings)),
+      _eventHandler(eventHandler) {
     
     auto tileSize = getTileSize();
     setTextureSize({3.f * tileSize, 3.f * tileSize});
@@ -13,7 +15,9 @@ Player::Player(engine::Settings& settings, engine::ISpriteTextures& textures)
     setPos({20.f * tileSize, 30.f * tileSize - getSize().y});
 }
 
-void Player::update(float deltaTime, const std::unordered_map<SDL_Keycode, bool>& keyStates) {
+void Player::update(float deltaTime) {
+    handleMovement(deltaTime);
+    
     DynamicSpriteEntity::update(deltaTime);
 }
 
@@ -52,14 +56,57 @@ engine::DynamicSpriteEntity::Config Player::initAndGetConfig(engine::Settings& s
 
     config.size = {0.85f * tileSize, 1.8f * tileSize};
     config.pos = {0.3f * windowSize.x, 30.f * tileSize - config.size.y};
+    config.type = static_cast<engine::Entity::Type>(EntityType::PLAYER);
     config.textureSize = {3.f * tileSize, 3.f * tileSize};
     config.direction = 1;
     config.maxHealth = 100.f;
     config.health = 100.f;
+    config.defaultSpeed = 2.5f * tileSize;
+    config.sprintSpeed = 7.5f * tileSize;
     config.spriteData = std::move(spriteData);
-    config.type = engine::EntityTypes::Sprite::PLAYER;
 
     return config;
+}
+
+void Player::handleMovement(float deltaTime) {
+    const auto leftPressed = _eventHandler.isAnyKeyPressed(SDLK_LEFT, SDLK_a);
+    const auto rightPressed = _eventHandler.isAnyKeyPressed(SDLK_RIGHT, SDLK_d);
+    const bool lshiftPressed = _eventHandler.isKeyPressed(SDLK_LSHIFT);
+
+    auto& spriteData = getSpriteData();
+
+    if (leftPressed && rightPressed) {
+        handleLShift(lshiftPressed, spriteData);
+    }
+    else if (leftPressed) {
+        setDirection(-1);
+        handleLShift(lshiftPressed, spriteData);
+    }
+    else if (rightPressed) {
+        setDirection(1);
+        handleLShift(lshiftPressed, spriteData);
+    }
+    else {
+        stop();
+        if (spriteData.getAnimation() != static_cast<size_t>(State::IDLE)) {
+            spriteData.setAnimation(static_cast<size_t>(State::IDLE));
+        }
+    }
+}
+
+void Player::handleLShift(bool shiftPressed, engine::SpriteData& spriteData) {
+    if (shiftPressed) {
+        sprint();
+        if (spriteData.getAnimation() != static_cast<size_t>(State::RUNNING)) {
+            spriteData.setAnimation(static_cast<size_t>(State::RUNNING));
+        }
+    } 
+    else {
+        move();
+        if (spriteData.getAnimation() != static_cast<size_t>(State::WALKING)) {
+            spriteData.setAnimation(static_cast<size_t>(State::WALKING));
+        }
+    }
 }
 
 }

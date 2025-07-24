@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Engine/DynamicEntity.h"
-#include "Engine/EntityTypes.h"
 #include "Engine/ISpriteTextures.h"
 #include "Engine/SpriteData.h"
 
@@ -11,18 +10,19 @@ class DynamicSpriteEntity : public DynamicEntity {
 public:
     struct Config : DynamicEntity::Config {
         SpriteData spriteData;
-        EntityTypes::Sprite type;
     };
 
     DynamicSpriteEntity(Settings&, ISpriteTextures&, const Config&);
 
-    void update(float deltaTime) override { _spriteData.updateFrame(); }
+    void update(float deltaTime) override;
     void render(SDL_Renderer&, Camera&) const override;
+
+protected:
+    SpriteData& getSpriteData() { return _spriteData; }
 
 private:
     ISpriteTextures& _textures;
     SpriteData _spriteData;
-    EntityTypes::Sprite _type;
 };
 
 }

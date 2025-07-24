@@ -6,15 +6,15 @@ void EventHandler::pollEvents() {
     SDL_Event event;
     while(SDL_PollEvent(&event)) {
         switch(event.type) {
-        case SDL_QUIT:
-            _quitRequested = true; 
-            break;
-        case SDL_KEYUP:
-            _keyStates[event.key.keysym.sym] = true;
-            break;
-        case SDL_KEYDOWN:
-            _keyStates[event.key.keysym.sym] = false;
-            break;
+            case SDL_QUIT:
+                _quitRequested = true; 
+                break;
+            case SDL_KEYDOWN:
+                _keyStates[event.key.keysym.sym] = true;
+                break;
+            case SDL_KEYUP:
+                _keyStates[event.key.keysym.sym] = false;
+                break;
         }
     }
 }
@@ -22,11 +22,6 @@ void EventHandler::pollEvents() {
 void EventHandler::resetKeyStates() {
     for (auto& [key, state] : _keyStates)
         state = false;
-}
-
-bool EventHandler::isKeyPressed(SDL_Keycode key) const {
-    auto it = _keyStates.find(key);
-    return it != _keyStates.end() && it->second;
 }
 
 }

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <SDL.h>
-#include "Engine/EntityTypes.h"
+#include "Engine/Entity.h"
 
 namespace engine {
 
@@ -9,7 +9,7 @@ class ISimpleTextures {
 public:
     virtual ~ISimpleTextures() = default;
 
-    virtual SDL_Texture& getTexture(EntityTypes::Simple) = 0;
+    virtual SDL_Texture& getTexture(Entity::Type) = 0;
 };
 
 }

@@ -11,8 +11,19 @@ namespace engine {
 /// @brief Stores global configuration settings for the game.
 class Settings {
 public:
+    struct Config {
+        bool fullscreen;
+        std::string title;
+        float targetFps;
+        bool showHitboxes;
+        bool showTextureHitboxes;
+        utils::i2v windowSize;
+        utils::i2v windowPos;
+        size_t tileSize;
+    };
+    
     /// @brief Constructs default settings.
-    Settings() { SDL_LogDebug(utils::LOG_CATEGORY_SETUP, "Settings created"); }
+    Settings(Config&&);
 
     ~Settings() { SDL_LogDebug(utils::LOG_CATEGORY_CLEANUP, "Settings destroyed"); }
 

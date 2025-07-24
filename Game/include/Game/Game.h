@@ -1,8 +1,10 @@
 #pragma once
 
+#include <list>
 #include <Engine/SDLManager.h>
 #include <Engine/WindowManager.h>
 #include <Engine/EventHandler.h>
+#include <Engine/PhysicsHandler.h>
 #include <Engine/Clock.h>
 #include <Engine/RenderManager.h>
 #include <Engine/Camera.h>
@@ -12,6 +14,7 @@
 #include "Game/SimpleTextures.h"
 #include "Game/SpriteTextures.h"
 #include "Game/Player.h"
+#include "Engine/StaticEntity.h"
 
 namespace game {
 
@@ -32,6 +35,8 @@ public:
     void run();
 
 private:
+    static engine::Settings::Config createDefaultSettingsConfig();
+
     /// @brief Handles user and system events.
     void handleEvents();
 
@@ -41,10 +46,11 @@ private:
     /// @brief Renders the current game frame.
     void render();
 
-    engine::Settings _settings{};             ///< Stores configuration settings.
+    engine::Settings _settings;             ///< Stores configuration settings.
     engine::SDLManager _SDLManager{};         ///< Initializes and shuts down SDL.
     engine::WindowManager _windowManager;   ///< Manages the SDL window and renderer.
     engine::EventHandler _eventHandler{};     ///< Handles SDL events.
+    engine::PhysicsHandler _physicsHandler{};
     engine::Clock _clock;                   ///< Manages frame timing and delta time.
     engine::RenderManager _renderManager;   ///< Responsible for clearing and presenting the renderer.
     engine::Camera _camera;                 ///< Controls the view into the game world.
@@ -57,8 +63,7 @@ private:
 
     bool _running{true};                  ///< Indicates if the game loop is active.
 
-    std::unique_ptr<Player> _player;
-    std::vector<std::unique_ptr<engine::DynamicEntity>> _dynamicEntities{};
+    std::list<std::unique_ptr<engine::Entity>> _entities{};
 };
 
 }

@@ -2,7 +2,6 @@
 
 #include "Engine/Drawable.h"
 #include "Engine/IUpdatable.h"
-#include "Engine/EntityTypes.h"
 
 namespace engine {
 

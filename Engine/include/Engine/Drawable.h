@@ -9,7 +9,7 @@ namespace engine {
 // abstract class
 class Drawable : public Entity, public IRenderable {
 public:
-    struct Config {
+    struct Config : Entity::Config {
         utils::f2v pos;
         utils::f2v size;
         utils::f2v textureSize;
@@ -22,8 +22,6 @@ public:
 
     int getDirection() const { return _direction; }
     void setDirection(int direction) { _direction = direction; }
-
-    bool isRenderable() const override { return true; }
 
 protected:
     utils::f2v getTextureSize() const { return _textureSize; }

@@ -3,7 +3,7 @@
 namespace engine {
 
 Drawable::Drawable(Settings& settings, const Config& config)
-    : Entity(config.pos, config.size, settings),
+    : Entity(settings, config),
       _textureSize(config.textureSize),
       _direction(config.direction) {}
 

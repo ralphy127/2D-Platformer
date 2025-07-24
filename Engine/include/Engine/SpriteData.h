@@ -9,7 +9,7 @@ namespace engine {
 // frame, animation indexed from 0
 class SpriteData {
 public:
-    using ClockType = std::chrono::high_resolution_clock;
+    using ClockType = std::chrono::steady_clock;
     using AnimationsInfo = std::vector<std::pair<size_t, ClockType::duration>>;
     
     SpriteData() = default;

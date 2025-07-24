@@ -37,9 +37,6 @@ public:
 
     static ClockType::time_point getTime() { return _now; }
 private:
-    /// @brief Logs the current FPS to the debug output.
-    void logFPS();
-
     Settings& _settings;
 
     float _deltaTime{};                                     ///< Delta time between frames (seconds).

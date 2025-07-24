@@ -33,7 +33,10 @@ public:
     /// @brief Checks if a specific key is currently marked as pressed.
     /// @param key The SDL_Keycode of the key to check.
     /// @return True if the key is pressed, false if not pressed or not present in the map.
-    bool isKeyPressed(SDL_Keycode) const;
+    bool isKeyPressed(SDL_Keycode key) const { return _keyStates.contains(key) && _keyStates.at(key); }
+
+    template<typename... Keys>
+    bool isAnyKeyPressed(Keys... keys) const { return (... || isKeyPressed(keys)); }
 
     /// @brief Checks if quit is requested
     /// @return True if SDL_QUIT event is raised
