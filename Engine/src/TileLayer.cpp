@@ -47,6 +47,10 @@ void TileLayer::render(SDL_Renderer& renderer, Camera& camera) const {
     }
 }
 
+const TileLayer::Grid& TileLayer::getGridView() const {
+    return _grid;
+}
+
 std::string TileLayer::getCSVPath() const {
     std::string fileName;
     switch(_type) {

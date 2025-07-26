@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Engine/DynamicEntity.h>
+#include <Engine/TileLayer.h>
 #include <Engine/Settings.h>
 
 namespace engine {
@@ -11,7 +11,7 @@ struct collisionHit {
     float distance;
 };
 
-using Collision = std::pair<bool, bool>;
+class DynamicEntity;
 
 class PhysicsHandler : public ISettingsObserver {
 public:
@@ -24,11 +24,13 @@ public:
     PhysicsHandler(PhysicsHandler&&) = delete;
     PhysicsHandler& operator=(PhysicsHandler&&) = delete;
 
-    Collision AABBcast(const SDL_Rect& source, const SDL_Rect& target, const utils::f2v& velocity, collisionHit& outhit, float deltaTime) const;
+    bool AABBcast(const SDL_Rect& source, const SDL_Rect& target, const utils::f2v& velocity, collisionHit& outhit, float deltaTime) const;
 
-    void applyGravity(DynamicEntity& entity, float deltaTime);
+    void applyGravity(DynamicEntity&, float deltaTime) const;
 
     void setGAcceleration(float g) { _gAcceleration = g; }
+
+    void handleMapCollisions(DynamicEntity& entity, const TileLayer::Grid& map, float deltaTime) const;
 
     void setFallGMultiplier(float fallGMultiplier) { _fallGMultiplier = fallGMultiplier; }
 

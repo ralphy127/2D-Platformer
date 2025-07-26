@@ -11,6 +11,8 @@ namespace engine {
 /// @brief Represents a tile-based layer in the map.
 class TileLayer : public Layer, public ISettingsObserver {
 public:
+    using Grid = std::vector<std::vector<int>>;
+
     /// @brief Types of tile layers.
     enum class Type { DECORATION, INTERACTIVE, MAP };
 
@@ -34,7 +36,7 @@ public:
 
     /// @brief Gets the tile grid data.
     /// @return 2D grid of tile IDs.
-    const std::vector<std::vector<int>>& getGridView() const;
+    const Grid& getGridView() const;
 
     void onSettingsChanged() override { _tileSize = _settings.getTileSize(); }
 
@@ -53,7 +55,7 @@ private:
     Type _type;                             ///< Type of the tile layer.
     size_t _level;                          ///< Level index.
     size_t _tileSize;                       ///< Size of each tile.
-    std::vector<std::vector<int>> _grid;    ///< Grid of tile IDs.
+    Grid _grid;                             ///< Grid of tile IDs.
 };
 
 

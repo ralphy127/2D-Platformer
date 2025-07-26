@@ -58,6 +58,8 @@ private:
 
     const engine::EventHandler& _eventHandler; ///< Reference to input event handler.
 
+    bool _jumpPressedLastFrame{false};
+
     State _state{State::IDLE};                 ///< Current player state.
 };
 

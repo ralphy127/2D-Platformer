@@ -27,6 +27,8 @@ public:
     /// @param camera Camera used to transform tile positions.
     void render(SDL_Renderer&, Camera&) const;
 
+    const TileLayer::Grid& getMapView() const;
+
 private:
     size_t _level; ///< id of the level
 

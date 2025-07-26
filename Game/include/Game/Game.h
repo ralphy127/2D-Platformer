@@ -62,6 +62,7 @@ private:
     SpriteTextures _spriteTextures;             ///< Manages textures for sprite entities.
 
     std::vector<engine::Level> _levels{};       ///< Stores loaded levels.
+    size_t _currentLevel{0UL};
 
     bool _running{true};                        ///< Indicates if the game loop is active.
 

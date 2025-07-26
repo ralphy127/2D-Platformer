@@ -43,6 +43,10 @@ public:
     /// @param size New size to set.
     void setSize(utils::f2v size) { _size = size; }
 
+    SDL_Rect getHitBox() const;
+
+    void setHitBox(SDL_Rect hitbox);
+
 protected:
     /// @brief Returns the type of the entity.
     /// @return Integer identifier of the entity type.

@@ -7,13 +7,7 @@ namespace game {
 
 Player::Player(engine::Settings& settings, engine::ISpriteTextures& textures, const engine::EventHandler& eventHandler)
     : DynamicSpriteEntity(settings, textures, initAndGetConfig(settings)),
-      _eventHandler(eventHandler) {
-    
-    auto tileSize = getTileSize();
-    setTextureSize({3.f * tileSize, 3.f * tileSize});
-    setSize({0.85f * tileSize, 1.8f * tileSize});
-    setPos({20.f * tileSize, 30.f * tileSize - getSize().y});
-}
+      _eventHandler(eventHandler) {}
 
 void Player::update(float deltaTime) {
     handleMovement(deltaTime);
@@ -25,7 +19,6 @@ void Player::render(SDL_Renderer& renderer, engine::Camera& camera) const {
     auto pos = getPos();
     auto size = getSize();
     utils::f2v cameraPos(pos.x - size.x/2.f, pos.y - size.y/2.f);
-    
     camera.centerOn(cameraPos);
     
     DynamicSpriteEntity::render(renderer, camera);
@@ -55,7 +48,7 @@ engine::DynamicSpriteEntity::Config Player::initAndGetConfig(engine::Settings& s
     engine::DynamicSpriteEntity::Config config{};
 
     config.size = {0.85f * tileSize, 1.8f * tileSize};
-    config.pos = {0.3f * windowSize.x, 30.f * tileSize - config.size.y};
+    config.pos = {0.3f * windowSize.x, -30.f * tileSize - config.size.y};
     config.type = static_cast<engine::Entity::Type>(EntityType::PLAYER);
     config.textureSize = {3.f * tileSize, 3.f * tileSize};
     config.direction = 1;
@@ -63,6 +56,7 @@ engine::DynamicSpriteEntity::Config Player::initAndGetConfig(engine::Settings& s
     config.health = 100.f;
     config.defaultSpeed = 2.5f * tileSize;
     config.sprintSpeed = 7.5f * tileSize;
+    config.defaultJumpVy = 5.f * tileSize;
     config.spriteData = std::move(spriteData);
 
     return config;
@@ -72,6 +66,8 @@ void Player::handleMovement(float deltaTime) {
     const auto leftPressed = _eventHandler.isAnyKeyPressed(SDLK_LEFT, SDLK_a);
     const auto rightPressed = _eventHandler.isAnyKeyPressed(SDLK_RIGHT, SDLK_d);
     const bool lshiftPressed = _eventHandler.isKeyPressed(SDLK_LSHIFT);
+
+    const bool jumpNow = _eventHandler.isAnyKeyPressed(SDLK_UP, SDLK_w);
 
     auto& spriteData = getSpriteData();
 
@@ -92,6 +88,21 @@ void Player::handleMovement(float deltaTime) {
             spriteData.setAnimation(static_cast<size_t>(State::IDLE));
         }
     }
+
+    if (!isOnGround()) {
+        if (spriteData.getAnimation() != static_cast<size_t>(State::JUMPING)) {
+            spriteData.setAnimation(static_cast<size_t>(State::JUMPING));
+        }
+    }
+
+    if(jumpNow && !_jumpPressedLastFrame && isOnGround()) {
+        jump();
+        if (spriteData.getAnimation() != static_cast<size_t>(State::JUMPING)) {
+            spriteData.setAnimation(static_cast<size_t>(State::JUMPING));
+        }
+    }
+
+    _jumpPressedLastFrame = jumpNow;
 }
 
 void Player::handleLShift(bool shiftPressed, engine::SpriteData& spriteData) {

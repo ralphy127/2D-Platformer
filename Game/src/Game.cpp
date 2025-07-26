@@ -66,8 +66,11 @@ void Game::update() {
     auto deltaTime = _clock.getDeltaTime();
 
     for (auto& entity : _entities) {
-        if (auto* updatable = dynamic_cast<engine::IUpdatable*>(entity.get())) {
-            updatable->update(deltaTime);
+        if (auto* dynamicEntity = dynamic_cast<engine::DynamicEntity*>(entity.get())) {
+            dynamicEntity->update(deltaTime);
+            _physicsHandler.applyGravity(*dynamicEntity, deltaTime);
+            _physicsHandler.handleMapCollisions(*dynamicEntity, _levels[_currentLevel].getMapView(), deltaTime);
+            dynamicEntity->applyMovement(deltaTime);
         }
     }
 }
@@ -77,8 +80,7 @@ void Game::render() {
 
     auto& renderer = _renderManager.getRenderer();
 
-    for (const auto& level : _levels)
-        level.render(renderer, _camera);
+    _levels[0].render(renderer, _camera);
 
     for (const auto& entity : _entities) {
         if (auto* renderable = dynamic_cast<engine::IRenderable*>(entity.get())) {

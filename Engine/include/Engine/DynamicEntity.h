@@ -14,6 +14,7 @@ public:
         float health;        ///< Current health points.
         float defaultSpeed;  ///< Default movement speed.
         float sprintSpeed;   ///< Speed used when sprinting.
+        float defaultJumpVy;
     };
 
     /// @brief Constructs a DynamicEntity using provided settings and config.
@@ -22,6 +23,8 @@ public:
     /// @brief Updates the entity logic every frame.
     /// @param deltaTime Time elapsed since last update.
     void update(float deltaTime) override;
+
+    void applyMovement(float deltaTime);
 
     /// @brief Gets current velocity vector.
     utils::f2v getVel() const { return _vel; }
@@ -86,11 +89,14 @@ protected:
     /// @brief Stops horizontal movement.
     void stop() { _vel.x = 0.f; }
 
+    void jump();
+
 private:
     float _health{};           ///< Current health.
     float _maxHealth;          ///< Maximum health.
     float _defaultSpeed;       ///< Normal movement speed.
     float _sprintSpeed;        ///< Sprint movement speed.
+    float _defaultJumpVy;
     utils::f2v _vel{0.f, 0.f}; ///< Current velocity vector.
     bool _onGround{false};     ///< True if entity is on ground
 };
