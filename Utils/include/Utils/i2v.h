@@ -22,7 +22,8 @@ struct i2v {
         if (other.x == 0 || other.y == 0) throw std::runtime_error("Division by zero");
         return i2v(x / other.x, y / other.y); }
 
-    i2v operator*(float scalar) const { return i2v(static_cast<int>(x * scalar), static_cast<int>(y * scalar)); }
+    i2v operator*(float scalar) const {
+        return i2v(static_cast<int>(x * scalar), static_cast<int>(y * scalar)); }
     i2v operator/(float scalar) const {
         if (scalar == 0.f) throw std::runtime_error("Division by zero");
         return i2v(static_cast<int>(x / scalar), static_cast<int>(y / scalar)); }
@@ -45,7 +46,8 @@ struct i2v {
     bool operator!=(const i2v& other) const { return x != other.x || y != other.y; }
     bool operator!=(i2v&& other) const { return x != other.x || y != other.y; }
 
-    friend std::ostream& operator<<(std::ostream& os, const i2v& v) { return os << "i2v(" << v.x << ", " << v.y << ")"; }
+    friend std::ostream& operator<<(std::ostream& os, const i2v& v) {
+        return os << "[" << v.x << ", " << v.y << "]"; }
 };
 
 }

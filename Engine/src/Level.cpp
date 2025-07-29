@@ -2,12 +2,22 @@
 
 namespace engine {
 
-Level::Level(IMapTextures& mapTextures, const ITileClassifier& tileClassifier, Settings& settings, size_t level) 
+Level::Level(
+    IMapTextures& mapTextures,
+    const ITileClassifier& tileClassifier,
+    Settings& settings,
+    size_t level) 
     : _level(level) {
+        
     try {
         const size_t layers = 1;
         _layers.resize(layers);
-        _layers[0] = std::make_unique<TileLayer>(mapTextures, tileClassifier, settings, TileLayer::Type::MAP, level);
+        _layers[0] = std::make_unique<TileLayer>(
+                         mapTextures,
+                         tileClassifier,
+                         settings,
+                         TileLayer::Type::MAP,
+                         level);
 
         SDL_LogDebug(utils::LOG_CATEGORY_SETUP, "Level %zu created", _level);
     }

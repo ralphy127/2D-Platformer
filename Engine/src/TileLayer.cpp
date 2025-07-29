@@ -5,7 +5,12 @@
 
 namespace engine {
 
-TileLayer::TileLayer(IMapTextures& mapTextures, const ITileClassifier& tileClassifier, Settings& settings, Type type, size_t level) 
+TileLayer::TileLayer(
+    IMapTextures& mapTextures,
+    const ITileClassifier& tileClassifier,
+    Settings& settings,
+    Type type,
+    size_t level) 
     : _mapTextures(mapTextures),
       _tileClassifier(tileClassifier),
       _settings(settings),
@@ -68,8 +73,8 @@ std::string TileLayer::getCSVPath() const {
     }
 
     return std::string("assets/levels/level_") + 
-                      (_level < 10 ? "0" : "") + (_level < 100 ? "0" : "") + std::to_string(_level) + "/" 
-                      + fileName + ".csv";
+                      (_level < 10 ? "0" : "") + (_level < 100 ? "0" : "") 
+                      + std::to_string(_level) + "/" + fileName + ".csv";
 }
 
 void TileLayer::loadFromCSV(const std::string& path) {

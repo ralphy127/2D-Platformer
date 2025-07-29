@@ -29,7 +29,10 @@ public:
     /// @param pos Position of the clipping rectangle (x, y)
     /// @param size Size of the clipping rectangle (width, height)
     /// @return Unique pointer to the clipped texture
-    static utils::SDLUtils::TexturePtr loadClippedFromFile(SDL_Renderer&, const std::string& fileName, const utils::i2v& pos, const utils::i2v& size);
+    static utils::SDLUtils::TexturePtr loadClippedFromFile(SDL_Renderer&,
+        const std::string& fileName,
+        const utils::i2v& pos,
+        const utils::i2v& size);
 
     /// @brief Load a sequence of textures matching a filename pattern
     /// @param renderer SDL renderer used to create textures
@@ -37,7 +40,11 @@ public:
     /// @param count Number of textures to load
     /// @param extension File extension, default is ".png"
     /// @return Vector of unique pointers to loaded textures
-    static std::vector<utils::SDLUtils::TexturePtr> loadSequenceFromPattern(SDL_Renderer&, const std::string& pattern, const size_t count, std::string extension = ".png");
+    static std::vector<utils::SDLUtils::TexturePtr> loadSequenceFromPattern(
+        SDL_Renderer&,
+        const std::string& pattern,
+        const size_t count,
+        std::string extension = ".png");
 };
 
 }

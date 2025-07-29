@@ -11,7 +11,7 @@ class SpriteData {
 public:
     using ClockType = std::chrono::steady_clock;
 
-    /// @brief Alias for a vector containing pairs of (frame count, duration per frame) per animation.
+    /// @brief Vector containing pairs of (frame count, duration per frame) per animation.
     using AnimationsInfo = std::vector<std::pair<size_t, ClockType::duration>>;
     
     /// @brief Default constructor creates empty SpriteData with no animations.
@@ -60,7 +60,7 @@ public:
     void resetAnimation();
 
 private:
-    /// @brief Updates cached info like frames count and target frame duration based on the current animation.
+    /// @brief Updates information about frames count and target frame duration.
     void fetchAnimationsInfo();
 
     /// @brief Stores pairs of (frames count, frame duration) for each animation.
@@ -68,8 +68,8 @@ private:
 
     size_t _currentAnimation{};                 ///< Current animation index.
     size_t _currentFrame{};                     ///< Current frame index within the animation.
-    size_t _framesInCurrentAnimation{};         ///< Cached number of frames in the current animation.
-    ClockType::duration _targetFrameDuration{}; ///< Duration to display each frame in the current animation.
+    size_t _framesInCurrentAnimation{};         ///< Number of frames in the current animation.
+    ClockType::duration _targetFrameDuration{}; ///< Duration to display each frame.
     ClockType::time_point _lastFrameTime{};     ///< Time point of last frame update.
 };
 

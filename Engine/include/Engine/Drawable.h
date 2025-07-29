@@ -31,6 +31,8 @@ public:
     /// @param direction New direction value.
     void setDirection(int direction) { _direction = direction; }
 
+    void turn() { _direction *= -1; }
+
 protected:
     /// @brief Gets the texture size.
     /// @return Texture size as a vector.

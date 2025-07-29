@@ -1,5 +1,9 @@
 #pragma once
 
+#include <string>
+#include <unordered_map>
+#include <chrono>
+#include <functional>
 #include <SDL.h>
 
 namespace utils {
@@ -21,5 +25,20 @@ enum {
  * @param message     The log message string.
  */
 void consoleSDLLogger(void* userData, int category, SDL_LogPriority, const char* message);
+
+class Logger {
+public:
+    using ClockType = std::chrono::steady_clock;
+
+    static void logDebugEvery(
+        const std::string& key,
+        ClockType::duration interval,
+        const std::function<std::string()>& messageFunc);
+
+    static bool shouldLog(const std::string& key, ClockType::duration interval);
+
+private:
+    static inline std::unordered_map<std::string, ClockType::time_point> _lastLogTimes{};
+};
 
 }

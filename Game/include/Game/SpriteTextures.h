@@ -53,7 +53,8 @@ private:
 
     SDL_Renderer& _renderer; ///< Renderer used for texture creation.
 
-    std::unordered_map<EntityType, std::vector<std::vector<utils::SDLUtils::TexturePtr>>> _cache{}; /// <Cache mapping entity types to their animations and frames textures.
+    /// @brief Cache mapping entity types to their animations and frames textures.
+    std::unordered_map<EntityType, std::vector<std::vector<utils::SDLUtils::TexturePtr>>> _cache{};
 
     /// @brief Metadata definitions for each sprite sheet.
     std::unordered_map<EntityType, TextureDefinition> _spriteDefinitions{};

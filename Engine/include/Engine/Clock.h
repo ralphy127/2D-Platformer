@@ -46,8 +46,8 @@ private:
 
     float _deltaTime{};                           ///< Time elapsed between frames in seconds.
     ClockType::time_point _lastFrameTime{ClockType::now()}; ///< Timestamp of last frame.
-    float _targetFps{};                           ///< Target frames per second (read from settings).
-    ClockType::duration _targetFrameDuration{};  ///< Target duration of a single frame.
+    float _targetFps{};                           ///< Target frames per second.
+    ClockType::duration _targetFrameDuration{};   ///< Target duration of a single frame.
     float _actualFps{};                           ///< Calculated actual FPS.
     ClockType::time_point _now{ClockType::now()}; ///< timestamp of current frame
 };

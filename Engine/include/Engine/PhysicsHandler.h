@@ -24,13 +24,18 @@ public:
     PhysicsHandler(PhysicsHandler&&) = delete;
     PhysicsHandler& operator=(PhysicsHandler&&) = delete;
 
-    bool AABBcast(const SDL_Rect& source, const SDL_Rect& target, const utils::f2v& velocity, collisionHit& outhit, float deltaTime) const;
+    bool AABBcast(
+        const SDL_Rect& source,
+        const SDL_Rect& target,
+        const utils::f2v& velocity,
+        collisionHit& outhit,
+        float deltaTime) const;
 
     void applyGravity(DynamicEntity&, float deltaTime) const;
 
     void setGAcceleration(float g) { _gAcceleration = g; }
 
-    void handleMapCollisions(DynamicEntity& entity, const TileLayer::Grid& map, float deltaTime) const;
+    void handleMapCollisions(DynamicEntity&, const TileLayer::Grid&, float deltaTime) const;
 
     void setFallGMultiplier(float fallGMultiplier) { _fallGMultiplier = fallGMultiplier; }
 

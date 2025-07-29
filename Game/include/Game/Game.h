@@ -54,7 +54,7 @@ private:
     engine::EventHandler _eventHandler{};       ///< Handles SDL events.
     engine::PhysicsHandler _physicsHandler;     ///< Manages physics calculations.
     engine::Clock _clock;                       ///< Manages frame timing and delta time.
-    engine::RenderManager _renderManager;       ///< Responsible for clearing and presenting the renderer.
+    engine::RenderManager _renderManager;       ///< Clears and presents the renderer.
     engine::Camera _camera;                     ///< Controls the view into the game world.
     MapTextures _mapTextures;                   ///< Manages map-related textures.
     TileClassifier _tileClassifier{};           ///< Classifies tiles (e.g., collision types).

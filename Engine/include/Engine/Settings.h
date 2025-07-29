@@ -8,7 +8,7 @@
 
 namespace engine {
 
-/// @brief Manages global game configuration settings and notifies registered observers on any changes.
+/// @brief Manages game configuration settings and notifies registered observers on any changes.
 class Settings {
 public:
     /// @brief Configuration struct used for initializing Settings.
@@ -78,7 +78,8 @@ public:
 
     /// @brief Enables or disables texture hitbox rendering.
     /// @param showTextureHitboxes Whether to show texture hitboxes.
-    void setTextureHitboxes(bool showTextureHitboxes) { _showTextureHitboxes = showTextureHitboxes; notifyObservers(); }
+    void setTextureHitboxes(bool showTextureHitboxes) {
+        _showTextureHitboxes = showTextureHitboxes; notifyObservers(); }
 
     /// @brief Gets the logical window size.
     /// @return Current window resolution.
@@ -112,8 +113,9 @@ private:
     bool _showHitboxes{true};                      ///< Whether to render debug hitboxes.
     bool _showTextureHitboxes{true};               ///< Whether to render debug texture hitboxes.
 
+    /// @brief Window position on screen.
+    utils::i2v _windowPos{SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED};
     utils::i2v _windowSize{720, 460};              ///< Logical window resolution.
-    utils::i2v _windowPos{SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED}; ///< Window position on screen.
     size_t _tileSize{0UL};                         ///< Size of one tile in pixels.
 };
 

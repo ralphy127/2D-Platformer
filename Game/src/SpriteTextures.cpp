@@ -13,7 +13,11 @@ SpriteTextures::SpriteTextures(SDL_Renderer& renderer)
     SDL_LogDebug(utils::LOG_CATEGORY_SETUP, "Sprite textures created");
 }
 
-SDL_Texture& SpriteTextures::getTexture(engine::Entity::Type typeId, size_t animation, size_t frame) {
+SDL_Texture& SpriteTextures::getTexture(
+    engine::Entity::Type typeId,
+    size_t animation,
+    size_t frame) {
+
     const auto type = static_cast<EntityType>(typeId);
     const auto it = _cache.find(type);
     if (it == _cache.end())
@@ -34,8 +38,9 @@ SDL_Texture& SpriteTextures::getTexture(engine::Entity::Type typeId, size_t anim
 }
 
 void SpriteTextures::loadDefaultSprites() {
-    for (auto type : allSpriteTypes) 
+    for (auto type : allSpriteTypes) {
         loadSprite(type);
+    }
 }
 
 void SpriteTextures::loadSprite(EntityType type) {
@@ -74,6 +79,13 @@ void SpriteTextures::defineSprites() {
         utils::i2v(0, 0)
     };
     _spriteDefinitions[EntityType::PLAYER] = std::move(playerDef);
+
+    TextureDefinition commanderDef {
+        {6, 9, 8, 4, 5, 4, 2, 9, 3, 6},
+        utils::i2v(128, 128),
+        utils::i2v(0, 0)
+    };
+    _spriteDefinitions[EntityType::COMMANDER] = std::move(commanderDef);
 };
 
 }

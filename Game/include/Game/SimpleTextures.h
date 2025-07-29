@@ -37,7 +37,8 @@ private:
 
     SDL_Renderer& _renderer; ///< Renderer used for texture creation.
 
-    std::unordered_map<EntityType, utils::SDLUtils::TexturePtr> _cache{}; ///< Cache mapping entity types to their loaded textures.
+    /// @brief Cache mapping entity types to their loaded textures.
+    std::unordered_map<EntityType, utils::SDLUtils::TexturePtr> _cache{};
 };
 
 }

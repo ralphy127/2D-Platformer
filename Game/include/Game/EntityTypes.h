@@ -11,6 +11,7 @@ namespace game {
 enum class EntityType {
     // sprite
     PLAYER,
+    COMMANDER,
     // texture
 
     // helpers
@@ -25,7 +26,8 @@ const std::vector<EntityType> allSimpleTypes = {
 
 /// @brief List of all sprite-based entity types.
 const std::vector<EntityType> allSpriteTypes = {
-    EntityType::PLAYER    
+    EntityType::PLAYER,
+    EntityType::COMMANDER,
 };
 
 /// @brief Converts an EntityType enum to a lowercase string representation.
@@ -33,6 +35,8 @@ inline std::string toString(EntityType type) {
     switch (type) {
         case EntityType::PLAYER:
             return std::string("player");
+        case EntityType::COMMANDER:
+            return std::string("commander");
         default:
             return std::string("unknown");
     }

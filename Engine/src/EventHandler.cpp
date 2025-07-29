@@ -19,6 +19,11 @@ void EventHandler::pollEvents() {
     }
 }
 
+bool EventHandler::isKeyPressed(SDL_Keycode key) const {
+    const auto it = _keyStates.find(key);
+    return it != _keyStates.end() && it->second;
+}
+
 void EventHandler::resetKeyStates() {
     for (auto& [key, state] : _keyStates)
         state = false;

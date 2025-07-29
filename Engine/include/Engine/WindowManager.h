@@ -47,7 +47,8 @@ private:
     /// @brief Resets the SDL window with the specified parameters.
     void resetWindow(const std::string& title, int x, int y, int w, int h, Uint32 flags);
 
-    std::unique_ptr<SDL_Window, decltype(&SDL_DestroyWindow)> _window; ///< Managed SDL window pointer
+    /// @brief Managed SDL window pointer
+    std::unique_ptr<SDL_Window, decltype(&SDL_DestroyWindow)> _window;
 
     Settings& _settings;            ///< Reference to game settings
     bool _fullscreen;               ///< If true, the game runs in fullscreen mode.

@@ -36,7 +36,8 @@ public:
 private:
     SDL_Renderer& _renderer; ///< SDL renderer used for creating textures
 
-    std::array<std::vector<utils::SDLUtils::TexturePtr>, 2> _textures{}; ///< Container holding textures grouped by type
+    /// @brief Container holding textures grouped by type
+    std::array<std::vector<utils::SDLUtils::TexturePtr>, 2> _textures{};
 };
 
 }

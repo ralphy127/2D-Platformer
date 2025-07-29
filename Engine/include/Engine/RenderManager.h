@@ -28,13 +28,15 @@ public:
     SDL_Renderer& getRenderer() { return *_renderer; }
 
     /// @brief Clears the current rendering target with a fixed background color.
-    void clear() const { SDL_SetRenderDrawColor(_renderer.get(), 50, 200, 200, 255); SDL_RenderClear(_renderer.get()); }
+    void clear() const;
 
     /// @brief Presents the rendered content on the screen.
     void present() const { SDL_RenderPresent(_renderer.get()); }
 
 private:
-    std::unique_ptr<SDL_Renderer, decltype(&SDL_DestroyRenderer)> _renderer{nullptr, SDL_DestroyRenderer}; ///< Managed SDL renderer pointer
+    /// @brief Managed SDL renderer pointer
+    std::unique_ptr<SDL_Renderer, decltype(&SDL_DestroyRenderer)>
+        _renderer{nullptr, SDL_DestroyRenderer};
 };
 
 }

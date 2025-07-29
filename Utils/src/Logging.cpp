@@ -2,7 +2,6 @@
 
 #include <iostream>
 #include <sstream>
-#include <iomanip>
 #include <chrono>
 #include <ctime>
 #include <string>
@@ -85,14 +84,36 @@ void consoleSDLLogger(void* userData, int category, SDL_LogPriority priority, co
             break;
     }
 
-    const int CATEGORY_WIDTH = 12;
-    const int PRIORITY_WIDTH = 8;
+    const int categoryWidth = 12;
+    const int priotityWidth = 8;
 
     std::cout << "[" << timestamp.str() << "] "
-              << std::left << std::setw(CATEGORY_WIDTH) << "[" + categoryStr + "] "
-              << colorCode << std::left << std::setw(PRIORITY_WIDTH) << priorityStr << "\033[0m" << " : "
-              << message
+              << std::left << std::setw(categoryWidth) << "[" + categoryStr + "] "
+              << colorCode << std::left << std::setw(priotityWidth)
+              << priorityStr 
+              << "\033[0m" << " : " << message
               << std::endl;
+}
+
+void Logger::logDebugEvery(
+    const std::string& key,
+    ClockType::duration interval,
+    const std::function<std::string()>& messageFunc) {
+
+    if (!shouldLog(key, interval)) {
+        return;
+    }
+
+    SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION, "[%s] %s", key.c_str(), messageFunc().c_str());
+
+    _lastLogTimes[key] = ClockType::now();
+}
+
+bool Logger::shouldLog(const std::string& key, ClockType::duration interval) {
+    const auto now = ClockType::now();
+    const auto [it, inserted] = _lastLogTimes.try_emplace(key, now);
+
+    return inserted || now - it->second >= interval;
 }
 
 }

@@ -54,7 +54,8 @@ struct f2v {
     bool operator!=(const f2v& other) const { return x != other.x || y != other.y; }
     bool operator!=(f2v&& other) const { return x != other.x || y != other.y; }
 
-    friend std::ostream& operator<<(std::ostream& os, const f2v& v) { return os << "f2v(" << v.x << ", " << v.y << ")"; }
+    friend std::ostream& operator<<(std::ostream& os, const f2v& v) {
+        return os << "[" << v.x << ", " << v.y << "]"; }
 };
 
 }

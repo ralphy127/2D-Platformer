@@ -4,22 +4,39 @@
 
 namespace engine {
 
-utils::SDLUtils::TexturePtr TexturesManager::loadFromFile(SDL_Renderer& renderer, const std::string& fileName) {
+utils::SDLUtils::TexturePtr TexturesManager::loadFromFile(
+    SDL_Renderer& renderer,
+    const std::string& fileName) {
+        
     auto surface = utils::SDLUtils::makeSurface(IMG_Load(fileName.c_str()));
     if (!surface)
         throw std::runtime_error("Failed to create surface: " + std::string(IMG_GetError()));
 
-    auto texture = utils::SDLUtils::makeTexture(SDL_CreateTextureFromSurface(&renderer, surface.get()));
+    auto texture = utils::SDLUtils::makeTexture(
+        SDL_CreateTextureFromSurface(&renderer, surface.get()));
+
     if(!texture) 
         throw std::runtime_error("Failed to load texture: " + std::string(IMG_GetError()));
 
     return texture;
 }
 
-utils::SDLUtils::TexturePtr TexturesManager::loadClippedFromFile(SDL_Renderer& renderer, const std::string& fileName, const utils::i2v& pos, const utils::i2v& size) { 
+utils::SDLUtils::TexturePtr TexturesManager::loadClippedFromFile(
+    SDL_Renderer& renderer,
+    const std::string& fileName,
+    const utils::i2v& pos,
+    const utils::i2v& size) { 
+
     auto originalTexture = loadFromFile(renderer, fileName);
 
-    auto cutTexture = utils::SDLUtils::makeTexture(SDL_CreateTexture(&renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, size.x, size.y));
+    auto cutTexture = utils::SDLUtils::makeTexture(
+        SDL_CreateTexture(
+            &renderer,
+            SDL_PIXELFORMAT_RGBA8888,
+            SDL_TEXTUREACCESS_TARGET,
+            size.x,
+            size.y));
+
     if(!cutTexture)
         throw std::runtime_error("Failed to cut texture: " + std::string(IMG_GetError()));
 
@@ -37,7 +54,12 @@ utils::SDLUtils::TexturePtr TexturesManager::loadClippedFromFile(SDL_Renderer& r
     return cutTexture;
 }
 
-std::vector<utils::SDLUtils::TexturePtr> TexturesManager::loadSequenceFromPattern(SDL_Renderer& renderer, const std::string& pattern, const size_t count, std::string extension) {
+std::vector<utils::SDLUtils::TexturePtr> TexturesManager::loadSequenceFromPattern(
+    SDL_Renderer& renderer,
+    const std::string& pattern,
+    const size_t count,
+    std::string extension) {
+
     std::vector<utils::SDLUtils::TexturePtr> textures;
     textures.reserve(count);
 

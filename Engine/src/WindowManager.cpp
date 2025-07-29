@@ -21,7 +21,13 @@ WindowManager::WindowManager(Settings& settings)
 
     auto windowPos = _settings.getWindowPos();
 
-    resetWindow(_settings.getTitle(), windowPos.x, windowPos.y, _windowSize.x, _windowSize.y, flags);
+    resetWindow(
+        _settings.getTitle(),
+        windowPos.x,
+        windowPos.y,
+        _windowSize.x,
+        _windowSize.y,
+        flags);
 
     _settings.registerObserver(*this);
 
@@ -52,26 +58,47 @@ void WindowManager::onSettingsChanged() {
         initFullScreenWindowDimensions();
         _settings.setWindowSize(_windowSize);
         auto windowPos = _settings.getWindowPos();
-        resetWindow(_settings.getTitle(), windowPos.x, windowPos.y, _windowSize.x, _windowSize.y, SDL_WINDOW_FULLSCREEN_DESKTOP);
+        resetWindow(
+            _settings.getTitle(),
+            windowPos.x,
+            windowPos.y,
+            _windowSize.x,
+            _windowSize.y,
+            SDL_WINDOW_FULLSCREEN_DESKTOP);
     }
     else if(oldWindowSize != _windowSize) {
         auto windowPos = _settings.getWindowPos();
-        resetWindow(_settings.getTitle(), windowPos.x, windowPos.y, _windowSize.x, _windowSize.y, 0);
+        resetWindow(
+            _settings.getTitle(),
+            windowPos.x,
+            windowPos.y,
+            _windowSize.x,
+            _windowSize.y,
+            0);
     }
 }
 
 void WindowManager::initFullScreenWindowDimensions() {
     SDL_DisplayMode displayMode;
     if(SDL_GetCurrentDisplayMode(0, &displayMode)) 
-        throw std::runtime_error(std::string("Failed to initialize window dimensions: ") + std::string(SDL_GetError()));
+        throw std::runtime_error(std::string("Failed to initialize window dimensions: ")
+                                 + SDL_GetError());
     
     if(displayMode.w <= 0 || displayMode.h <= 0)
-        throw std::runtime_error(std::string("Failed to initialize window dimensions: ") + std::string(SDL_GetError()));
+        throw std::runtime_error(std::string("Failed to initialize window dimensions: ")
+                                 + SDL_GetError());
 
     _windowSize = utils::i2v(displayMode.w, displayMode.h);
 }
 
-void WindowManager::resetWindow(const std::string& title, int x, int y, int w, int h, Uint32 flags) {
+void WindowManager::resetWindow(
+    const std::string& title,
+    int x,
+    int y,
+    int w,
+    int h,
+    Uint32 flags) {
+
     _window.reset(SDL_CreateWindow(title.c_str(), x, y, w, h, flags));
 
     if(!_window)

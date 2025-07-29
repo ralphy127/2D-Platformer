@@ -9,9 +9,6 @@ namespace game {
 /// @brief Represents the player character in the game.
 class Player : public engine::DynamicSpriteEntity {
 public:
-    using DynamicSpriteEntity::update;
-    using Base = engine::DynamicSpriteEntity;
-
     /// @brief Constructs a Player instance.
     /// @param settings Reference to global game settings.
     /// @param spriteTextures Reference to sprite texture provider.
@@ -25,7 +22,9 @@ public:
     /// @brief Renders the player sprite to the screen.
     /// @param renderer SDL renderer.
     /// @param camera Camera for converting world to screen coordinates.
-    void render(SDL_Renderer& renderer, engine::Camera& camera) const override;
+    void render(SDL_Renderer&, engine::Camera&) const override;
+
+    void logDebugState();
 
 private:
     /// @brief Defines various player states controlling animations and behavior.
@@ -45,7 +44,9 @@ private:
     /// @brief Initializes and returns the configuration struct for the base DynamicSpriteEntity.
     /// @param settings Reference to global game settings.
     /// @return Config object with player-specific settings.
-    Base::Config initAndGetConfig(engine::Settings&) const;
+    engine::DynamicSpriteEntity::Config initAndGetConfig(const engine::Settings&) const;
+
+    void createAndAddAttacks();
 
     /// @brief Handles player movement and updates velocity and state accordingly.
     /// @param deltaTime Time elapsed since last frame.
@@ -55,7 +56,13 @@ private:
     /// @param shiftPressed Whether the shift key is currently pressed.
     /// @param spriteData Reference to the sprite animation data to update.
     void handleLShift(bool shiftPressed, engine::SpriteData& spriteData);
+    
+    void tryToChangeAnimation(State, engine::SpriteData&);
 
+    void handleAttacks();
+
+    std::string stateToString(size_t animation);
+    
     const engine::EventHandler& _eventHandler; ///< Reference to input event handler.
 
     bool _jumpPressedLastFrame{false};

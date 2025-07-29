@@ -72,13 +72,15 @@ protected:
     bool isHealthy() const { return _health > _maxHealth / 3 * 2; }
 
     /// @brief Clamps health to be within [0, maxHealth].
-    void capHealthIfNeeded(float health) { health > _maxHealth ? _health = _maxHealth : _health = health; }
+    void capHealthIfNeeded(float health) {
+        health > _maxHealth ? _health = _maxHealth : _health = health; }
 
     /// @brief Gets default movement speed.
     float getDefaultSpeed() const { return _defaultSpeed; }
 
     /// @brief Sets default movement speed (must be > 0).
-    void setDefaultSpeed(float defaultSpeed) { if (defaultSpeed > 0.f) _defaultSpeed = defaultSpeed; }
+    void setDefaultSpeed(float defaultSpeed) {
+        if (defaultSpeed > 0.f) _defaultSpeed = defaultSpeed; }
 
     /// @brief Moves the entity based on direction and default speed.
     void move() { _vel.x = getDirection() * _defaultSpeed; }
@@ -90,6 +92,11 @@ protected:
     void stop() { _vel.x = 0.f; }
 
     void jump();
+
+    /// @brief Renders the entity's main hitbox (red rectangle).
+    void renderEntityHitbox(SDL_Renderer&, Camera&) const;
+
+    void renderTextureHitbox(SDL_Renderer&, Camera&, const SDL_Rect& textureRect) const;
 
 private:
     float _health{};           ///< Current health.

@@ -1,5 +1,7 @@
 #include "Game/Game.h"
 
+#include <Game/Commander.h>
+
 namespace game {
 
 Game::Game()
@@ -28,6 +30,8 @@ Game::Game()
 
     auto player = std::make_unique<Player>(_settings, _spriteTextures, _eventHandler);
     _entities.push_back(std::move(player));
+
+    _entities.push_back(std::make_unique<Commander>(_settings, _spriteTextures));
 
     SDL_LogDebug(utils::LOG_CATEGORY_SETUP, "Game created");
 }
@@ -65,13 +69,23 @@ void Game::update() {
     _clock.tickAndWait();
     auto deltaTime = _clock.getDeltaTime();
 
-    for (auto& entity : _entities) {
-        if (auto* dynamicEntity = dynamic_cast<engine::DynamicEntity*>(entity.get())) {
-            dynamicEntity->update(deltaTime);
-            _physicsHandler.applyGravity(*dynamicEntity, deltaTime);
-            _physicsHandler.handleMapCollisions(*dynamicEntity, _levels[_currentLevel].getMapView(), deltaTime);
-            dynamicEntity->applyMovement(deltaTime);
+    try {
+        for (auto& entity : _entities) {
+            if (auto* dynamicEntity = dynamic_cast<engine::DynamicEntity*>(entity.get())) {
+                dynamicEntity->update(deltaTime);
+                _physicsHandler.applyGravity(*dynamicEntity, deltaTime);
+                _physicsHandler.handleMapCollisions(*dynamicEntity,
+                    _levels[_currentLevel].getMapView(),
+                    deltaTime);
+                dynamicEntity->applyMovement(deltaTime);
+
+                if (auto* player = dynamic_cast<game::Player*>(dynamicEntity))
+                    player->logDebugState();
+            }
         }
+    }
+    catch (const std::exception& e) {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Game updating error: %s", e.what());
     }
 }
 
@@ -80,12 +94,17 @@ void Game::render() {
 
     auto& renderer = _renderManager.getRenderer();
 
-    _levels[0].render(renderer, _camera);
+    try {
+        _levels[0].render(renderer, _camera);
 
-    for (const auto& entity : _entities) {
-        if (auto* renderable = dynamic_cast<engine::IRenderable*>(entity.get())) {
-            renderable->render(renderer, _camera);
+        for (const auto& entity : _entities) {
+            if (auto* renderable = dynamic_cast<engine::IRenderable*>(entity.get())) {
+                renderable->render(renderer, _camera);
+            }
         }
+    }
+    catch (const std::exception& e) {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Game renderign error: %s", e.what());
     }
 
     _renderManager.present();
