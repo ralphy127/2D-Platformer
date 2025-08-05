@@ -18,6 +18,7 @@ Level::Level(
                          settings,
                          TileLayer::Type::MAP,
                          level);
+        
 
         SDL_LogDebug(utils::LOG_CATEGORY_SETUP, "Level %zu created", _level);
     }

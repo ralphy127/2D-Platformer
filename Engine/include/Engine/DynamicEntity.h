@@ -72,8 +72,7 @@ protected:
     bool isHealthy() const { return _health > _maxHealth / 3 * 2; }
 
     /// @brief Clamps health to be within [0, maxHealth].
-    void capHealthIfNeeded(float health) {
-        health > _maxHealth ? _health = _maxHealth : _health = health; }
+    void capHealthIfNeeded(float health);
 
     /// @brief Gets default movement speed.
     float getDefaultSpeed() const { return _defaultSpeed; }

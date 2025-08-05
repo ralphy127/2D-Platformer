@@ -78,124 +78,143 @@ void PhysicsHandler::applyGravity(DynamicEntity& entity, float deltaTime) const 
 void PhysicsHandler::handleMapCollisions(
     DynamicEntity& entity,
     const TileLayer::Grid& map,
-    float deltaTime) const {
-
+    float deltaTime) const 
+{
     auto velocity = entity.getVel();
-    auto hitBox = entity.getHitBox();
-    
-    const bool wasOnGround = entity.isOnGround();
-    bool landed = false;
+    auto hitbox = entity.getHitbox();
+    auto landed = false;
 
-    const int mapHeight = static_cast<int>(map.size());
+    checkHorizontalCollision(map, deltaTime, velocity, hitbox);
+    checkVerticalCollision(map, deltaTime, velocity, hitbox, landed);
+    checkIfStillOnGround(entity, map, deltaTime, hitbox, velocity);
 
-    // Check horizontal collision
-    if (velocity.x != 0.f) {
-        SDL_Rect futureHitBox = hitBox;
-        futureHitBox.x += static_cast<int>(std::round(velocity.x * deltaTime));
-
-        const int topTileY = futureHitBox.y / _tileSize;
-        const int bottomTileY = (futureHitBox.y + futureHitBox.h - 1) / _tileSize;
-
-        bool horizontalCollision = false;
-        for (int tileY = topTileY; tileY <= bottomTileY && tileY < mapHeight && tileY >= 0; ++tileY) {
-            int mapWidth = static_cast<int>(map[tileY].size());
-
-            const int leftTileX = futureHitBox.x / _tileSize;
-            const int rightTileX = (futureHitBox.x + futureHitBox.w - 1) / _tileSize;
-
-            for (int tileX = leftTileX; tileX <= rightTileX && tileX < mapWidth && tileX >= 0; ++tileX) {
-                if (map[tileY][tileX] == -1) continue;
-
-                const SDL_Rect tileRect{
-                    static_cast<int>(tileX * _tileSize),
-                    static_cast<int>(tileY * _tileSize),
-                    static_cast<int>(_tileSize),
-                    static_cast<int>(_tileSize)
-                };
-
-                if (SDL_HasIntersection(&futureHitBox, &tileRect)) {
-                    velocity.x = 0.f;
-                    horizontalCollision = true;
-                    break;
-                }
-            }
-
-            if (horizontalCollision) break;
-        }
-    }
-
-    // Check vertical collision
-    if (velocity.y != 0.f) {
-        SDL_Rect futureHitBox = hitBox;
-        futureHitBox.y += static_cast<int>(std::round(velocity.y * deltaTime));
-
-        const int topTileY = futureHitBox.y / _tileSize;
-        const int bottomTileY = (futureHitBox.y + futureHitBox.h - 1) / _tileSize;
-
-        bool verticalCollision = false;
-        for (int tileY = topTileY; tileY <= bottomTileY && tileY < mapHeight && tileY >= 0; ++tileY) {
-            const int mapWidth = static_cast<int>(map[tileY].size());
-
-            const int leftTileX = futureHitBox.x / _tileSize;
-            const int rightTileX = (futureHitBox.x + futureHitBox.w - 1) / _tileSize;
-
-            for (int tileX = leftTileX; tileX <= rightTileX && tileX < mapWidth && tileX >= 0; ++tileX) {
-                if (map[tileY][tileX] == -1) continue;
-
-                const SDL_Rect tileRect{
-                    static_cast<int>(tileX * _tileSize),
-                    static_cast<int>(tileY * _tileSize),
-                    static_cast<int>(_tileSize),
-                    static_cast<int>(_tileSize)
-                };
-
-                if (SDL_HasIntersection(&futureHitBox, &tileRect)) {
-                    if (velocity.y > 0) {
-                        landed = true;
-                    }
-                    velocity.y = 0.f;
-                    verticalCollision = true;
-                    break;
-                }
-            }
-
-            if (verticalCollision) break;
-        }
-    }
-
-    // Check if entity should stay on ground  
-    if (wasOnGround && velocity.y >= 0) {
-        auto futureHitBox = hitBox;
-        futureHitBox.y += static_cast<int>(std::round(velocity.y * deltaTime));
-        
-        const int footY = futureHitBox.y + futureHitBox.h;
-        const int tileYBelow = footY / _tileSize;
-
-        bool hasGroundBelow = false;
-        for (int corner = 0; corner < 2; ++corner) {
-            const int cornerX = (corner == 0) ? futureHitBox.x : (futureHitBox.x + futureHitBox.w - 1);
-            const int tileX = cornerX / _tileSize;
-
-            if (tileYBelow >= 0 && tileYBelow < mapHeight &&
-                tileX >= 0 && tileX < static_cast<int>(map[tileYBelow].size()) &&
-                map[tileYBelow][tileX] != -1) {
-                hasGroundBelow = true;
-                break;
-            }
-        }
-
-        if (!hasGroundBelow) {
-            entity.setOnGround(false);
-        }
-    }
-
-    if (landed) {
+    if (landed)
         entity.setOnGround(true);
-    }
 
     entity.setVel(velocity);
 }
 
+
+void PhysicsHandler::checkHorizontalCollision(
+    const TileLayer::Grid& map,
+    float deltaTime,
+    utils::f2v& velocity,
+    const SDL_Rect& hitbox) const
+{
+    if (velocity.x == 0.f)
+        return;
+
+    auto futureHitbox = hitbox;
+    futureHitbox.x += static_cast<int>(std::round(velocity.x * deltaTime));
+
+    const int topTileY = futureHitbox.y / _tileSize;
+    const int bottomTileY = (futureHitbox.y + futureHitbox.h - 1) / _tileSize;
+    const int mapHeight = static_cast<int>(map.size());
+
+    for (int tileY = topTileY; tileY <= bottomTileY && tileY < mapHeight && tileY >= 0; ++tileY) {
+        int mapWidth = static_cast<int>(map[tileY].size());
+
+        const int leftTileX = futureHitbox.x / _tileSize;
+        const int rightTileX = (futureHitbox.x + futureHitbox.w - 1) / _tileSize;
+
+        for (int tileX = leftTileX;
+             tileX <= rightTileX && tileX < mapWidth && tileX >= 0; 
+             ++tileX) {
+                
+            if (map[tileY][tileX] == -1) continue;
+
+            SDL_Rect tileRect{
+                static_cast<int>(tileX * _tileSize),
+                static_cast<int>(tileY * _tileSize),
+                static_cast<int>(_tileSize),
+                static_cast<int>(_tileSize)
+            };
+
+            if (SDL_HasIntersection(&futureHitbox, &tileRect)) {
+                velocity.x = 0.f;
+                return;
+            }
+        }
+    }
+}
+
+void PhysicsHandler::checkVerticalCollision(
+    const TileLayer::Grid& map,
+    float deltaTime,
+    utils::f2v& velocity,
+    const SDL_Rect& hitbox,
+    bool& landed) const
+{
+    if (velocity.y == 0.f)
+        return;
+
+    auto futureHitbox = hitbox;
+    futureHitbox.y += static_cast<int>(std::round(velocity.y * deltaTime));
+
+    const int topTileY = futureHitbox.y / _tileSize;
+    const int bottomTileY = (futureHitbox.y + futureHitbox.h - 1) / _tileSize;
+    const int mapHeight = static_cast<int>(map.size());
+
+    for (int tileY = topTileY; tileY <= bottomTileY && tileY < mapHeight && tileY >= 0; ++tileY) {
+        const int mapWidth = static_cast<int>(map[tileY].size());
+
+        const int leftTileX = futureHitbox.x / _tileSize;
+        const int rightTileX = (futureHitbox.x + futureHitbox.w - 1) / _tileSize;
+
+        for (int tileX = leftTileX;
+             tileX <= rightTileX && tileX < mapWidth && tileX >= 0;
+             ++tileX) {
+
+            if (map[tileY][tileX] == -1) continue;
+
+            SDL_Rect tileRect{
+                static_cast<int>(tileX * _tileSize),
+                static_cast<int>(tileY * _tileSize),
+                static_cast<int>(_tileSize),
+                static_cast<int>(_tileSize)
+            };
+
+            if (SDL_HasIntersection(&futureHitbox, &tileRect)) {
+                if (velocity.y > 0.f) {
+                    landed = true;
+                }
+                velocity.y = 0.f;
+                return;
+            }
+        }
+    }
+}
+
+void PhysicsHandler::checkIfStillOnGround(
+    DynamicEntity& entity,
+    const TileLayer::Grid& map,
+    float deltaTime,
+    const SDL_Rect& hitbox,
+    const utils::f2v& velocity) const
+{
+    if (velocity.y < 0.f)
+        return;
+
+    auto futureHitbox = hitbox;
+    futureHitbox.y += static_cast<int>(std::round(velocity.y * deltaTime));
+
+    const int footY = futureHitbox.y + futureHitbox.h;
+    const int tileYBelow = footY / _tileSize;
+    const int mapHeight = static_cast<int>(map.size());
+
+    for (int corner = 0; corner < 2; ++corner) {
+        const int cornerX = (corner == 0) ? futureHitbox.x : (futureHitbox.x + futureHitbox.w - 1);
+        const int tileX = cornerX / _tileSize;
+
+        if (tileYBelow >= 0 && tileYBelow < mapHeight &&
+            tileX >= 0 && tileX < static_cast<int>(map[tileYBelow].size()) &&
+            map[tileYBelow][tileX] != -1) {
+            return;
+        }
+    }
+
+    entity.setOnGround(false);
+}
 
 void PhysicsHandler::onSettingsChanged() {
     const auto oldTileSize = _tileSize;

@@ -33,7 +33,7 @@ public:
     static void logDebugEvery(
         const std::string& key,
         ClockType::duration interval,
-        const std::function<std::string()>& messageFunc);
+        const std::string& message);
 
     static bool shouldLog(const std::string& key, ClockType::duration interval);
 

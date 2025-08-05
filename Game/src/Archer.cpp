@@ -1,23 +1,23 @@
-#include <Game/Commander.h>
+#include <Game/Archer.h>
 
 #include <Game/EntityTypes.h>
 
 namespace game {
 
-Commander::Commander(engine::Settings& settings, engine::ISpriteTextures& textures)
+Archer::Archer(engine::Settings& settings, engine::ISpriteTextures& textures)
     : DynamicSpriteEntity(settings, textures, initAndGetConfig(settings)) {}
 
-void Commander::update(float deltaTime) {
+void Archer::update(float deltaTime) {
     const auto now = engine::Clock::getTime();
 
     if (now - _lastBehaviorChange > _interval) {
         if (_state == State::IDLE) {
-            turn();
-            move();
-            _state = State::WALKING;
+            sprint();
+            _state = State::RUNNING;
         }
-        else if (_state == State::WALKING) {
+        else if (_state == State::RUNNING) {
             stop();
+            turn();
             _state = State::IDLE;
         }
 
@@ -28,23 +28,23 @@ void Commander::update(float deltaTime) {
     DynamicSpriteEntity::update(deltaTime);
 }
 
-engine::DynamicSpriteEntity::Config Commander::initAndGetConfig(
+engine::DynamicSpriteEntity::Config Archer::initAndGetConfig(
     const engine::Settings& settings) const {
         
     const auto framesDuration = std::chrono::milliseconds(120);
 
     // number of frames / frame duration
     engine::SpriteData::AnimationsInfo animationsInfo = {
-        {5, framesDuration},
         {9, framesDuration},
         {8, framesDuration},
-        {4, framesDuration},
+        {8, framesDuration},
         {5, framesDuration},
-        {4, framesDuration},
-        {2, framesDuration},
-        {7, framesDuration},
-        {2, framesDuration},
-        {6, framesDuration}
+        {5, framesDuration},
+        {6, framesDuration},
+        {14, framesDuration},
+        {9, framesDuration},
+        {3, framesDuration},
+        {5, framesDuration}
     };
 
     engine::SpriteData spriteData{std::move(animationsInfo), static_cast<size_t>(_state)};
@@ -54,15 +54,15 @@ engine::DynamicSpriteEntity::Config Commander::initAndGetConfig(
 
     engine::DynamicSpriteEntity::Config config{};
 
-    config.size = {1.33f * 0.85f * tileSize, 1.33f * 1.8f * tileSize};
-    config.pos = {0.3f * windowSize.x, -30.f * tileSize - config.size.y};
-    config.type = static_cast<engine::Entity::Type>(EntityType::COMMANDER);
-    config.textureSize = {1.33f * 3.f * tileSize, 1.33f * 3.f * tileSize};
+    config.size = {1.1f * 0.85f * tileSize, 1.1f * 1.8f * tileSize};
+    config.pos = {0.4f * windowSize.x, -30.f * tileSize - config.size.y};
+    config.type = static_cast<engine::Entity::Type>(EntityType::ARCHER);
+    config.textureSize = {1.1f * 3.f * tileSize, 1.1f * 3.f * tileSize};
     config.direction = 1;
-    config.maxHealth = 100.f;
-    config.health = 100.f;
-    config.defaultSpeed = 0.9f * tileSize;
-    config.sprintSpeed = 5.5f * tileSize;
+    config.maxHealth = 60.f;
+    config.health = 60.f;
+    config.defaultSpeed = 2.f * tileSize;
+    config.sprintSpeed = 4.f * tileSize;
     config.defaultJumpVy = 5.f * tileSize;
     config.spriteData = std::move(spriteData);
 

@@ -12,10 +12,6 @@ namespace engine {
 class TexturesManager {
 public:
     TexturesManager() = delete;
-    TexturesManager(const TexturesManager&) = delete;
-    TexturesManager(TexturesManager&&) = delete;
-    TexturesManager& operator=(const TexturesManager&) = delete;
-    TexturesManager& operator=(TexturesManager&&) = delete;
 
     /// @brief Load a single texture from a file
     /// @param renderer SDL renderer used to create the texture

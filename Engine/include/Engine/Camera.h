@@ -15,15 +15,10 @@ public:
     /// @param pos Initial position of the camera in world coordinates.
     /// @param zoom Initial zoom factor.
     /// @param settings Reference to settings used for observing window size changes.
-    Camera(utils::i2v pos, float zoom, Settings&);
+    Camera(Settings&);
 
     /// @brief Destructor. Unregisters from settings observer.
     ~Camera();
-
-    Camera(const Camera&) = delete;
-    Camera& operator=(const Camera&) = delete;
-    Camera(Camera&&) = delete;
-    Camera& operator=(Camera&&) = delete;
     
     /// @brief Gets the current viewport rectangle of the camera.
     /// @return SDL_Rect representing the visible area in world space.
@@ -53,7 +48,7 @@ public:
 private:
     Settings& _settings;       ///< Reference to global settings.
 
-    utils::i2v _pos;           ///< Current top-left position of the camera in world space.
+    utils::i2v _pos{};         ///< Current top-left position of the camera in world space.
     utils::i2v _windowSize{};  ///< Size of the viewport window in pixels.
     float _zoom{};             ///< Zoom factor applied to camera projection.
 };

@@ -15,7 +15,7 @@ TileLayer::TileLayer(
       _tileClassifier(tileClassifier),
       _settings(settings),
       _type(type),
-      _level(level) {
+      _levelId(level) {
 
     _tileSize = _settings.getTileSize();
     auto path = getCSVPath();
@@ -58,23 +58,23 @@ const TileLayer::Grid& TileLayer::getGridView() const {
 
 std::string TileLayer::getCSVPath() const {
     std::string fileName;
-    switch(_type) {
+    switch (_type) {
+        case Type::FRONT_DECORATION:
+            fileName = "front_decoration";
+            break;
         case Type::MAP:
             fileName = "map";
             break;
-        case Type::INTERACTIVE:
-            fileName = "interactive";
-            break;
-        case Type::DECORATION:
-            fileName = "decoration";
+        case Type::BACK_DECORATION:
+            fileName = "back_decoration";
             break;
         default:
             throw std::runtime_error("failed to get csv path: wrong map type.");
     }
 
     return std::string("assets/levels/level_") + 
-                      (_level < 10 ? "0" : "") + (_level < 100 ? "0" : "") 
-                      + std::to_string(_level) + "/" + fileName + ".csv";
+                      (_levelId < 10 ? "0" : "") + (_levelId < 100 ? "0" : "") +
+                      std::to_string(_levelId) + "/" + fileName + ".csv";
 }
 
 void TileLayer::loadFromCSV(const std::string& path) {

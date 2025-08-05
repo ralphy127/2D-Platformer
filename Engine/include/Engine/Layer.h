@@ -6,9 +6,9 @@
 namespace engine {
 
 /// @brief Interface for renderable map layers.
-class Layer {
+class ILayer {
 public:
-    virtual ~Layer() = default;
+    virtual ~ILayer() = default;
 
     /// @brief Renders the layer.
     /// @param renderer SDL renderer used for drawing.

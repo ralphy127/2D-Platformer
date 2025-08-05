@@ -17,11 +17,6 @@ public:
 
     ~Level() { SDL_LogDebug(utils::LOG_CATEGORY_CLEANUP, "Level %zu destroyed", _level); }
 
-    Level(const Level&) = delete;
-    Level& operator=(const Level&) = delete;
-    Level(Level&&) = default;
-    Level& operator=(Level&&) = default;
-
     /// @brief Renders all layers of the level.
     /// @param renderer SDL renderer.
     /// @param camera Camera used to transform tile positions.
@@ -32,7 +27,7 @@ public:
 private:
     size_t _level; ///< id of the level
 
-    std::vector<std::unique_ptr<Layer>> _layers{}; ///< List of layers in the level.
+    std::vector<std::unique_ptr<ILayer>> _layers{}; ///< List of layers in the level.
 };
 
 }

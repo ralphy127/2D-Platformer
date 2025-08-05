@@ -6,12 +6,16 @@
 
 namespace utils {
 
+struct f2v;
+
 /// @brief Simple 2D integer vector with basic arithmetic operations and length calculation.
 struct i2v {
     int x = 0, y = 0;
 
     i2v() = default;
     i2v(int x, int y) : x(x), y(y) {}
+
+    f2v tof2v() const;
 
     float length() const { return std::sqrt(static_cast<float>(x * x + y * y)); }
 

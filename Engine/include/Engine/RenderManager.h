@@ -18,11 +18,6 @@ public:
 
     ~RenderManager() { SDL_LogDebug(utils::LOG_CATEGORY_CLEANUP, "Render manager destroyed"); }
 
-    RenderManager(const RenderManager&) = delete;
-    RenderManager& operator=(const RenderManager&) = delete;
-    RenderManager(RenderManager&&) = default;
-    RenderManager& operator=(RenderManager&&) = default;
-
     /// @brief Gets the raw pointer to the SDL renderer.
     /// @return Pointer to SDL_Renderer.
     SDL_Renderer& getRenderer() { return *_renderer; }

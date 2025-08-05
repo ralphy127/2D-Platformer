@@ -17,11 +17,6 @@ public:
 
     ~SimpleTextures() { SDL_LogDebug(utils::LOG_CATEGORY_CLEANUP, "Simple textures created"); }
 
-    SimpleTextures(const SimpleTextures&) = delete;
-    SimpleTextures(SimpleTextures&&) = delete;
-    SimpleTextures& operator=(const SimpleTextures&) = delete;
-    SimpleTextures& operator=(SimpleTextures&&) = delete;
-
     /// @brief Retrieves the SDL texture associated with the given entity type.
     /// @param type The entity type to get the texture for.
     /// @return Reference to the cached SDL_Texture for the entity type.

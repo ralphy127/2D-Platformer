@@ -9,7 +9,7 @@ namespace engine {
 SpriteData::SpriteData(AnimationsInfo animationsInfo, size_t initialAnimation) 
     : _animationsInfo(std::move(animationsInfo)),
       _currentAnimation(initialAnimation),
-      _lastFrameTime(ClockType::now()) {
+      _lastFrameTime(Clock::getTime()) {
         
     if (_currentAnimation >= _animationsInfo.size()) {
         throw std::invalid_argument("Initial animation out of range");
@@ -28,11 +28,11 @@ void SpriteData::setFrame(size_t frame) {
         throw std::invalid_argument("Frames cannot be greater than frames in current animation");
 
     _currentFrame = frame;
-    _lastFrameTime = ClockType::now();
+    _lastFrameTime = Clock::getTime();
 }
 
 void SpriteData::updateFrame() {
-    auto now = ClockType::now();
+    auto now = Clock::getTime();
 
     if (now - _lastFrameTime < _targetFrameDuration)
         return;
@@ -47,13 +47,13 @@ void SpriteData::setAnimation(size_t animation) {
 
     _currentAnimation = animation;
     _currentFrame = 0UL;
-    _lastFrameTime = ClockType::now();
+    _lastFrameTime = Clock::getTime();
     fetchAnimationsInfo();
 }
 
 void SpriteData::resetAnimation() {
     _currentFrame = 0UL;
-    _lastFrameTime = ClockType::now();
+    _lastFrameTime = Clock::getTime();
 }
 
 }

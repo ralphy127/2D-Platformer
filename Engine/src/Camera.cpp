@@ -2,14 +2,10 @@
 
 namespace engine {
 
-Camera::Camera(utils::i2v pos, float zoom, Settings& settings)
-    : _settings(settings),
-      _pos(pos) {   
-    if (zoom <= 0.0f) 
-        throw std::invalid_argument("Zoom must be positive");
+Camera::Camera(Settings& settings)
+    : _settings(settings) {
 
     _windowSize = _settings.getWindowSize();
-    _zoom = zoom;
 
     _settings.registerObserver(*this);
 

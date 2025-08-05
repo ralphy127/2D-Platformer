@@ -17,7 +17,7 @@ Clock::Clock(Settings& settings)
 void Clock::tickAndWait() {
     using namespace std::chrono;
 
-    _now = ClockType::now();
+    _now = Type::now();
     auto frameDuration = _now - _lastFrameTime;
 
     if (frameDuration < _targetFrameDuration) {
@@ -29,7 +29,7 @@ void Clock::tickAndWait() {
             std::this_thread::sleep_for(safeSleepTime);
     }
 
-    auto currentTime = ClockType::now();
+    auto currentTime = Type::now();
     _deltaTime = duration<float>(currentTime - _lastFrameTime).count();
     _lastFrameTime = currentTime;
 
@@ -41,7 +41,7 @@ void Clock::onSettingsChanged() {
 
     std::chrono::duration<float> secondsPerFrame(1.0f / _targetFps);
     
-    _targetFrameDuration = std::chrono::duration_cast<ClockType::duration>(secondsPerFrame);
+    _targetFrameDuration = std::chrono::duration_cast<Type::duration>(secondsPerFrame);
 }
 
 }

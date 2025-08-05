@@ -27,7 +27,6 @@ public:
     void logDebugState();
 
 private:
-    /// @brief Defines various player states controlling animations and behavior.
     enum class State {
         IDLE,       ///< Standing still.
         WALKING,    ///< Moving at walking speed.

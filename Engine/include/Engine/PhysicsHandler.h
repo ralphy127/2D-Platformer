@@ -19,11 +19,6 @@ public:
 
     ~PhysicsHandler();
 
-    PhysicsHandler(const PhysicsHandler&) = delete;
-    PhysicsHandler& operator=(const PhysicsHandler&) = delete;
-    PhysicsHandler(PhysicsHandler&&) = delete;
-    PhysicsHandler& operator=(PhysicsHandler&&) = delete;
-
     bool AABBcast(
         const SDL_Rect& source,
         const SDL_Rect& target,
@@ -40,7 +35,29 @@ public:
     void setFallGMultiplier(float fallGMultiplier) { _fallGMultiplier = fallGMultiplier; }
 
     void onSettingsChanged() override;
+
 private:
+    void checkHorizontalCollision(
+        const TileLayer::Grid&, 
+        float deltaTime,
+        utils::f2v& velocity,
+        const SDL_Rect& hitBox) const;
+    
+    void checkVerticalCollision(
+        const TileLayer::Grid&,
+        float deltaTime,
+        utils::f2v& velocity,
+        const SDL_Rect& hitBox,
+        bool& landed) const;
+
+    void checkIfStillOnGround(
+        DynamicEntity& entity,
+        const TileLayer::Grid&,
+        float deltaTime,
+        const SDL_Rect& hitBox,
+        const utils::f2v& velocity) const;
+
+
     Settings& _settings;
 
     size_t _tileSize{};

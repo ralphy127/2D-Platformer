@@ -10,18 +10,13 @@ namespace engine {
 /// @brief Manages frame timing, delta time calculation, and frame rate regulation.
 class Clock : ISettingsObserver {
 public:
-    using ClockType = std::chrono::high_resolution_clock;
+    using Type = std::chrono::high_resolution_clock;
 
     /// @brief Constructs Clock and initializes timing variables based on settings.
     /// @param settings Reference to the settings object (used for target FPS, etc.).
     Clock(Settings&);
 
     ~Clock() { SDL_LogDebug(utils::LOG_CATEGORY_CLEANUP, "Clock destroyed"); }
-
-    Clock(const Clock&) = delete;
-    Clock& operator=(const Clock&) = delete;
-    Clock(Clock&&) = delete;
-    Clock& operator=(Clock&&) = delete;
 
     /// @brief Regulates frame rate to maintain consistent timing and updates delta time.
     void tickAndWait();
@@ -39,17 +34,17 @@ public:
 
     /// @brief Returns current high-resolution clock timestamp.
     /// @return Current time point.
-    ClockType::time_point getTime() { return _now; }
+    static Type::time_point getTime() { return _now; }
 
 private:
-    Settings& _settings;                          ///< Reference to settings.
+    Settings& _settings;                                    ///< Reference to settings.
 
-    float _deltaTime{};                           ///< Time elapsed between frames in seconds.
-    ClockType::time_point _lastFrameTime{ClockType::now()}; ///< Timestamp of last frame.
-    float _targetFps{};                           ///< Target frames per second.
-    ClockType::duration _targetFrameDuration{};   ///< Target duration of a single frame.
-    float _actualFps{};                           ///< Calculated actual FPS.
-    ClockType::time_point _now{ClockType::now()}; ///< timestamp of current frame
+    float _deltaTime{};                                     ///< Time elapsed between frames [s].
+    Type::time_point _lastFrameTime{Type::now()};           ///< Timestamp of last frame.
+    float _targetFps{};                                     ///< Target frames per second.
+    Type::duration _targetFrameDuration{};                  ///< Target duration of a single frame.
+    float _actualFps{};                                     ///< Calculated actual FPS.
+    inline static Type::time_point _now{Type::now()};       ///< timestamp of current frame.
 };
 
 }

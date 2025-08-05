@@ -3,16 +3,15 @@
 #include <vector>
 #include <utility>
 #include <chrono>
+#include "Engine/Clock.h"
 
 namespace engine {
 
 /// @brief Holds animation data and manages frame progression for sprite animations.
 class SpriteData {
 public:
-    using ClockType = std::chrono::steady_clock;
-
     /// @brief Vector containing pairs of (frame count, duration per frame) per animation.
-    using AnimationsInfo = std::vector<std::pair<size_t, ClockType::duration>>;
+    using AnimationsInfo = std::vector<std::pair<size_t, Clock::Type::duration>>;
     
     /// @brief Default constructor creates empty SpriteData with no animations.
     SpriteData() = default;
@@ -54,7 +53,7 @@ public:
 
     /// @brief Returns the duration each frame should be displayed in the current animation.
     /// @return Duration of a single frame in the current animation.
-    ClockType::duration getCurrentAnimationDuration() const { return _targetFrameDuration; }
+    Clock::Type::duration getCurrentAnimationDuration() const { return _targetFrameDuration; }
 
     /// @brief Resets the current animation to its first frame and resets timing.
     void resetAnimation();
@@ -69,8 +68,8 @@ private:
     size_t _currentAnimation{};                 ///< Current animation index.
     size_t _currentFrame{};                     ///< Current frame index within the animation.
     size_t _framesInCurrentAnimation{};         ///< Number of frames in the current animation.
-    ClockType::duration _targetFrameDuration{}; ///< Duration to display each frame.
-    ClockType::time_point _lastFrameTime{};     ///< Time point of last frame update.
+    Clock::Type::duration _targetFrameDuration{}; ///< Duration to display each frame.
+    Clock::Type::time_point _lastFrameTime{};     ///< Time point of last frame update.
 };
 
 }

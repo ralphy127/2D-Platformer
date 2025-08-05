@@ -13,8 +13,6 @@
 #include "Game/TiileClassifier.h"
 #include "Game/SimpleTextures.h"
 #include "Game/SpriteTextures.h"
-#include "Game/Player.h"
-#include "Engine/StaticEntity.h"
 
 namespace game {
 
@@ -23,11 +21,6 @@ class Game {
 public:
     /// @brief Constructs the Game object and initializes all subsystems.
     Game();
-
-    Game(const Game&) = delete;
-    Game& operator=(const Game&) = delete;
-    Game(Game&&) = delete;
-    Game& operator=(Game&&) = delete;
 
     ~Game() { SDL_LogDebug(utils::LOG_CATEGORY_CLEANUP, "Game destroyed"); }
 
@@ -47,7 +40,7 @@ private:
 
     /// @brief Renders the current game frame.
     void render();
-
+ 
     engine::Settings _settings;                 ///< Stores configuration settings.
     engine::SDLManager _SDLManager{};           ///< Initializes and shuts down SDL.
     engine::WindowManager _windowManager;       ///< Manages the SDL window and renderer.
@@ -61,10 +54,10 @@ private:
     SimpleTextures _simpleTextures;             ///< Manages textures for simple entities.
     SpriteTextures _spriteTextures;             ///< Manages textures for sprite entities.
 
-    std::vector<engine::Level> _levels{};       ///< Stores loaded levels.
-    size_t _currentLevel{0UL};
-
     bool _running{true};                        ///< Indicates if the game loop is active.
+
+    std::vector<std::unique_ptr<engine::Level>> _levels{}; ///< Stores loaded levels.
+    size_t _currentLevel{0UL};                  ///< Active level index
 
     std::list<std::unique_ptr<engine::Entity>> _entities{}; ///< Holds all entities in the game.
 };

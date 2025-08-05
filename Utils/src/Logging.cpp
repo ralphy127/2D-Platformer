@@ -98,13 +98,13 @@ void consoleSDLLogger(void* userData, int category, SDL_LogPriority priority, co
 void Logger::logDebugEvery(
     const std::string& key,
     ClockType::duration interval,
-    const std::function<std::string()>& messageFunc) {
+    const std::string& message) {
 
     if (!shouldLog(key, interval)) {
         return;
     }
 
-    SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION, "[%s] %s", key.c_str(), messageFunc().c_str());
+    SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION, "[%s] %s", key.c_str(), message.c_str());
 
     _lastLogTimes[key] = ClockType::now();
 }

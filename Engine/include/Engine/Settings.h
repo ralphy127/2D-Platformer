@@ -30,11 +30,6 @@ public:
     /// @brief Destructor logs the cleanup event.
     ~Settings() { SDL_LogDebug(utils::LOG_CATEGORY_CLEANUP, "Settings destroyed"); }
 
-    Settings(const Settings&) = delete;
-    Settings(Settings&&) = delete;
-    Settings& operator=(Settings&&) = delete;
-    Settings& operator=(const Settings&) = delete;
-
     /// @brief Registers an observer to receive setting change notifications.
     /// @param observer Reference to the observer to register.
     void registerObserver(ISettingsObserver& observer) { _observers.push_back(&observer); }

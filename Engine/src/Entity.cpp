@@ -12,7 +12,7 @@ Entity::Entity(Settings& settings, const Config& config)
     _tileSize = _settings.getTileSize();
 }
 
-SDL_Rect Entity::getHitBox() const {
+SDL_Rect Entity::getHitbox() const {
     return {
         static_cast<int>(_pos.x),
         static_cast<int>(_pos.y),
@@ -21,7 +21,7 @@ SDL_Rect Entity::getHitBox() const {
     };
 }
 
-void Entity::setHitBox(SDL_Rect hitbox) {
+void Entity::setHitbox(SDL_Rect hitbox) {
     _pos = utils::f2v(hitbox.x, hitbox.y);
     _size = utils::f2v(hitbox.w, hitbox.h);
 }

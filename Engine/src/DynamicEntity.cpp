@@ -27,6 +27,18 @@ void DynamicEntity::jump() {
     }
 }
 
+void DynamicEntity::capHealthIfNeeded(float health) {
+    if (health > _maxHealth) {
+        _health = _maxHealth;
+    }
+    else if (health < 0) {
+        _health = 0.f;
+    }
+    else {
+        _health = health;
+    }
+}
+
 void DynamicEntity::renderEntityHitbox(SDL_Renderer& renderer, Camera& camera) const {
     auto entityRect = camera.worldToViewport(getPos(), getSize());
     SDL_SetRenderDrawColor(&renderer, 255, 0, 0, 255); // red

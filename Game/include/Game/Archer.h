@@ -6,9 +6,9 @@
 
 namespace game {
 
-class Commander : public engine::DynamicSpriteEntity {
+class Archer : public engine::DynamicSpriteEntity {
 public:
-    Commander(engine::Settings&, engine::ISpriteTextures&);
+    Archer(engine::Settings&, engine::ISpriteTextures&);
 
     void update(float deltaTime) override;
 
@@ -20,7 +20,7 @@ private:
         ATTACK1,    ///< Performing attack animation 1.
         ATTACK2,    ///< Performing attack animation 2.
         ATTACK3,    ///< Performing attack animation 3.
-        PROTECTING, ///< Defensive state.
+        ATTACK4,    ///< Performing attack animation 4.
         JUMPING,    ///< In the air.
         HURT,       ///< Taking damage.
         DEAD        ///< Player is dead.
@@ -31,7 +31,7 @@ private:
     State _state{State::IDLE};
 
     engine::Clock::Type::time_point _lastBehaviorChange{engine::Clock::getTime()};
-    engine::Clock::Type::duration _interval{std::chrono::seconds(3)};
+    engine::Clock::Type::duration _interval{std::chrono::seconds(4)};
 };
 
 }

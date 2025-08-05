@@ -12,12 +12,7 @@ public:
     EventHandler() { SDL_LogDebug(utils::LOG_CATEGORY_SETUP, "Event handler created"); }
 
     ~EventHandler() { SDL_LogDebug(utils::LOG_CATEGORY_CLEANUP, "Event handler destroyed"); }
-
-    EventHandler(const EventHandler&) = delete;
-    EventHandler& operator=(const EventHandler&) = delete;
-    EventHandler(EventHandler&&) = delete;
-    EventHandler& operator=(EventHandler&&) = delete;
-
+    
     /// @brief Polls SDL events and updates internal key state map.
     /// Should be called once per frame to process new input.
     void pollEvents();

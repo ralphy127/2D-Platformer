@@ -36,27 +36,33 @@ void Player::render(SDL_Renderer& renderer, engine::Camera& camera) const {
 void Player::logDebugState() {
     const auto logInterval = std::chrono::seconds(1);
     const std::string logKey{"PlayerState"};
+
     if (!utils::Logger::shouldLog(logKey, logInterval))
         return;
 
-    utils::Logger::logDebugEvery(logKey, logInterval, [&] {
-        std::ostringstream oss;
-        
-        const int logWidth = 61;
+    const int logWidth = 61;
 
-        oss << ":\n"
-            << std::right << std::setw(logWidth) << "[Position]    : " << getPos() << "\n"
-            << std::right << std::setw(logWidth) << "[Velocity]    : " << getVel() << "\n"
-            << std::right << std::setw(logWidth) << "[On Ground]   : " << std::boolalpha << isOnGround() << "\n"
-            << std::right << std::setw(logWidth) << "[Direction]   : " << (getDirection() == 1 ? "Right" : "Left") << "\n"
-            << std::right << std::setw(logWidth) << "[Animation]   : " << stateToString(getSpriteData().getAnimation()) << "\n"
-            << std::right << std::setw(logWidth) << "[Frame]       : " << getSpriteData().getFrame() << "\n";
-        
-        return oss.str();
-    });
+    std::ostringstream message;
+    message << "\n";
+
+    auto addFieldToMessage = [&message, logWidth](const std::string& label, const auto value) {
+        message << std::right << std::setw(logWidth)
+                << label << " : " << value << "\n";
+    };
+
+    addFieldToMessage("[Position]    : ", getPos());
+    addFieldToMessage("[Velocity]    : ", getVel());
+    addFieldToMessage("[On Ground]   : ", isOnGround() ? "True" : "False");
+    addFieldToMessage("[Direction]   : ", getDirection() == 1 ? "Right" : "Left");
+    addFieldToMessage("[Animation]   : ", stateToString(getSpriteData().getAnimation()));
+    addFieldToMessage("[Frame]       : ", getSpriteData().getFrame());
+
+    utils::Logger::logDebugEvery(logKey, logInterval, message.str());
 }
 
-engine::DynamicSpriteEntity::Config Player::initAndGetConfig(const engine::Settings& settings) const {
+engine::DynamicSpriteEntity::Config Player::initAndGetConfig(
+    const engine::Settings& settings) const {
+
     const auto framesDuration = std::chrono::milliseconds(120);
 
     engine::SpriteData::AnimationsInfo animationsInfo = {
@@ -105,7 +111,8 @@ void Player::createAndAddAttacks() {
     attack.offsetLeft = {-1.15f * size.x, 0.2f * size.y};
     attack.size = {1.75f * size.x, 0.45f * size.y};
     attack.animationId = static_cast<size_t>(State::ATTACK1);
-    attack.onHit = [](){ SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "Player swung performed attack 1"); };
+    attack.onHit = [](){
+        SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "Player swung performed attack 1"); };
     attack.sourceTag = "player";
 
     addAtack(attack);
@@ -117,7 +124,8 @@ void Player::createAndAddAttacks() {
     attack.offsetLeft = {-2.15f * size.x, -0.45f * size.y};
     attack.size = {2.3f * size.x, 1.3f * size.y};
     attack.animationId = static_cast<size_t>(State::ATTACK2);
-    attack.onHit = [](){ SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "Player swung performed attack 2"); };
+    attack.onHit = [](){
+        SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "Player swung performed attack 2"); };
 
     addAtack(attack);
 
@@ -128,7 +136,8 @@ void Player::createAndAddAttacks() {
     attack.offsetLeft = {-2.15f * size.x, 0.05f * size.y};
     attack.size = {2.1f * size.x, 0.65f * size.y};
     attack.animationId = static_cast<size_t>(State::ATTACK3);
-    attack.onHit = [](){ SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "Player swung performed attack 3"); };
+    attack.onHit = [](){
+        SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "Player swung performed attack 3"); };
 
     addAtack(attack);
 }
@@ -182,21 +191,23 @@ void Player::handleLShift(bool shiftPressed, engine::SpriteData& spriteData) {
 }
 
 void Player::tryToChangeAnimation(State state, engine::SpriteData& spriteData) {
-    if (!isAttacking() &&
-        spriteData.getAnimation() != static_cast<size_t>(state)) {
-
+    if (!isAttacking() && spriteData.getAnimation() != static_cast<size_t>(state))
         spriteData.setAnimation(static_cast<size_t>(state));
-    }
 }
 
 void Player::handleAttacks() {
-    if (_eventHandler.isKeyPressed(SDLK_z)) {
+    const auto& spriteData = getSpriteData();
+    if (_eventHandler.isKeyPressed(SDLK_z) &&
+        spriteData.getAnimation() != static_cast<size_t>(State::ATTACK1)) {
+            
         performAttack(static_cast<engine::AttackId>(State::ATTACK1));
     }
-    else if (_eventHandler.isKeyPressed(SDLK_x)) {
+    else if (_eventHandler.isKeyPressed(SDLK_x) &&
+             spriteData.getAnimation() != static_cast<size_t>(State::ATTACK2)) {
         performAttack(static_cast<engine::AttackId>(State::ATTACK2));
     }
-    else if (_eventHandler.isKeyPressed(SDLK_c)) {
+    else if (_eventHandler.isKeyPressed(SDLK_c) &&
+             spriteData.getAnimation() != static_cast<size_t>(State::ATTACK3)) {
         performAttack(static_cast<engine::AttackId>(State::ATTACK3));
     }
 }

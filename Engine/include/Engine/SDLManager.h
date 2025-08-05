@@ -15,11 +15,6 @@ public:
     /// @brief Cleans up SDL and audio subsystems
     ~SDLManager();
 
-    SDLManager(const SDLManager&) = delete;
-    SDLManager& operator=(const SDLManager&) = delete;
-    SDLManager(SDLManager&&) = delete;
-    SDLManager& operator=(SDLManager&&) = delete;
-
     /// @brief Sets the master volume level
     /// @param volume Volume level in range 0 to 10
     void setVolume(size_t volume);

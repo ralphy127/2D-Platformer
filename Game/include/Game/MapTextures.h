@@ -19,11 +19,6 @@ public:
 
     ~MapTextures() { SDL_LogDebug(utils::LOG_CATEGORY_CLEANUP, "Map textures destroyed"); }
 
-    MapTextures(const MapTextures&) = delete;
-    MapTextures& operator=(const MapTextures&) = delete;
-    MapTextures(MapTextures&&) = delete;
-    MapTextures& operator=(MapTextures&&) = delete;
-
     /// @brief Map texture types
     enum class TextureType { NONE, GROUND, BUILDING };
     

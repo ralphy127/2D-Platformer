@@ -3,6 +3,7 @@
 #include "Engine/DynamicEntity.h"
 #include "Engine/ISpriteTextures.h"
 #include "Engine/SpriteData.h"
+#include "Engine/Clock.h"
 
 namespace engine {
 
@@ -23,8 +24,6 @@ struct AttackData {
 /// @brief Represents a dynamic entity that uses sprite-based animation for rendering.
 class DynamicSpriteEntity : public DynamicEntity {
 public:
-    using ClockType = std::chrono::steady_clock;
-
     /// @brief Configuration structure for DynamicSpriteEntity.
     /// Extends DynamicEntity::Config with sprite data.
     struct Config : DynamicEntity::Config {
@@ -60,20 +59,26 @@ protected:
     bool isAttacking() const { return _currentAttack.has_value(); }
 
 private:
+    void updateHealthBar();
+
     /// @brief Renders the weapon's hitbox during attacks (green rectangle).
     void renderWeaponHitbox(SDL_Renderer& renderer, Camera& camera) const;
 
+    void renderHealthBar(SDL_Renderer&, Camera&) const;
 
-private:
     ISpriteTextures& _textures; ///< Reference to sprite texture provider.
     
     SpriteData _spriteData;     ///< Current animation state and sprite properties.
 
-    std::unordered_map<AttackId, AttackData> _attacks;
+    std::unordered_map<AttackId, AttackData> _attacks{};
 
-    std::optional<AttackId> _currentAttack;
+    std::optional<AttackId> _currentAttack{};
 
-    ClockType::time_point _lastAttackStartTime;
+    Clock::Type::time_point _lastAttackStartTime{};
+
+    utils::f2v _healthBarPos{};
+
+    utils::f2v _healthBarSize{};
 };
 
 }

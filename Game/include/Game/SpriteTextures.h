@@ -12,7 +12,6 @@
 namespace game {
 
 /// @brief Defines metadata for a sprite sheet's animations and frames.
-
 struct TextureDefinition {
     std::vector<int> frameCounts;  ///< Number of frames per animation.
     utils::i2v frameSize;          ///< Size (width, height) of each frame in pixels.
@@ -27,12 +26,7 @@ public:
     SpriteTextures(SDL_Renderer& renderer);
     
     ~SpriteTextures() { SDL_LogDebug(utils::LOG_CATEGORY_CLEANUP, "Sprite textures destroyed"); }
-
-    SpriteTextures(const SpriteTextures&) = delete;
-    SpriteTextures& operator=(const SpriteTextures&) = delete;
-    SpriteTextures(SpriteTextures&&) = delete;
-    SpriteTextures& operator=(SpriteTextures&&) = delete;
-
+    
     /// @brief Retrieves the texture for a specific entity type, animation, and frame.
     /// @param type Entity type identifying the sprite.
     /// @param animation Animation index (0-based).

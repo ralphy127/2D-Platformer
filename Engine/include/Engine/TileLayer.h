@@ -9,12 +9,12 @@
 namespace engine {
 
 /// @brief Represents a tile-based layer in the map.
-class TileLayer : public Layer, public ISettingsObserver {
+class TileLayer : public ILayer, public ISettingsObserver {
 public:
     using Grid = std::vector<std::vector<int>>;
 
     /// @brief Types of tile layers.
-    enum class Type { DECORATION, INTERACTIVE, MAP };
+    enum class Type { FRONT_DECORATION, MAP, BACK_DECORATION };
 
     /// @brief Constructs a TileLayer.
     /// @param mapTextures Reference to the map textures manager.
@@ -24,10 +24,6 @@ public:
     TileLayer(IMapTextures&, const ITileClassifier&, Settings&, Type, size_t level);
 
     ~TileLayer() { _settings.unregisterObserver(*this); }
-    TileLayer(const TileLayer&) = delete;
-    TileLayer& operator=(const TileLayer&) = delete;
-    TileLayer(TileLayer&&) = delete;
-    TileLayer& operator=(TileLayer&&) = delete;
 
     /// @brief Renders the tile layer.
     /// @param renderer SDL renderer used for drawing.
@@ -48,12 +44,12 @@ private:
     /// @brief Loads tile data from a CSV file.
     /// @param path Path to the CSV file.
     void loadFromCSV(const std::string& path);
-
+    
     IMapTextures& _mapTextures;             ///< Reference to the map textures manager.
     const ITileClassifier& _tileClassifier; /// Reference to tileClassifier
     Settings& _settings;                    ///< Reference to game settings
     Type _type;                             ///< Type of the tile layer.
-    size_t _level;                          ///< Level index.
+    size_t _levelId;                        ///< Level index.
     size_t _tileSize;                       ///< Size of each tile.
     Grid _grid;                             ///< Grid of tile IDs.
 };

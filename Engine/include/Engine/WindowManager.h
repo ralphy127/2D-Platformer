@@ -18,11 +18,6 @@ public:
 
     ~WindowManager();
 
-    WindowManager(const WindowManager&) = delete;
-    WindowManager& operator=(const WindowManager&) = delete;
-    WindowManager(WindowManager&&) = delete;
-    WindowManager& operator=(WindowManager&&) = delete;
-
     /// @brief Gets the raw pointer to the SDL window.
     /// @return Pointer to SDL_Window.
     SDL_Window& getWindow() { return *_window; }
