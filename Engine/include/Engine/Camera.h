@@ -38,6 +38,8 @@ public:
     /// @param zoom New zoom factor. Clamped internally to reasonable bounds.
     void setZoom(float zoom);
 
+    float getZoom() const { return _zoom; }
+
     /// @brief Sets the window size of the camera viewport.
     /// @param windowSize New window size in pixels.
     void setWindowSize(const utils::i2v& windowSize) { _windowSize = windowSize; }

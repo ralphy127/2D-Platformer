@@ -1,7 +1,8 @@
 #pragma once
 
-#include <Engine/TileLayer.h>
-#include <Engine/Settings.h>
+#include "Engine/TileLayer.h"
+#include "Engine/Settings.h"
+#include "Engine/DynamicSpriteEntity.h"
 
 namespace engine {
 
@@ -19,6 +20,19 @@ public:
 
     ~PhysicsHandler();
 
+    void applyGravity(DynamicEntity&, float deltaTime) const;
+
+    void setGAcceleration(float g) { _gAcceleration = g; }
+
+    void handleMapCollisions(DynamicEntity&, const TileLayer::Grid&, float deltaTime) const;
+
+    void handleAttacksCollisions(std::vector<std::reference_wrapper<DynamicSpriteEntity>>&) const;
+
+    void setFallGMultiplier(float fallGMultiplier) { _fallGMultiplier = fallGMultiplier; }
+
+    void onSettingsChanged() override;
+
+private:
     bool AABBcast(
         const SDL_Rect& source,
         const SDL_Rect& target,
@@ -26,35 +40,24 @@ public:
         collisionHit& outhit,
         float deltaTime) const;
 
-    void applyGravity(DynamicEntity&, float deltaTime) const;
-
-    void setGAcceleration(float g) { _gAcceleration = g; }
-
-    void handleMapCollisions(DynamicEntity&, const TileLayer::Grid&, float deltaTime) const;
-
-    void setFallGMultiplier(float fallGMultiplier) { _fallGMultiplier = fallGMultiplier; }
-
-    void onSettingsChanged() override;
-
-private:
     void checkHorizontalCollision(
         const TileLayer::Grid&, 
         float deltaTime,
         utils::f2v& velocity,
-        const SDL_Rect& hitBox) const;
+        const SDL_FRect& hitBox) const;
     
     void checkVerticalCollision(
         const TileLayer::Grid&,
         float deltaTime,
         utils::f2v& velocity,
-        const SDL_Rect& hitBox,
+        const SDL_FRect& hitBox,
         bool& landed) const;
 
     void checkIfStillOnGround(
         DynamicEntity& entity,
         const TileLayer::Grid&,
         float deltaTime,
-        const SDL_Rect& hitBox,
+        const SDL_FRect& hitBox,
         const utils::f2v& velocity) const;
 
 

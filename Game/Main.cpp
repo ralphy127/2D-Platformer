@@ -11,7 +11,7 @@ try {
 
     return EXIT_SUCCESS;
 }
-catch(const std::exception& e) {
+catch (const std::exception& e) {
     SDL_LogCritical(SDL_LOG_CATEGORY_APPLICATION, "%s", e.what());
 
     return EXIT_FAILURE;

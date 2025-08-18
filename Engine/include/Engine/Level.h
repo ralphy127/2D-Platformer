@@ -13,7 +13,7 @@ public:
     /// @param mapTextures Reference to the map textures.
     /// @param settings Game settings.
     /// @param level Level index to load.
-    Level(IMapTextures&, const ITileClassifier&, Settings&, size_t level);
+    Level(IMapTextures&, const ITileClassifier&, Settings&, SDL_Renderer&, size_t level);
 
     ~Level() { SDL_LogDebug(utils::LOG_CATEGORY_CLEANUP, "Level %zu destroyed", _level); }
 

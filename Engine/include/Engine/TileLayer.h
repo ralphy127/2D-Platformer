@@ -14,7 +14,7 @@ public:
     using Grid = std::vector<std::vector<int>>;
 
     /// @brief Types of tile layers.
-    enum class Type { FRONT_DECORATION, MAP, BACK_DECORATION };
+    enum class Type { BACK_DECORATION = 3, MAP, FRONT_DECORATION};
 
     /// @brief Constructs a TileLayer.
     /// @param mapTextures Reference to the map textures manager.

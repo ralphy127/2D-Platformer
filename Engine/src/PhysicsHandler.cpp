@@ -2,7 +2,6 @@
 
 #include <SDL2/SDL.h>
 #include <cmath>
-#include <Engine/DynamicEntity.h>
 
 namespace engine {
 
@@ -18,42 +17,6 @@ PhysicsHandler::~PhysicsHandler() {
     _settings.unregisterObserver(*this);
 
     SDL_LogDebug(utils::LOG_CATEGORY_CLEANUP, "Physics handler destroyed"); 
-};
-
-bool PhysicsHandler::AABBcast(
-    const SDL_Rect& source,
-    const SDL_Rect& target,
-    const utils::f2v& vel,
-    collisionHit& outhit,
-    float deltaTime) const {
-
-    if (std::abs(vel.length()) <= std::numeric_limits<float>::epsilon())
-        return false;
-
-    bool collisionX = false;
-    bool collisionY = false;
-
-    if (std::abs(vel.x) > std::numeric_limits<float>::epsilon()) {
-        SDL_Rect futureX = source;
-        futureX.x += static_cast<int>(std::round(vel.x * deltaTime));
-
-        if (SDL_HasIntersection(&futureX, &target)) {
-            collisionX = true;
-            outhit.normal.x = (vel.x > 0.f) ? -1.0f : 1.0f;
-        }
-    }
-
-    if (std::abs(vel.y) > std::numeric_limits<float>::epsilon()) {
-        SDL_Rect futureY = source;
-        futureY.y += static_cast<int>(std::round(vel.y * deltaTime));
-
-        if (SDL_HasIntersection(&futureY, &target)) {
-            collisionY = true;
-            outhit.normal.y = (vel.y > 0) ? -1.0f : 1.0f;
-        }
-    }
-
-    return collisionX || collisionY;
 }
 
 void PhysicsHandler::applyGravity(DynamicEntity& entity, float deltaTime) const {
@@ -94,12 +57,88 @@ void PhysicsHandler::handleMapCollisions(
     entity.setVel(velocity);
 }
 
+bool PhysicsHandler::AABBcast(
+    const SDL_Rect& source,
+    const SDL_Rect& target,
+    const utils::f2v& vel,
+    collisionHit& outhit,
+    float deltaTime) const {
+
+    if (std::abs(vel.length()) <= std::numeric_limits<float>::epsilon())
+        return false;
+
+    bool collisionX = false;
+    bool collisionY = false;
+
+    if (std::abs(vel.x) > std::numeric_limits<float>::epsilon()) {
+        SDL_Rect futureX = source;
+        futureX.x += static_cast<int>(std::round(vel.x * deltaTime));
+
+        if (SDL_HasIntersection(&futureX, &target)) {
+            collisionX = true;
+            outhit.normal.x = (vel.x > 0.f) ? -1.0f : 1.0f;
+        }
+    }
+
+    if (std::abs(vel.y) > std::numeric_limits<float>::epsilon()) {
+        SDL_Rect futureY = source;
+        futureY.y += static_cast<int>(std::round(vel.y * deltaTime));
+
+        if (SDL_HasIntersection(&futureY, &target)) {
+            collisionY = true;
+            outhit.normal.y = (vel.y > 0) ? -1.0f : 1.0f;
+        }
+    }
+
+    return collisionX || collisionY;
+}
+
+void PhysicsHandler::handleAttacksCollisions(
+    std::vector<std::reference_wrapper<DynamicSpriteEntity>>& entities) const {
+        
+    int playerIndex = -1;
+    const auto n = entities.size();
+    for (size_t index = 0; index < n; ++index) {
+        if (entities[index].get().isPlayer()) {
+            playerIndex = index;
+            break;
+        }
+    }
+
+    if (playerIndex == -1)
+        throw std::runtime_error("Player not found while trying to handle entities collisions");
+
+    auto& player = entities[playerIndex].get();
+    const auto playerHitbox = player.getHitbox();
+    const auto playerWeaponHitbox = player.getWeaponHitbox();
+
+    for (size_t i = 0; i < n; ++i) {
+        auto& entity = entities.at(i).get();
+        if (&entity == &player)
+            continue;
+
+        if (!entity.isAttacking())
+            continue;
+        
+        const auto entityWeaponHitbox = entity.getWeaponHitbox();
+        if (entityWeaponHitbox.has_value() &&
+            SDL_HasIntersectionF(&entityWeaponHitbox.value(), &playerHitbox)) {
+            
+            auto& attackData = entity.getCurrentAttackDataView();
+            
+            player.dealDamage(attackData.damage);
+            
+            if (attackData.onHit)
+                attackData.onHit();
+        }
+    }
+}
 
 void PhysicsHandler::checkHorizontalCollision(
     const TileLayer::Grid& map,
     float deltaTime,
     utils::f2v& velocity,
-    const SDL_Rect& hitbox) const
+    const SDL_FRect& hitbox) const
 {
     if (velocity.x == 0.f)
         return;
@@ -120,17 +159,17 @@ void PhysicsHandler::checkHorizontalCollision(
         for (int tileX = leftTileX;
              tileX <= rightTileX && tileX < mapWidth && tileX >= 0; 
              ++tileX) {
-                
+
             if (map[tileY][tileX] == -1) continue;
 
-            SDL_Rect tileRect{
-                static_cast<int>(tileX * _tileSize),
-                static_cast<int>(tileY * _tileSize),
-                static_cast<int>(_tileSize),
-                static_cast<int>(_tileSize)
+            SDL_FRect tileRect{
+                static_cast<float>(tileX * _tileSize),
+                static_cast<float>(tileY * _tileSize),
+                static_cast<float>(_tileSize),
+                static_cast<float>(_tileSize)
             };
 
-            if (SDL_HasIntersection(&futureHitbox, &tileRect)) {
+            if (SDL_HasIntersectionF(&futureHitbox, &tileRect)) {
                 velocity.x = 0.f;
                 return;
             }
@@ -142,7 +181,7 @@ void PhysicsHandler::checkVerticalCollision(
     const TileLayer::Grid& map,
     float deltaTime,
     utils::f2v& velocity,
-    const SDL_Rect& hitbox,
+    const SDL_FRect& hitbox,
     bool& landed) const
 {
     if (velocity.y == 0.f)
@@ -167,14 +206,14 @@ void PhysicsHandler::checkVerticalCollision(
 
             if (map[tileY][tileX] == -1) continue;
 
-            SDL_Rect tileRect{
-                static_cast<int>(tileX * _tileSize),
-                static_cast<int>(tileY * _tileSize),
-                static_cast<int>(_tileSize),
-                static_cast<int>(_tileSize)
+            SDL_FRect tileRect{
+                static_cast<float>(tileX * _tileSize),
+                static_cast<float>(tileY * _tileSize),
+                static_cast<float>(_tileSize),
+                static_cast<float>(_tileSize)
             };
 
-            if (SDL_HasIntersection(&futureHitbox, &tileRect)) {
+            if (SDL_HasIntersectionF(&futureHitbox, &tileRect)) {
                 if (velocity.y > 0.f) {
                     landed = true;
                 }
@@ -189,7 +228,7 @@ void PhysicsHandler::checkIfStillOnGround(
     DynamicEntity& entity,
     const TileLayer::Grid& map,
     float deltaTime,
-    const SDL_Rect& hitbox,
+    const SDL_FRect& hitbox,
     const utils::f2v& velocity) const
 {
     if (velocity.y < 0.f)

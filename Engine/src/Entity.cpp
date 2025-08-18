@@ -12,12 +12,12 @@ Entity::Entity(Settings& settings, const Config& config)
     _tileSize = _settings.getTileSize();
 }
 
-SDL_Rect Entity::getHitbox() const {
+SDL_FRect Entity::getHitbox() const {
     return {
-        static_cast<int>(_pos.x),
-        static_cast<int>(_pos.y),
-        static_cast<int>(_size.x),
-        static_cast<int>(_size.y)
+        _pos.x,
+        _pos.y,
+        _size.x,
+        _size.y
     };
 }
 

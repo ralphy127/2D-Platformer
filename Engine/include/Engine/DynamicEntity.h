@@ -40,7 +40,6 @@ public:
     /// @param onGround True if entity is on the ground, false otherwise.
     void setOnGround(bool onGround) { _onGround = onGround; }
 
-protected:
     /// @brief Sets health value, capped at maxHealth.
     void setHealth(float health) { capHealthIfNeeded(health); }
 
@@ -80,7 +79,12 @@ protected:
     /// @brief Sets default movement speed (must be > 0).
     void setDefaultSpeed(float defaultSpeed) {
         if (defaultSpeed > 0.f) _defaultSpeed = defaultSpeed; }
+    
+    void dealDamage(float damage) { capHealthIfNeeded(_health - damage); }
 
+    void heal(float health) { capHealthIfNeeded(_health + health); }
+
+protected:
     /// @brief Moves the entity based on direction and default speed.
     void move() { _vel.x = getDirection() * _defaultSpeed; }
 
@@ -91,7 +95,6 @@ protected:
     void stop() { _vel.x = 0.f; }
 
     void jump();
-
     /// @brief Renders the entity's main hitbox (red rectangle).
     void renderEntityHitbox(SDL_Renderer&, Camera&) const;
 

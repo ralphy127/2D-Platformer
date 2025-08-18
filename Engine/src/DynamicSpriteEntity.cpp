@@ -27,15 +27,9 @@ void DynamicSpriteEntity::update(float deltaTime) {
 
     setHealth(getHealth() - 0.2f);
 
+    calculateWeaponHitbox();
+
     DynamicEntity::update(deltaTime);
-}
-
-void DynamicSpriteEntity::updateHealthBar() {
-    const auto pos = getPos();
-    const auto size = getSize();
-    const auto tileSize = getTileSize();
-
-    _healthBarPos = {pos.x + 0.5f * size.x - 0.5f * _healthBarSize.x, pos.y - tileSize * 0.2f};
 }
 
 void DynamicSpriteEntity::render(SDL_Renderer& renderer, Camera& camera) const {
@@ -66,6 +60,45 @@ void DynamicSpriteEntity::render(SDL_Renderer& renderer, Camera& camera) const {
     renderHealthBar(renderer, camera);
 }
 
+const AttackData& DynamicSpriteEntity::getCurrentAttackDataView() const {
+    if (!_currentAttack.has_value())
+        throw std::runtime_error("Entitie is not performing an attack");
+    
+    return _attacks.at(_currentAttack.value());
+}
+
+void DynamicSpriteEntity::updateHealthBar() {
+    const auto pos = getPos();
+    const auto size = getSize();
+    const auto tileSize = getTileSize();
+
+    _healthBarPos = {pos.x + 0.5f * size.x - 0.5f * _healthBarSize.x, pos.y - tileSize * 0.2f};
+}
+
+void DynamicSpriteEntity::calculateWeaponHitbox() {
+    if (!_currentAttack.has_value()) {
+        _weaponHitbox.reset();
+        return;
+    }
+
+    const auto it = _attacks.find(_currentAttack.value());
+    if (it == _attacks.end())
+        throw std::runtime_error(std::string("AttackData of attackId: ") +
+            std::to_string(_currentAttack.value()) + "not found");
+    
+    const auto attack = it->second;
+
+    const auto offset = getDirection() > 0 ? attack.offsetRight : attack.offsetLeft;
+    const auto size = attack.size;
+    
+    _weaponHitbox = {
+        getPos().x + offset.x,
+        getPos().y + offset.y,
+        size.x,
+        size.y
+    };
+}
+
 void DynamicSpriteEntity::performAttack(AttackId id) {
     const auto it = _attacks.find(id);
     if (it == _attacks.cend())
@@ -88,28 +121,12 @@ void DynamicSpriteEntity::handleAttack() {
 }
 
 void DynamicSpriteEntity::renderWeaponHitbox(SDL_Renderer& renderer, Camera& camera) const {
-    if (!_currentAttack.has_value())
+    if (!_currentAttack.has_value() || !_weaponHitbox.has_value())
         return;
-
-    const auto it = _attacks.find(_currentAttack.value());
-    if (it == _attacks.end())
-        return;
-    
-    const auto attack = it->second;
-
-    const auto offset = getDirection() > 0 ? attack.offsetRight : attack.offsetLeft;
-    const auto size = attack.size;
-    
-    SDL_Rect actualWeaponHitBox = {
-        static_cast<int>(getPos().x + offset.x),
-        static_cast<int>(getPos().y + offset.y),
-        static_cast<int>(size.x),
-        static_cast<int>(size.y)
-    };
     
     const auto weaponRect = camera.worldToViewport(
-        {static_cast<float>(actualWeaponHitBox.x), static_cast<float>(actualWeaponHitBox.y)},
-        {static_cast<float>(actualWeaponHitBox.w), static_cast<float>(actualWeaponHitBox.h)}
+        {_weaponHitbox->x, _weaponHitbox->y},
+        {_weaponHitbox->w, _weaponHitbox->h}
     );
     
     SDL_SetRenderDrawColor(&renderer, 0, 255, 0, 255); // green

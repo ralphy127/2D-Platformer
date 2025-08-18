@@ -16,7 +16,7 @@ Game::Game()
       _mapTextures(_renderManager.getRenderer()),
       _simpleTextures(_renderManager.getRenderer()),
       _spriteTextures(_renderManager.getRenderer()) {
-                
+
     const auto windowSize = _windowManager.getWindowSize();
     _settings.setWindowSize(windowSize);
     
@@ -31,9 +31,10 @@ Game::Game()
     size_t levels = 1;
     for (size_t level = 0; level < levels; ++level)
         _levels.push_back(std::make_unique<engine::Level>(_mapTextures,
-                                                          _tileClassifier,
-                                                          _settings,
-                                                          level));
+            _tileClassifier,
+            _settings,
+            _renderManager.getRenderer(),
+            level));
 
     _entities.push_back(std::make_unique<Commander>(_settings, _spriteTextures));
     _entities.push_back(std::make_unique<Archer>(_settings, _spriteTextures));
@@ -87,11 +88,11 @@ void Game::update() {
                     deltaTime);
 
                 dynamicEntity->applyMovement(deltaTime);
-
-                if (auto* player = dynamic_cast<game::Player*>(dynamicEntity))
-                    player->logDebugState();
             }
         }
+
+        auto& player = dynamic_cast<Player&>(*_entities.back());
+        player.logDebugState();
     }
     catch (const std::exception& e) {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Game update error: %s", e.what());

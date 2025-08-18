@@ -9,7 +9,7 @@ namespace engine {
 
 class ParallaxLayer : public ILayer, public ISettingsObserver {
 public:
-    enum class Type { NEAR, FAR, BACKGROUND };
+    enum class Type { BACKGROUND, FAR, NEAR };
 
     ParallaxLayer(Settings&, SDL_Renderer&, Type, size_t levelId, float parallaxSpeed);
 

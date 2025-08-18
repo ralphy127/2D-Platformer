@@ -43,7 +43,7 @@ public:
     /// @param size New size to set.
     void setSize(utils::f2v size) { _size = size; }
 
-    SDL_Rect getHitbox() const;
+    SDL_FRect getHitbox() const;
 
     void setHitbox(SDL_Rect hitbox);
 

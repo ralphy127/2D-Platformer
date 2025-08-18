@@ -45,6 +45,16 @@ public:
     /// @param camera Camera for world-to-screen transformations.
     void render(SDL_Renderer&, Camera&) const override;
 
+    std::optional<SDL_FRect> getWeaponHitbox() const { return _weaponHitbox; };
+
+    bool isAttacking() const { return _currentAttack.has_value(); }
+
+    virtual bool isPlayer() const { return false; }
+
+    std::optional<AttackId> getAttackId() const { return _currentAttack; }
+
+    const AttackData& getCurrentAttackDataView() const;
+
 protected:
     /// @brief Provides access to the internal sprite animation data.
     /// @return Reference to the entity's SpriteData.
@@ -56,10 +66,10 @@ protected:
 
     void handleAttack();
 
-    bool isAttacking() const { return _currentAttack.has_value(); }
-
 private:
     void updateHealthBar();
+
+    void calculateWeaponHitbox();
 
     /// @brief Renders the weapon's hitbox during attacks (green rectangle).
     void renderWeaponHitbox(SDL_Renderer& renderer, Camera& camera) const;
@@ -73,6 +83,8 @@ private:
     std::unordered_map<AttackId, AttackData> _attacks{};
 
     std::optional<AttackId> _currentAttack{};
+
+    std::optional<SDL_FRect> _weaponHitbox{};
 
     Clock::Type::time_point _lastAttackStartTime{};
 
