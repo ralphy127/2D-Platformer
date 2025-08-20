@@ -9,88 +9,68 @@ namespace engine {
 
 using AttackId = int;
 
+/// @brief Data structure defining attack properties and behavior.
 struct AttackData {
-    AttackId id;
-    float damage;
-    std::chrono::steady_clock::duration duration;
-    utils::f2v offsetRight;
-    utils::f2v offsetLeft;
-    utils::f2v size;
-    size_t animationId;
-    std::function<void()> onHit;
-    std::optional<std::string> sourceTag;
+    AttackId id;                                  ///< Unique attack identifier.
+    float damage;                                 ///< Damage dealt by this attack.
+    std::chrono::steady_clock::duration duration; ///< How long attack lasts.
+    utils::f2v offsetRight;                       ///< Hitbox offset when facing right.
+    utils::f2v offsetLeft;                        ///< Hitbox offset when facing left.
+    utils::f2v size;                              ///< Hitbox dimensions (width, height).
+    size_t animationId;                           ///< Animation to play during attack.
+    std::function<void()> onHit;                  ///< Callback executed on successful hit.
+    std::optional<std::string> sourceTag;         ///< Optional tag for attack source.
 };
 
-/// @brief Represents a dynamic entity that uses sprite-based animation for rendering.
+/// @brief Represents dynamic entity rendered using spritesheet. Can perform attacks, has health.
 class DynamicSpriteEntity : public DynamicEntity {
 public:
-    /// @brief Configuration structure for DynamicSpriteEntity.
-    /// Extends DynamicEntity::Config with sprite data.
+    /// @brief Configuration struct used to initialize a DynamicSimpleEntity.
     struct Config : DynamicEntity::Config {
         SpriteData spriteData; ///< Initial sprite animation data.
     };
 
-    /// @brief Constructs a DynamicSpriteEntity with sprite textures and animation data.
-    /// @param settings Reference to engine settings.
-    /// @param textures Sprite texture manager.
-    /// @param config Configuration containing position, size, health, speed and sprite info.
     DynamicSpriteEntity(Settings&, ISpriteTextures&, const Config&);
 
-    /// @brief Updates the entity state, including sprite animation.
-    /// @param deltaTime Time elapsed since the last frame (in seconds).
+    /// @brief Updates entity's logic based on the elapsed time.
     void update(float deltaTime) override;
 
-    /// @brief Renders the entity using the provided renderer and camera.
-    /// @param renderer SDL renderer to use for drawing.
-    /// @param camera Camera for world-to-screen transformations.
     void render(SDL_Renderer&, Camera&) const override;
 
-    std::optional<SDL_FRect> getWeaponHitbox() const { return _weaponHitbox; };
-
     bool isAttacking() const { return _currentAttack.has_value(); }
-
+    std::optional<AttackId> getAttackId() const { return _currentAttack; }
+    std::optional<SDL_FRect> getWeaponHitbox() const { return _weaponHitbox; };
+    const AttackData& getCurrentAttackDataView() const;
+    
+    /// @brief Checks if entity is a player, should be overridden in player's class.
     virtual bool isPlayer() const { return false; }
 
-    std::optional<AttackId> getAttackId() const { return _currentAttack; }
-
-    const AttackData& getCurrentAttackDataView() const;
-
 protected:
-    /// @brief Provides access to the internal sprite animation data.
-    /// @return Reference to the entity's SpriteData.
+    void addAtack(const AttackData& attack) { _attacks[attack.id] = attack; }
+    void performAttack(AttackId);
+    void handleAttack();
     SpriteData& getSpriteData() { return _spriteData; }
 
-    void addAtack(const AttackData& attack) { _attacks[attack.id] = attack; }
-
-    void performAttack(AttackId);
-
-    void handleAttack();
-
 private:
-    void updateHealthBar();
-
-    void calculateWeaponHitbox();
-
     /// @brief Renders the weapon's hitbox during attacks (green rectangle).
     void renderWeaponHitbox(SDL_Renderer& renderer, Camera& camera) const;
 
     void renderHealthBar(SDL_Renderer&, Camera&) const;
 
-    ISpriteTextures& _textures; ///< Reference to sprite texture provider.
-    
-    SpriteData _spriteData;     ///< Current animation state and sprite properties.
+    void updateHealthBar();
 
-    std::unordered_map<AttackId, AttackData> _attacks{};
+    /// @brief Updates weapon hitbox based on current attack and direction.
+    void calculateWeaponHitbox();
 
-    std::optional<AttackId> _currentAttack{};
+    ISpriteTextures& _textures;                          ///< Reference to sprite texture provider.
 
-    std::optional<SDL_FRect> _weaponHitbox{};
-
-    Clock::Type::time_point _lastAttackStartTime{};
-
-    utils::f2v _healthBarPos{};
-
-    utils::f2v _healthBarSize{};
+    SpriteData _spriteData;                              ///< Sprite properties.
+    std::unordered_map<AttackId, AttackData> _attacks{}; ///< Available attacks mapped by ID.
+    std::optional<AttackId> _currentAttack{};            ///< Currently active attack ID.
+    std::optional<SDL_FRect> _weaponHitbox{};            ///< Current weapon collision area.
+    Clock::Type::time_point _lastAttackStartTime{};      ///< When current attack started.
+    utils::f2v _healthBarPos{};                          ///< Health bar screen position.
+    utils::f2v _healthBarSize{};                         ///< Health bar dimensions.
 };
 
 }

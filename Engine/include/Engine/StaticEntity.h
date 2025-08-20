@@ -5,6 +5,7 @@
 
 namespace engine {
 
+// to be implemented
 class StaticEntity : public Drawable {
     struct Config : Drawable::Config {
         

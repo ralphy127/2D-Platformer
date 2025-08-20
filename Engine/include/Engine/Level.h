@@ -6,27 +6,19 @@
 
 namespace engine {
 
-/// @brief Represents a game level composed of multiple tile layers.
+/// @brief Represents a game level composed of multiple layers.
 class Level {
 public:
-    /// @brief Constructs a level with specified textures, settings, and level number.
-    /// @param mapTextures Reference to the map textures.
-    /// @param settings Game settings.
-    /// @param level Level index to load.
     Level(IMapTextures&, const ITileClassifier&, Settings&, SDL_Renderer&, size_t level);
-
     ~Level() { SDL_LogDebug(utils::LOG_CATEGORY_CLEANUP, "Level %zu destroyed", _level); }
 
     /// @brief Renders all layers of the level.
-    /// @param renderer SDL renderer.
-    /// @param camera Camera used to transform tile positions.
     void render(SDL_Renderer&, Camera&) const;
 
     const TileLayer::Grid& getMapView() const;
 
 private:
-    size_t _level; ///< id of the level
-
+    size_t _level;                                  ///< id of the level
     std::vector<std::unique_ptr<ILayer>> _layers{}; ///< List of layers in the level.
 };
 

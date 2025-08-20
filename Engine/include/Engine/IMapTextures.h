@@ -4,7 +4,7 @@
 
 namespace engine {
 
-/// @brief Interface for managing map textures.
+/// @brief Interface for map textures provider.
 class IMapTextures {
 public:
     virtual ~IMapTextures() = default;

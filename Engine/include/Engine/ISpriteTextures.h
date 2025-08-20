@@ -5,7 +5,7 @@
 
 namespace engine {
 
-/// @brief Interface providing animated textures (sprites) for sprite-type entities.
+/// @brief Interface for animated textures provider (for sprite-type entities).
 class ISpriteTextures {
 public:
     virtual ~ISpriteTextures() = default;

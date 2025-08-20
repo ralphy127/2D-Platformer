@@ -5,7 +5,7 @@
 
 namespace engine {
 
-/// @brief Interface providing textures for simple entities (non-animated).
+/// @brief Interface for simple textures provider (for non-animated entities).
 class ISimpleTextures {
 public:
     virtual ~ISimpleTextures() = default;

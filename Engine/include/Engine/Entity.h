@@ -12,57 +12,33 @@ public:
 
     /// @brief Configuration structure used for constructing entities.
     struct Config {
-        utils::f2v pos;   ///< Initial position of the entity.
-        utils::f2v size;  ///< Size of the entity.
-        Type type;        ///< Entity type identifier.
+        utils::f2v pos; ///< Initial position of the entity.
+        utils::f2v size;///< Size of the entity.
+        Type type;      ///< Entity type identifier.
     };
 
-    /// @brief Constructs an Entity with the given configuration.
-    /// @param settings Reference to engine settings.
-    /// @param config Entity configuration (position, size, type).
     Entity(Settings&, const Config& config);
-
     ~Entity() { _settings.unregisterObserver(*this); }
 
-    /// @brief Called when settings are changed. Updates cached tile size.
-    void onSettingsChanged() override;
-
-    /// @brief Gets the position of the entity.
-    /// @return Current position.
     utils::f2v getPos() const { return _pos; }
-
-    /// @brief Sets the position of the entity.
-    /// @param pos New position to set.
     void setPos(utils::f2v pos) { _pos = pos; }
 
-    /// @brief Gets the size of the entity.
-    /// @return Current size.
     utils::f2v getSize() const { return _size; }
-
-    /// @brief Sets the size of the entity.
-    /// @param size New size to set.
     void setSize(utils::f2v size) { _size = size; }
 
     SDL_FRect getHitbox() const;
-
     void setHitbox(SDL_Rect hitbox);
 
 protected:
-    /// @brief Returns the type of the entity.
-    /// @return Integer identifier of the entity type.
     Type getType() const { return _type; }
 
-    /// @brief Returns current tile size from settings.
-    /// @return Size of a single tile in pixels.
     size_t getTileSize() const { return _tileSize; }
 
-    /// @brief Provides access to settings object.
-    /// @return Const reference to the settings.
     const Settings& getSettings() const { return _settings; }
 
 private:
     Settings& _settings; ///< Reference to shared engine settings.
-    size_t _tileSize;    ///< Cached tile size (updated on settings change).
+    size_t _tileSize;    ///< Cached tile size.
     utils::f2v _pos;     ///< Current position of the entity.
     utils::f2v _size;    ///< Current size of the entity.
     Type _type;          ///< Identifier for the type of entity.

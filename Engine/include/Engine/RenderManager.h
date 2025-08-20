@@ -9,17 +9,11 @@
 
 namespace engine {
 
-/// @brief Manages clearing and presenting the SDL renderer.
 class RenderManager {
 public:
-    /// @brief Constructs RenderManager with the given SDL renderer.
-    /// @param renderer Pointer to the SDL_Renderer to manage.
     RenderManager(SDL_Window&);
-
     ~RenderManager() { SDL_LogDebug(utils::LOG_CATEGORY_CLEANUP, "Render manager destroyed"); }
 
-    /// @brief Gets the raw pointer to the SDL renderer.
-    /// @return Pointer to SDL_Renderer.
     SDL_Renderer& getRenderer() { return *_renderer; }
 
     /// @brief Clears the current rendering target with a fixed background color.

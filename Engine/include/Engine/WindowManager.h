@@ -9,45 +9,31 @@
 
 namespace engine {
 
-/// @brief Manages SDL window and renderer lifecycle and properties
 class WindowManager : public ISettingsObserver {
 public:
-    /// @brief Constructs a WindowManager, initializing SDL window and renderer.
-    /// @param settings Game settings to get window size and fullscreen configuration
     WindowManager(Settings&);
-
     ~WindowManager();
 
-    /// @brief Gets the raw pointer to the SDL window.
-    /// @return Pointer to SDL_Window.
     SDL_Window& getWindow() { return *_window; }
 
-    /// @brief Gets the current window size.
-    /// @return Window size as an i2v struct.
     utils::i2v getWindowSize() const { return _windowSize; }
-
-    /// @brief Sets a new window size.
-    /// @param windowSize The new window size as an i2v struct.
     void setWindowSize(const utils::i2v& windowSize);
 
-    /// @brief Set fullscreen configuration
-    /// @param fullscreen If true, display mode is fulscreen
     void setFullscreen(bool fullscreen) { _fullscreen = fullscreen; }
 
     void onSettingsChanged() override;
 private:
-    /// @brief Initializes window dimensions based on configuration or fullscreen display mode.
+    /// @brief Initializes window dimensions based on configuration.
     void initFullScreenWindowDimensions();
 
     /// @brief Resets the SDL window with the specified parameters.
     void resetWindow(const std::string& title, int x, int y, int w, int h, Uint32 flags);
+    
+    Settings& _settings;    ///< Reference to game settings
 
-    /// @brief Managed SDL window pointer
-    std::unique_ptr<SDL_Window, decltype(&SDL_DestroyWindow)> _window;
-
-    Settings& _settings;            ///< Reference to game settings
-    bool _fullscreen;               ///< If true, the game runs in fullscreen mode.
-    utils::i2v _windowSize;         ///< Current window size
+    std::unique_ptr<SDL_Window, decltype(&SDL_DestroyWindow)> _window; ///< Managed SDL window
+    bool _fullscreen;       ///< If true, the game runs in fullscreen mode.
+    utils::i2v _windowSize; ///< Current window size
 };
 
 }

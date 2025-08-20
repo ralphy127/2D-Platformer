@@ -5,28 +5,17 @@
 
 namespace engine {
 
-/// @brief Represents a dynamic entity using simple textures for rendering.
+/// @brief Represents dynamic entity represented in game by single texture.
 class DynamicSimpleEntity : public DynamicEntity {
 public:
-    /// @brief Configuration structure for DynamicSimpleEntity.
-    /// Inherits all configuration fields from DynamicEntity::Config.
-    struct Config : DynamicEntity::Config {
-        // No additional fields for now.
-    };
+    /// @brief Configuration struct used to initialize a DynamicSimpleEntity.
+    struct Config : DynamicEntity::Config {};
 
-    /// @brief Constructs a DynamicSimpleEntity with texture support.
-    /// @param settings Reference to engine settings.
-    /// @param textures Texture provider implementing ISimpleTextures.
-    /// @param config Configuration for initialization.
     DynamicSimpleEntity(Settings&, ISimpleTextures&, const Config&);
 
-    /// @brief Updates the entity's state.
-    /// @param deltaTime Time since last frame (in seconds).
+    /// @brief Updates entity's logic based on the elapsed time.
     void update(float deltaTime) override {}
 
-    /// @brief Renders the entity using the given renderer and camera.
-    /// @param renderer SDL renderer to draw with.
-    /// @param camera Camera used to transform world coordinates.
     void render(SDL_Renderer&, Camera&) const override;
 
 private:

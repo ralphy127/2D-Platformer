@@ -1,34 +1,37 @@
 #pragma once
 
 #include <Utils/SDLUtils.h>
-#include "Engine/Layer.h"
+#include "Engine/ILayer.h"
 #include "Engine/TexturesManager.h"
 #include "Camera.h"
 
 namespace engine {
 
+/// @brief Layer that scrolls at different speeds to create depth illusion.
 class ParallaxLayer : public ILayer, public ISettingsObserver {
 public:
+    /// @brief Types of parallax layers with different depth levels.
     enum class Type { BACKGROUND, FAR, NEAR };
 
     ParallaxLayer(Settings&, SDL_Renderer&, Type, size_t levelId, float parallaxSpeed);
-
     ~ParallaxLayer() { _settings.unregisterObserver(*this); }
 
+    /// @brief Renders the parallax layer with camera-based scrolling.
     void render(SDL_Renderer&, Camera&) const override;
 
     void onSettingsChanged() override;
 
 private:
+    /// @brief Gets the texture file path based on type and level.
     std::string getTexturePath() const;
 
-    Settings& _settings;
+    Settings& _settings;  ///< Reference to game settings.
 
-    Type _type;
-    size_t _levelId;
-    float _parallaxSpeed;
-    size_t _tileSize;
-    utils::SDLUtils::TexturePtr _texture{nullptr, SDL_DestroyTexture};
+    Type _type;           ///< Layer depth type.
+    size_t _levelId;      ///< Level identifier for texture.
+    float _parallaxSpeed; ///< Speed multiplier for scrolling.
+    size_t _tileSize;     ///< Size of tiles for scaling.
+    utils::SDLUtils::TexturePtr _texture{nullptr, SDL_DestroyTexture}; ///< Layer texture.
 };
 
 }

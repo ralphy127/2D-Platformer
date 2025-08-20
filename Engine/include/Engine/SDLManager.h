@@ -6,17 +6,12 @@
 
 namespace engine {
 
-/// @brief Manages SDL initialization, audio and cleanup
+/// @brief Manages SDL initialization, subsystems, audio and cleanup.
 class SDLManager {
 public:
-    /// @brief Constructs SDLManager and initializes SDL subsystems and audio
     SDLManager();
-
-    /// @brief Cleans up SDL and audio subsystems
     ~SDLManager();
 
-    /// @brief Sets the master volume level
-    /// @param volume Volume level in range 0 to 10
     void setVolume(size_t volume);
 
 private:

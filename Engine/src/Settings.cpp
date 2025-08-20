@@ -2,7 +2,7 @@
 
 namespace engine {
 
-Settings::Settings(Config&& config)
+Settings::Settings(const Config& config)
     : _fullscreen(config.fullscreen),
       _title(std::move(config.title)),
       _targetFps(config.targetFps),
