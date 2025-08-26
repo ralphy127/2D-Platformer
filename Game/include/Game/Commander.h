@@ -14,16 +14,16 @@ public:
 
 private:
     enum class State {
-        IDLE,       ///< Standing still.
-        WALKING,    ///< Moving at walking speed.
-        RUNNING,    ///< Moving at sprint speed.
-        ATTACK1,    ///< Performing attack animation 1.
-        ATTACK2,    ///< Performing attack animation 2.
-        ATTACK3,    ///< Performing attack animation 3.
-        PROTECTING, ///< Defensive state.
-        JUMPING,    ///< In the air.
-        HURT,       ///< Taking damage.
-        DEAD        ///< Player is dead.
+        IDLE,
+        WALKING,
+        RUNNING,
+        ATTACK1,
+        ATTACK2,
+        ATTACK3,
+        PROTECTING,
+        JUMPING,
+        HURT,
+        DEAD
     };
 
     engine::DynamicSpriteEntity::Config initAndGetConfig(const engine::Settings&) const;

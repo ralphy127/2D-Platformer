@@ -10,20 +10,22 @@ class Archer : public engine::DynamicSpriteEntity {
 public:
     Archer(engine::Settings&, engine::ISpriteTextures&);
 
+    /// @brief Updates archer AI behavior and animation state.
     void update(float deltaTime) override;
 
 private:
+    /// @brief Defines various archer states controlling animations and behavior.
     enum class State {
-        IDLE,       ///< Standing still.
-        WALKING,    ///< Moving at walking speed.
-        RUNNING,    ///< Moving at sprint speed.
-        ATTACK1,    ///< Performing attack animation 1.
-        ATTACK2,    ///< Performing attack animation 2.
-        ATTACK3,    ///< Performing attack animation 3.
-        ATTACK4,    ///< Performing attack animation 4.
-        JUMPING,    ///< In the air.
-        HURT,       ///< Taking damage.
-        DEAD        ///< Player is dead.
+        IDLE,
+        WALKING,
+        RUNNING,
+        ATTACK1,
+        ATTACK2,
+        ATTACK3,
+        ATTACK4,
+        JUMPING,
+        HURT,
+        DEAD
     };
 
     engine::DynamicSpriteEntity::Config initAndGetConfig(const engine::Settings&) const;

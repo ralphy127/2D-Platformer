@@ -94,42 +94,44 @@ bool PhysicsHandler::AABBcast(
 }
 
 void PhysicsHandler::handleAttacksCollisions(
-    std::vector<std::reference_wrapper<DynamicSpriteEntity>>& entities) const {
+    DynamicSpriteEntity& player,
+    DynamicEntity& entity) const {
+    
+    if (&player == &entity)
+        throw std::runtime_error("passed two same references (player and entity)");
+    
+    const auto playerHitbox = player.getHitbox();
+
+    if (player.isAttacking()) {
+        const auto playerWeaponHitbox = player.getWeaponHitbox();
+        if (!playerWeaponHitbox.has_value())
+            throw std::runtime_error("player is attacking, but has no weapon hitbox");
         
-    int playerIndex = -1;
-    const auto n = entities.size();
-    for (size_t index = 0; index < n; ++index) {
-        if (entities[index].get().isPlayer()) {
-            playerIndex = index;
-            break;
+        const auto& playerAttackData = player.getCurrentAttackDataView();
+
+        const auto entityHitbox = entity.getHitbox();
+        if (SDL_HasIntersectionF(&playerWeaponHitbox.value(), &entityHitbox)) {
+            entity.dealDamage(playerAttackData.damage);
+
+            if (playerAttackData.onHit)
+                playerAttackData.onHit();
         }
     }
 
-    if (playerIndex == -1)
-        throw std::runtime_error("Player not found while trying to handle entities collisions");
+    if (auto* dse = dynamic_cast<DynamicSpriteEntity*>(&entity)) {
+        if (dse->isAttacking()) {
+            const auto entityWeaponHitbox = dse->getWeaponHitbox();
+            if (!entityWeaponHitbox.has_value())
+                throw std::runtime_error("entity is attacking, but has no weapon hitbox");
 
-    auto& player = entities[playerIndex].get();
-    const auto playerHitbox = player.getHitbox();
-    const auto playerWeaponHitbox = player.getWeaponHitbox();
+            if (SDL_HasIntersectionF(&entityWeaponHitbox.value(), &playerHitbox)) {
+                const auto& attackData = dse->getCurrentAttackDataView();
 
-    for (size_t i = 0; i < n; ++i) {
-        auto& entity = entities.at(i).get();
-        if (&entity == &player)
-            continue;
+                player.dealDamage(attackData.damage);
 
-        if (!entity.isAttacking())
-            continue;
-        
-        const auto entityWeaponHitbox = entity.getWeaponHitbox();
-        if (entityWeaponHitbox.has_value() &&
-            SDL_HasIntersectionF(&entityWeaponHitbox.value(), &playerHitbox)) {
-            
-            auto& attackData = entity.getCurrentAttackDataView();
-            
-            player.dealDamage(attackData.damage);
-            
-            if (attackData.onHit)
-                attackData.onHit();
+                if (attackData.onHit)
+                    attackData.onHit();
+            }
         }
     }
 }

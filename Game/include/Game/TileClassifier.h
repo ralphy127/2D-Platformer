@@ -6,7 +6,6 @@
 
 namespace game {
 
-/// @brief Classifies tile IDs into texture coordinates and collision properties.
 class TileClassifier : public engine::ITileClassifier {
 public:
     /// @brief Classifies tile ID into type and texture index.

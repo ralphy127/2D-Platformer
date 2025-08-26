@@ -8,7 +8,6 @@ namespace utils {
 
 struct f2v;
 
-/// @brief Simple 2D integer vector with basic arithmetic operations and length calculation.
 struct i2v {
     int x = 0, y = 0;
 

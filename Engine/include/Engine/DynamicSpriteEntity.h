@@ -41,9 +41,6 @@ public:
     std::optional<AttackId> getAttackId() const { return _currentAttack; }
     std::optional<SDL_FRect> getWeaponHitbox() const { return _weaponHitbox; };
     const AttackData& getCurrentAttackDataView() const;
-    
-    /// @brief Checks if entity is a player, should be overridden in player's class.
-    virtual bool isPlayer() const { return false; }
 
 protected:
     void addAtack(const AttackData& attack) { _attacks[attack.id] = attack; }

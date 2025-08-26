@@ -72,7 +72,7 @@ std::string TileLayer::getCSVPath() const {
             throw std::runtime_error("failed to get csv path: wrong map type.");
     }
 
-    return std::string("/Users/rafalwybraniec/Desktop/C++/Gierki/2D-Platformer-refactored/build/Game/assets/levels/level_") + 
+    return std::string("assets/levels/level_") + 
                       (_levelId < 10 ? "0" : "") + (_levelId < 100 ? "0" : "") +
                       std::to_string(_levelId) + "/" + fileName + ".csv";
 }

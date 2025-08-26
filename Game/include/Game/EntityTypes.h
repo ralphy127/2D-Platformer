@@ -7,30 +7,31 @@ namespace game {
 
 /// @brief Represents different types of game entities.
 enum class EntityType {
-    // sprite
+    NONE,
+
     PLAYER,
     COMMANDER,
     ARCHER,
-    // texture
+    SPRITE_END,
 
-    // helpers
-    COUNT,
-    NONE
+    SIMPLE_END,
 };
 
-/// @brief List of all simple (non-sprite) entity types.
-const std::vector<EntityType> allSimpleTypes = {
+constexpr size_t simpleCount = static_cast<size_t>(EntityType::SIMPLE_END) -
+                               static_cast<size_t>(EntityType::SPRITE_END) - 1UL;
+                              
+constexpr std::array<EntityType, simpleCount> allSimpleTypes = {
 
 };
 
-/// @brief List of all sprite-based entity types.
-const std::vector<EntityType> allSpriteTypes = {
+constexpr size_t spriteCount = static_cast<size_t>(EntityType::SPRITE_END) - 1UL;
+
+constexpr std::array<EntityType, spriteCount> allSpriteTypes = {
     EntityType::PLAYER,
     EntityType::COMMANDER,
     EntityType::ARCHER,
 };
 
-/// @brief Converts an EntityType enum to a lowercase string representation.
 inline std::string toString(EntityType type) {
     switch (type) {
         case EntityType::PLAYER:
@@ -39,6 +40,10 @@ inline std::string toString(EntityType type) {
             return std::string("commander");
         case EntityType::ARCHER:
             return std::string("archer");
+        case EntityType::NONE:
+        case EntityType::SIMPLE_END:
+        case EntityType::SPRITE_END:
+            throw std::runtime_error("wrong entity type (helper)");
         default:
             return std::string("unknown");
     }

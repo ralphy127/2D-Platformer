@@ -6,56 +6,41 @@
 
 namespace game {
 
-/// @brief Represents the player character in the game.
 class Player : public engine::DynamicSpriteEntity {
 public:
-    /// @brief Constructs a Player instance.
-    /// @param settings Reference to global game settings.
-    /// @param spriteTextures Reference to sprite texture provider.
-    /// @param eventHandler Reference to event handler to process input.
     Player(engine::Settings&, engine::ISpriteTextures&, const engine::EventHandler&);
 
-    /// @brief Updates player state and animation each frame.
-    /// @param deltaTime Time elapsed since last frame.
     void update(float deltaTime) override;
 
-    /// @brief Renders the player sprite to the screen.
-    /// @param renderer SDL renderer.
-    /// @param camera Camera for converting world to screen coordinates.
     void render(SDL_Renderer&, engine::Camera&) const override;
 
     void logDebugState();
 
 private:
     enum class State {
-        IDLE,       ///< Standing still.
-        WALKING,    ///< Moving at walking speed.
-        RUNNING,    ///< Moving at sprint speed.
-        ATTACK1,    ///< Performing attack animation 1.
-        ATTACK2,    ///< Performing attack animation 2.
-        ATTACK3,    ///< Performing attack animation 3.
-        PROTECTING, ///< Defensive state.
-        JUMPING,    ///< In the air.
-        HURT,       ///< Taking damage.
-        DEAD        ///< Player is dead.
+        IDLE,
+        WALKING,
+        RUNNING,
+        ATTACK1,
+        ATTACK2,
+        ATTACK3,
+        PROTECTING,
+        JUMPING,
+        HURT,
+        DEAD
     };
 
-    /// @brief Initializes and returns the configuration struct for the base DynamicSpriteEntity.
-    /// @param settings Reference to global game settings.
-    /// @return Config object with player-specific settings.
     engine::DynamicSpriteEntity::Config initAndGetConfig(const engine::Settings&) const;
 
     void createAndAddAttacks();
 
     /// @brief Handles player movement and updates velocity and state accordingly.
-    /// @param deltaTime Time elapsed since last frame.
     void handleMovement(float deltaTime);
 
-    /// @brief Manages sprinting state based on whether shift key is pressed.
-    /// @param shiftPressed Whether the shift key is currently pressed.
-    /// @param spriteData Reference to the sprite animation data to update.
+    /// @brief Handles sprinting state based on whether shift key is pressed.
     void handleLShift(bool shiftPressed, engine::SpriteData& spriteData);
     
+    /// @brief Changes state and animation to desired if possible
     void tryToChangeAnimation(State, engine::SpriteData&);
 
     void handleAttacks();
@@ -63,10 +48,8 @@ private:
     std::string stateToString(size_t animation);
     
     const engine::EventHandler& _eventHandler; ///< Reference to input event handler.
-
-    bool _jumpPressedLastFrame{false};
-
-    State _state{State::IDLE};                 ///< Current player state.
+    bool _jumpPressedLastFrame{false}; ///< Jumping guard
+    State _state{State::IDLE}; ///< Current player state.
 };
 
 }

@@ -26,9 +26,9 @@ public:
     /// @brief Handles collisions between entity and map tiles.
     void handleMapCollisions(DynamicEntity&, const TileLayer::Grid&, float deltaTime) const;
 
-    /// @brief Handles attack collisions between entities.
-    void handleAttacksCollisions(std::vector<std::reference_wrapper<DynamicSpriteEntity>>&) const;
-
+    /// @brief Handles attack collisions between player and an entity.
+    void handleAttacksCollisions(DynamicSpriteEntity& player, DynamicEntity& entity) const;
+    
     void setFallGMultiplier(float fallGMultiplier) { _fallGMultiplier = fallGMultiplier; }
 
     void onSettingsChanged() override;

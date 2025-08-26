@@ -8,8 +8,8 @@ Settings::Settings(const Config& config)
       _targetFps(config.targetFps),
       _showHitboxes(config.showHitboxes),
       _showTextureHitboxes(config.showTextureHitboxes),
-      _windowSize(config.windowSize),
       _windowPos(config.windowPos),
+      _windowSize(config.windowSize),
       _tileSize(config.tileSize) {
     
     SDL_LogDebug(utils::LOG_CATEGORY_SETUP, "Settings created (custom)");

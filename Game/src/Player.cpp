@@ -27,7 +27,8 @@ void Player::update(float deltaTime) {
 void Player::render(SDL_Renderer& renderer, engine::Camera& camera) const {
     auto pos = getPos();
     auto size = getSize();
-    utils::f2v cameraPos(pos.x - size.x/2.f, pos.y - size.y/2.f -  getSettings().getWindowSize().y * 0.18f / camera.getZoom());
+    utils::f2v cameraPos(pos.x - size.x/2.f,
+        pos.y - size.y/2.f -  getSettings().getWindowSize().y * 0.18f / camera.getZoom());
     camera.centerOn(cameraPos);
 
     DynamicSpriteEntity::render(renderer, camera);
@@ -112,7 +113,7 @@ void Player::createAndAddAttacks() {
     attack.size = {1.75f * size.x, 0.45f * size.y};
     attack.animationId = static_cast<size_t>(State::ATTACK1);
     attack.onHit = [](){
-        SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "Player swung performed attack 1"); };
+        SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "Player performed attack 1"); };
     attack.sourceTag = "player";
 
     addAtack(attack);
@@ -125,7 +126,7 @@ void Player::createAndAddAttacks() {
     attack.size = {2.3f * size.x, 1.3f * size.y};
     attack.animationId = static_cast<size_t>(State::ATTACK2);
     attack.onHit = [](){
-        SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "Player swung performed attack 2"); };
+        SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "Player performed attack 2"); };
 
     addAtack(attack);
 
@@ -137,7 +138,7 @@ void Player::createAndAddAttacks() {
     attack.size = {2.1f * size.x, 0.65f * size.y};
     attack.animationId = static_cast<size_t>(State::ATTACK3);
     attack.onHit = [](){
-        SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "Player swung performed attack 3"); };
+        SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "Player performed attack 3"); };
 
     addAtack(std::move(attack));
 }

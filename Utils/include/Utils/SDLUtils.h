@@ -5,13 +5,10 @@
 
 namespace utils {
 
-/// @brief Utility class for managing SDL_Surface and SDL_Texture with smart pointers.
+/// @brief Utility static class for managing SDL_Surface and SDL_Texture with smart pointers.
 class SDLUtils {
 public:
-    /// @brief Type alias for a unique pointer managing SDL_Texture with SDL_DestroyTexture deleter.
     using TexturePtr = std::unique_ptr<SDL_Texture, decltype(&SDL_DestroyTexture)>;
-    
-    /// @brief Type alias for a unique pointer managing SDL_Surface with SDL_FreeSurface deleter.
     using SurfacePtr = std::unique_ptr<SDL_Surface, decltype(&SDL_FreeSurface)>;
 
     /// @brief Wraps a raw SDL_Surface pointer into a managed SurfacePtr.

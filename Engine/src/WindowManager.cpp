@@ -6,8 +6,8 @@
 namespace engine {
 
 WindowManager::WindowManager(Settings& settings) 
-    : _window(nullptr, SDL_DestroyWindow),
-      _settings(settings) {
+    : _settings(settings),
+      _window(nullptr, SDL_DestroyWindow) {
 
     _fullscreen = _settings.isFullscreen();
     if (_fullscreen) {

@@ -29,6 +29,8 @@ public:
     SDL_FRect getHitbox() const;
     void setHitbox(SDL_Rect hitbox);
 
+    void onSettingsChanged() override;
+
 protected:
     Type getType() const { return _type; }
 

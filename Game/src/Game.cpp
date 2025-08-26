@@ -1,6 +1,7 @@
 #include "Game/Game.h"
 
-#include "Game/Player.h"
+#include <filesystem>
+#include <set>
 #include "Game/Commander.h"
 #include "Game/Archer.h"
 
@@ -28,20 +29,50 @@ Game::Game()
 
     _camera.setZoom(2.f);
 
-    size_t levels = 1;
-    for (size_t level = 0; level < levels; ++level)
-        _levels.push_back(std::make_unique<engine::Level>(_mapTextures,
+    initLevels();
+    initEntities();
+
+    SDL_LogDebug(utils::LOG_CATEGORY_SETUP, "Game created");
+}
+
+void Game::initLevels() {
+    const std::string levelsPath{"assets/levels"};
+
+    std::set<int> levelIds;
+
+    for (const auto& entry : std::filesystem::directory_iterator(levelsPath)) {
+        if (!entry.is_directory()) continue;
+        const auto name = entry.path().filename().string();
+
+        if (name.rfind("level_", 0) == 0) {
+            try {
+                const auto id = std::stoi(name.substr(6));
+                levelIds.insert(id);
+            }
+            catch (const std::exception&) {
+                SDL_LogWarn(SDL_LOG_CATEGORY_APPLICATION,
+                    "Invalid level folder name: %s", name.c_str());
+            }
+        }
+    }
+
+    _levels.reserve(levelIds.size());
+    for (const auto id : levelIds) {
+        _levels.emplace_back(std::make_unique<engine::Level>(
+            _mapTextures,
             _tileClassifier,
             _settings,
             _renderManager.getRenderer(),
-            level));
+            id
+        ));
+    }
+}
+
+void Game::initEntities() {
+    player = std::make_unique<Player>(_settings, _spriteTextures, _eventHandler);
 
     _entities.push_back(std::make_unique<Commander>(_settings, _spriteTextures));
     _entities.push_back(std::make_unique<Archer>(_settings, _spriteTextures));
-
-    _entities.push_back(std::make_unique<Player>(_settings, _spriteTextures, _eventHandler));
-
-    SDL_LogDebug(utils::LOG_CATEGORY_SETUP, "Game created");
 }
 
 void Game::run() {
@@ -78,25 +109,29 @@ void Game::update() {
     const auto deltaTime = _clock.getDeltaTime();
 
     try {
-        for (auto& entity : _entities) {
-            if (auto* dynamicEntity = dynamic_cast<engine::DynamicEntity*>(entity.get())) {
-                dynamicEntity->update(deltaTime);
-                _physicsHandler.applyGravity(*dynamicEntity, deltaTime);
-                _physicsHandler.handleMapCollisions(
-                    *dynamicEntity,
-                    _levels[_currentLevel]->getMapView(),
-                    deltaTime);
+        const auto& map = _levels.at(_currentLevel)->getMapView();
 
-                dynamicEntity->applyMovement(deltaTime);
+        updateEntity(*player, map, deltaTime);
+
+        for (auto& entityPtr : _entities) {
+            if (auto* dynEntity = dynamic_cast<engine::DynamicEntity*>(entityPtr.get())) {
+                updateEntity(*dynEntity, map, deltaTime);
+                _physicsHandler.handleAttacksCollisions(*player, *dynEntity);
             }
         }
 
-        auto& player = dynamic_cast<Player&>(*_entities.back());
-        player.logDebugState();
+        player->logDebugState();
     }
     catch (const std::exception& e) {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Game update error: %s", e.what());
     }
+}
+
+void Game::updateEntity(engine::DynamicEntity& entity, const engine::TileLayer::Grid& map, float deltaTime) {
+    entity.update(deltaTime);
+    _physicsHandler.applyGravity(entity, deltaTime);
+    _physicsHandler.handleMapCollisions(entity, map, deltaTime);
+    entity.applyMovement(deltaTime);
 }
 
 void Game::render() {
@@ -112,6 +147,8 @@ void Game::render() {
                 renderable->render(renderer, _camera);
             }
         }
+
+        player->render(renderer, _camera);
     }
     catch (const std::exception& e) {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Game render error: %s", e.what());
