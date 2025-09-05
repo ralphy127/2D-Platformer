@@ -45,7 +45,7 @@ private:
 
     void handleAttacks();
 
-    std::string stateToString(size_t animation);
+    std::string stateToString(State);
     
     const engine::EventHandler& _eventHandler; ///< Reference to input event handler.
     bool _jumpPressedLastFrame{false}; ///< Jumping guard

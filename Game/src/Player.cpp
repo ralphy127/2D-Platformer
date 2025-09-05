@@ -35,28 +35,32 @@ void Player::render(SDL_Renderer& renderer, engine::Camera& camera) const {
 }
 
 void Player::logDebugState() {
-    const auto logInterval = std::chrono::seconds(1);
+    constexpr auto logInterval = std::chrono::seconds(1);
     const std::string logKey{"PlayerState"};
 
     if (!utils::Logger::shouldLog(logKey, logInterval))
         return;
 
-    const int logWidth = 61;
+    constexpr int whitespaces = 45;
+    constexpr int labelWidth = 15;
 
     std::ostringstream message;
     message << "\n";
 
-    auto addFieldToMessage = [&message, logWidth](const std::string& label, const auto value) {
-        message << std::right << std::setw(logWidth)
-                << label << " : " << value << "\n";
+    auto addFieldToMessage = [&message](const std::string& label, const auto value) {
+        message << std::right << std::setw(whitespaces) << ' ' 
+                << std::left << std::setw(labelWidth) << ("[" + label + "]")
+                << " : " << value << "\n";
     };
 
-    addFieldToMessage("[Position]    : ", getPos());
-    addFieldToMessage("[Velocity]    : ", getVel());
-    addFieldToMessage("[On Ground]   : ", isOnGround() ? "True" : "False");
-    addFieldToMessage("[Direction]   : ", getDirection() == 1 ? "Right" : "Left");
-    addFieldToMessage("[Animation]   : ", stateToString(getSpriteData().getAnimation()));
-    addFieldToMessage("[Frame]       : ", getSpriteData().getFrame());
+    const auto& spriteData = getSpriteData();
+
+    addFieldToMessage("Position", getPos());
+    addFieldToMessage("Velocity", getVel());
+    addFieldToMessage("On Ground", isOnGround() ? "True" : "False");
+    addFieldToMessage("Direction", getDirection() == 1 ? "Right" : "Left");
+    addFieldToMessage("Frame", spriteData.getFrame());
+    addFieldToMessage("Animation", stateToString(static_cast<State>(spriteData.getAnimation())));
 
     utils::Logger::logDebugEvery(logKey, logInterval, message.str());
 }
@@ -213,8 +217,8 @@ void Player::handleAttacks() {
     }
 }
 
-std::string Player::stateToString(size_t animation) {
-    switch (static_cast<State>(animation)) {
+std::string Player::stateToString(State state) {
+    switch (state) {
         case State::IDLE:       return "IDLE";
         case State::WALKING:    return "WALKING";
         case State::RUNNING:    return "RUNNING";

@@ -1,5 +1,3 @@
-# game/CMakeLists.txt
-
 file(GLOB_RECURSE GAME_SRC CONFIGURE_DEPENDS src/*.cpp)
 file(GLOB_RECURSE GAME_HEADERS CONFIGURE_DEPENDS include/Game/*.h)
 
