@@ -47,7 +47,7 @@ engine::DynamicSpriteEntity::Config Archer::initAndGetConfig(
         {5, framesDuration}
     };
 
-    engine::SpriteData spriteData{std::move(animationsInfo), static_cast<size_t>(_state)};
+    engine::SpriteData spriteData{std::move(animationsInfo), static_cast<engine::AnimationId>(_state)};
 
     const auto windowSize = settings.getWindowSize();
     const auto tileSize = settings.getTileSize();
@@ -58,7 +58,7 @@ engine::DynamicSpriteEntity::Config Archer::initAndGetConfig(
     config.pos = {0.4f * windowSize.x, -30.f * tileSize - config.size.y};
     config.type = static_cast<engine::Entity::Type>(EntityType::ARCHER);
     config.textureSize = {1.1f * 3.f * tileSize, 1.1f * 3.f * tileSize};
-    config.direction = 1;
+    config.direction = engine::Direction::Right;
     config.maxHealth = 60.f;
     config.health = 60.f;
     config.defaultSpeed = 2.f * tileSize;

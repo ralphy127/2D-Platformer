@@ -7,6 +7,8 @@
 
 namespace engine {
 
+using AnimationId = uint8_t;
+
 /// @brief Holds animation data and manages frame progression for sprite animations.
 class SpriteData {
 public:
@@ -14,7 +16,7 @@ public:
     using AnimationsInfo = std::vector<std::pair<size_t, Clock::Type::duration>>;
     
     SpriteData() = default;
-    SpriteData(AnimationsInfo animationsInfo, size_t initialAnimation);
+    SpriteData(AnimationsInfo animationsInfo, AnimationId initialAnimation);
 
     /// @brief Advances the current frame if enough time has passed according to animation timing.
     /// Should be called regularly (e.g. once per game update).
@@ -23,8 +25,8 @@ public:
     size_t getFrame() const { return _currentFrame; }
     void setFrame(size_t frame);
 
-    size_t getAnimation() const { return _currentAnimation; }
-    void setAnimation(size_t animation);
+    AnimationId getAnimation() const { return _currentAnimation; }
+    void setAnimation(AnimationId animation);
 
     size_t getAnimationCount() const { return _animationsInfo.size(); }
 
@@ -40,7 +42,7 @@ private:
     void fetchAnimationsInfo();
 
     AnimationsInfo _animationsInfo;               ///< Pairs of (frames count, frame duration).
-    size_t _currentAnimation;                     ///< Current animation index.
+    AnimationId _currentAnimation;                ///< Current animation index.
     size_t _currentFrame{};                       ///< Current frame index within the animation.
     size_t _framesInCurrentAnimation{};           ///< Number of frames in the current animation.
     Clock::Type::duration _targetFrameDuration{}; ///< Duration to display each frame.

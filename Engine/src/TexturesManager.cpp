@@ -57,13 +57,13 @@ utils::SDLUtils::TexturePtr TexturesManager::loadClippedFromFile(
 std::vector<utils::SDLUtils::TexturePtr> TexturesManager::loadSequenceFromPattern(
     SDL_Renderer& renderer,
     const std::string& pattern,
-    const size_t count,
+    const uint32_t count,
     std::string extension) {
 
     std::vector<utils::SDLUtils::TexturePtr> textures;
     textures.reserve(count);
 
-    for(size_t i = 0; i < count; ++i) {
+    for(uint32_t i = 0; i < count; ++i) {
         auto fileName = pattern + (i < 10 ? "0" : "") + std::to_string(i) + extension;
         textures.push_back(loadFromFile(renderer, fileName));
     }

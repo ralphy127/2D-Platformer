@@ -14,7 +14,7 @@ public:
     DynamicSimpleEntity(Settings&, ISimpleTextures&, const Config&);
 
     /// @brief Updates entity's logic based on the elapsed time.
-    void update(float deltaTime) override {}
+    void update(float32_t deltaTime) override {}
 
     void render(SDL_Renderer&, Camera&) const override;
 

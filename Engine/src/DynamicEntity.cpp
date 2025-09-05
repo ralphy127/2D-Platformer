@@ -1,5 +1,7 @@
 #include "Engine/DynamicEntity.h"
 
+#include "Engine/Colors.h"
+
 namespace engine {
 
 DynamicEntity::DynamicEntity(Settings& settings, const Config& config) 
@@ -12,11 +14,11 @@ DynamicEntity::DynamicEntity(Settings& settings, const Config& config)
     capHealthIfNeeded(_maxHealth);
 }
 
-void DynamicEntity::update(float deltaTime) {
+void DynamicEntity::update(float32_t deltaTime) {
     ;
 }
 
-void DynamicEntity::applyMovement(float deltaTime) {
+void DynamicEntity::applyMovement(float32_t deltaTime) {
     setPos(getPos() + utils::f2v(_vel.x * deltaTime, _vel.y * deltaTime));
 }
 
@@ -27,7 +29,7 @@ void DynamicEntity::jump() {
     }
 }
 
-void DynamicEntity::capHealthIfNeeded(float health) {
+void DynamicEntity::capHealthIfNeeded(float32_t health) {
     if (health > _maxHealth) {
         _health = _maxHealth;
     }
@@ -41,7 +43,7 @@ void DynamicEntity::capHealthIfNeeded(float health) {
 
 void DynamicEntity::renderEntityHitbox(SDL_Renderer& renderer, Camera& camera) const {
     auto entityRect = camera.worldToViewport(getPos(), getSize());
-    SDL_SetRenderDrawColor(&renderer, 255, 0, 0, 255); // red
+    SDL_SetRenderDrawColor(&renderer, color_red.r, color_red.g, color_red.b, SDL_ALPHA_OPAQUE);
     SDL_RenderDrawRect(&renderer, &entityRect);
 }
 
@@ -50,7 +52,7 @@ void DynamicEntity::renderTextureHitbox(
     Camera& camera,
     const SDL_Rect& textureRect) const {
         
-    SDL_SetRenderDrawColor(&renderer, 128, 128, 128, 255); // grey
+    SDL_SetRenderDrawColor(&renderer, color_grey.r, color_grey.g, color_grey.b, SDL_ALPHA_OPAQUE);
     SDL_RenderDrawRect(&renderer, &textureRect);
 }
 

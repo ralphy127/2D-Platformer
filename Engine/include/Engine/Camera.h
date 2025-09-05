@@ -25,8 +25,8 @@ public:
     /// @brief Centers the camera on a target position.
     void centerOn(const utils::f2v& target);
 
-    float getZoom() const { return _zoom; }
-    void setZoom(float zoom);
+    float32_t getZoom() const { return _zoom; }
+    void setZoom(float32_t zoom);
 
     void setWindowSize(const utils::i2v& windowSize) { _windowSize = windowSize; }
 
@@ -37,7 +37,7 @@ private:
 
     utils::i2v _pos{};         ///< Current top-left position of the camera in world space.
     utils::i2v _windowSize{};  ///< Size of the viewport window in pixels.
-    float _zoom{};             ///< Zoom factor applied to camera projection.
+    float32_t _zoom{};         ///< Zoom factor applied to camera projection.
 };
 
 }

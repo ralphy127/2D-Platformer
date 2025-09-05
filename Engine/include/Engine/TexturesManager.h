@@ -39,7 +39,7 @@ public:
     static std::vector<utils::SDLUtils::TexturePtr> loadSequenceFromPattern(
         SDL_Renderer&,
         const std::string& pattern,
-        const size_t count,
+        const uint32_t count,
         std::string extension = ".png");
 };
 

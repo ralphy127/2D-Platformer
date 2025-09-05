@@ -7,6 +7,20 @@ Drawable::Drawable(Settings& settings, const Config& config)
       _textureSize(config.textureSize),
       _direction(config.direction) {}
 
+int8_t Drawable::getDirectionMultiplicator() const {
+    if (_direction == Direction::Left)
+        return -1;
+    if (_direction == Direction::Right)
+        return 1;
+    return 0;
+}
+
+void Drawable::turn() {
+    if (_direction == Direction::None)
+        return;
+    _direction = _direction == Direction::Left ? Direction::Right : Direction::Left;
+}
+
 void Drawable::onSettingsChanged() {
     auto oldTileSize = getTileSize();
 

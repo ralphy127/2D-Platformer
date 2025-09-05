@@ -7,17 +7,17 @@
 
 namespace engine {
 
-using AttackId = int;
+using AttackId = uint8_t;
 
 /// @brief Data structure defining attack properties and behavior.
 struct AttackData {
     AttackId id;                                  ///< Unique attack identifier.
-    float damage;                                 ///< Damage dealt by this attack.
+    float32_t damage;                             ///< Damage dealt by this attack.
     std::chrono::steady_clock::duration duration; ///< How long attack lasts.
     utils::f2v offsetRight;                       ///< Hitbox offset when facing right.
     utils::f2v offsetLeft;                        ///< Hitbox offset when facing left.
     utils::f2v size;                              ///< Hitbox dimensions (width, height).
-    size_t animationId;                           ///< Animation to play during attack.
+    AnimationId animationId;                      ///< Animation to play during attack.
     std::function<void()> onHit;                  ///< Callback executed on successful hit.
     std::optional<std::string> sourceTag;         ///< Optional tag for attack source.
 };
@@ -33,7 +33,7 @@ public:
     DynamicSpriteEntity(Settings&, ISpriteTextures&, const Config&);
 
     /// @brief Updates entity's logic based on the elapsed time.
-    void update(float deltaTime) override;
+    void update(float32_t deltaTime) override;
 
     void render(SDL_Renderer&, Camera&) const override;
 

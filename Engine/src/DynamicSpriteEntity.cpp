@@ -10,15 +10,15 @@ DynamicSpriteEntity::DynamicSpriteEntity(
       _textures(textures),
       _spriteData(std::move(config.spriteData)) {
 
-        const auto size = getSize();
-        const auto tileSize = getTileSize();
+    const auto size = getSize();
+    const auto tileSize = getTileSize();
 
-        _healthBarSize = {size.x * 0.9f, tileSize * 0.2f};
+    _healthBarSize = {size.x * 0.9f, tileSize * 0.2f};
 
-        updateHealthBar();
+    updateHealthBar();
 }
 
-void DynamicSpriteEntity::update(float deltaTime) {
+void DynamicSpriteEntity::update(float32_t deltaTime) {
     _spriteData.updateFrame();
 
     handleAttack();
@@ -37,7 +37,7 @@ void DynamicSpriteEntity::render(SDL_Renderer& renderer, Camera& camera) const {
 
     auto& texture = _textures.getTexture(type, _spriteData.getAnimation(), _spriteData.getFrame());
     
-    const auto flip = getDirection() > 0 ? SDL_FLIP_NONE : SDL_FLIP_HORIZONTAL;
+    const auto flip = getDirection() == Direction::Right ? SDL_FLIP_NONE : SDL_FLIP_HORIZONTAL;
     
     const utils::f2v texturePos(
         getPos().x - (getTextureSize().x - getSize().x) / 2.,
@@ -88,7 +88,7 @@ void DynamicSpriteEntity::calculateWeaponHitbox() {
     
     const auto attack = it->second;
 
-    const auto offset = getDirection() > 0 ? attack.offsetRight : attack.offsetLeft;
+    const auto offset = getDirection() == Direction::Right ? attack.offsetRight : attack.offsetLeft;
     const auto size = attack.size;
     
     _weaponHitbox = {

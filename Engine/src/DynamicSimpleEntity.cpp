@@ -1,5 +1,7 @@
 #include "Engine/DynamicSimpleEntity.h"
 
+#include "Engine/Colors.h"
+
 namespace engine {
 
 DynamicSimpleEntity::DynamicSimpleEntity(
@@ -14,7 +16,7 @@ void DynamicSimpleEntity::render(SDL_Renderer& renderer, Camera& camera) const {
 
     auto& texture = _textures.getTexture(type);
 
-    const auto flip = getDirection() > 0 ? SDL_FLIP_NONE : SDL_FLIP_HORIZONTAL;
+    const auto flip = getDirection() == Direction::Right ? SDL_FLIP_NONE : SDL_FLIP_HORIZONTAL;
 
     const auto pos = getPos();
 
@@ -32,17 +34,11 @@ void DynamicSimpleEntity::render(SDL_Renderer& renderer, Camera& camera) const {
         throw std::runtime_error(std::string("SDL_RenderCopyEx error: ") + SDL_GetError()
                                  + " while rendering entity of type: " + std::to_string(type));
 
-    if (getSettings().showHitboxes()) {
-        const auto entityRect = camera.worldToViewport(pos, size);
-        SDL_SetRenderDrawColor(&renderer, 255, 0, 0, 255);
-        SDL_RenderDrawRect(&renderer, &entityRect);
-    }
+    if (getSettings().showHitboxes())
+        renderEntityHitbox(renderer, camera);
 
-    if (getSettings().showTextureHitboxes()) {
-        const auto textureRect = camera.worldToViewport(texturePos, textureSize);
-        SDL_SetRenderDrawColor(&renderer, 128, 128, 128, 255);
-        SDL_RenderDrawRect(&renderer, &textureRect);
-    }
+    if (getSettings().showTextureHitboxes())
+        renderTextureHitbox(renderer, camera, textureRect);
 }
 
 }

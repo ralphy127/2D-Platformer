@@ -6,23 +6,31 @@
 
 namespace engine {
 
+enum class Direction : uint8_t {
+    None,
+    Left,
+    Right
+};
+
 /// @brief Abstract class representing renderable entity
 class Drawable : public Entity, public IRenderable {
 public:
     /// @brief Configuration struct used to initialize a Drawable.
     struct Config : Entity::Config {
         utils::f2v textureSize; ///< Size of the texture used for rendering.
-        int direction;          ///< Rendering direction (negative for left, positive for right).
+        Direction direction;    ///< Rendering direction (negative for left, positive for right).
     };
 
     Drawable(Settings& settings, const Config& config);
 
 protected:
-    int getDirection() const { return _direction; }
-    void setDirection(int direction) { _direction = direction; }
+    Direction getDirection() const { return _direction; }
+    void setDirection(Direction direction) { _direction = direction; }
+
+    int8_t getDirectionMultiplicator() const;
     
     /// @brief Changes direction to opposite
-    void turn() { _direction *= -1; }
+    void turn();
 
     void onSettingsChanged() override;
 
@@ -32,7 +40,7 @@ protected:
 
 private:
     utils::f2v _textureSize; ///< Size of the associated texture.
-    int _direction;          ///< Direction for rendering (e.g. sprite flipping).
+    Direction _direction;    ///< Direction for rendering (e.g. sprite flipping).
 };
 
 }

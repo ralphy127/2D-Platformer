@@ -58,9 +58,9 @@ void Player::logDebugState() {
     addFieldToMessage("Position", getPos());
     addFieldToMessage("Velocity", getVel());
     addFieldToMessage("On Ground", isOnGround() ? "True" : "False");
-    addFieldToMessage("Direction", getDirection() == 1 ? "Right" : "Left");
-    addFieldToMessage("Frame", spriteData.getFrame());
+    addFieldToMessage("Direction", getDirection() == engine::Direction::Right ? "Right" : "Left");
     addFieldToMessage("Animation", stateToString(static_cast<State>(spriteData.getAnimation())));
+    addFieldToMessage("Frame", spriteData.getFrame());
 
     utils::Logger::logDebugEvery(logKey, logInterval, message.str());
 }
@@ -83,7 +83,7 @@ engine::DynamicSpriteEntity::Config Player::initAndGetConfig(
         {6, framesDuration}
     };
 
-    engine::SpriteData spriteData{std::move(animationsInfo), static_cast<size_t>(_state)};
+    engine::SpriteData spriteData{std::move(animationsInfo), static_cast<engine::AnimationId>(_state)};
 
     const auto windowSize = settings.getWindowSize();
     const auto tileSize = settings.getTileSize();
@@ -94,7 +94,7 @@ engine::DynamicSpriteEntity::Config Player::initAndGetConfig(
     config.pos = {0.3f * windowSize.x, -30.f * tileSize - config.size.y};
     config.type = static_cast<engine::Entity::Type>(EntityType::PLAYER);
     config.textureSize = {3.f * tileSize, 3.f * tileSize};
-    config.direction = 1;
+    config.direction = engine::Direction::Right;
     config.maxHealth = 100.f;
     config.health = 100.f;
     config.defaultSpeed = 4.5f * tileSize;
@@ -160,11 +160,11 @@ void Player::handleMovement(float deltaTime) {
         handleLShift(lshiftPressed, spriteData);
     }
     else if (leftPressed) {
-        setDirection(-1);
+        setDirection(engine::Direction::Left);
         handleLShift(lshiftPressed, spriteData);
     }
     else if (rightPressed) {
-        setDirection(1);
+        setDirection(engine::Direction::Right);
         handleLShift(lshiftPressed, spriteData);
     }
     else {

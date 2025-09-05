@@ -6,14 +6,13 @@
 
 namespace engine {
 
-SpriteData::SpriteData(AnimationsInfo animationsInfo, size_t initialAnimation) 
+SpriteData::SpriteData(AnimationsInfo animationsInfo, AnimationId initialAnimation) 
     : _animationsInfo(std::move(animationsInfo)),
       _currentAnimation(initialAnimation),
       _lastFrameTime(Clock::getTime()) {
         
-    if (_currentAnimation >= _animationsInfo.size()) {
+    if (_currentAnimation >= _animationsInfo.size())
         throw std::invalid_argument("Initial animation out of range");
-    }
 
     fetchAnimationsInfo();
 }
@@ -41,7 +40,7 @@ void SpriteData::updateFrame() {
     _lastFrameTime = now;
 }
 
-void SpriteData::setAnimation(size_t animation) {
+void SpriteData::setAnimation(AnimationId animation) {
     if (animation >= _animationsInfo.size())
         throw std::invalid_argument("Animation cannot be greater than number of animation");
 
