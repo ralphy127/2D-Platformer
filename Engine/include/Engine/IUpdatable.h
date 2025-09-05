@@ -8,7 +8,7 @@ public:
     virtual ~IUpdatable() = default;
 
     /// @brief Updates the object state based on elapsed time.
-    virtual void update(float deltaTime) = 0;
+    virtual void update(float32_t deltaTime) = 0;
 };
 
 }

@@ -17,7 +17,7 @@ public:
     SDL_Renderer& getRenderer() { return *_renderer; }
 
     /// @brief Clears the current rendering target with a fixed background color.
-    void clear() const;
+    void clear() const { SDL_RenderClear(_renderer.get()); }
 
     /// @brief Presents the rendered content on the screen.
     void present() const { SDL_RenderPresent(_renderer.get()); }

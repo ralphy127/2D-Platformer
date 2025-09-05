@@ -9,15 +9,15 @@ Level::Level(
     const ITileClassifier& tileClassifier,
     Settings& settings,
     SDL_Renderer& renderer,
-    size_t level) 
-    : _level(level) {
+    LevelId id) 
+    : _id(id) {
         
     try {
         _layers.push_back(std::make_unique<ParallaxLayer>(
             settings,
             renderer,
             ParallaxLayer::Type::BACKGROUND,
-            level,
+            _id,
             0.f
         ));
 
@@ -25,7 +25,7 @@ Level::Level(
             settings,
             renderer,
             ParallaxLayer::Type::FAR,
-            level,
+            _id,
             0.f
         ));
 
@@ -37,15 +37,15 @@ Level::Level(
             tileClassifier,
             settings,
             TileLayer::Type::MAP,
-            level
+            _id
         ));
 
         _layers.push_back(nullptr);
 
-        SDL_LogDebug(utils::LOG_CATEGORY_SETUP, "Level %zu created", _level);
+        SDL_LogDebug(utils::LOG_CATEGORY_SETUP, "Level %hu created", _id);
     }
     catch(const std::runtime_error& e) {
-        throw std::runtime_error("Loading level " + std::to_string(level) + " error: " + e.what());
+        throw std::runtime_error("Loading level " + std::to_string(_id) + " error: " + e.what());
     }
 }
 
@@ -62,7 +62,7 @@ const TileLayer::Grid& Level::getMapView() const {
 
         return mapLayer->getGridView();
     }
-    throw std::runtime_error("Level " + std::to_string(_level) + " map not initialized");
+    throw std::runtime_error("Level " + std::to_string(_id) + " map not initialized");
 }
 
 }

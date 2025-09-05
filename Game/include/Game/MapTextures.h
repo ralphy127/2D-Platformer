@@ -17,14 +17,15 @@ public:
 
     enum class TextureType { GROUND, BUILDING, COUNT, NONE };
     
-    SDL_Texture& getTexture(int type, size_t id) override { return *_textures.at(type).at(id); }
+    SDL_Texture& getTexture(engine::MapTextureType type, engine::MapTextureId id) override
+        { return *_textures.at(type).at(id); }
 
 private:
     SDL_Renderer& _renderer; ///< SDL renderer used for creating textures
 
     /// @brief Container holding textures grouped by type
     std::array<std::vector<utils::SDLUtils::TexturePtr>,
-               static_cast<size_t>(TextureType::COUNT)> _textures{};
+               static_cast<std::size_t>(TextureType::COUNT)> _textures{};
 };
 
 }

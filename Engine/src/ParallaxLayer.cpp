@@ -6,8 +6,8 @@ ParallaxLayer::ParallaxLayer(
     Settings& settings,
     SDL_Renderer& renderer,
     Type type,
-    size_t levelId,
-    float parallaxSpeed)
+    LevelId levelId,
+    float32_t parallaxSpeed)
     : _settings(settings),
       _type(type),
       _levelId(levelId),

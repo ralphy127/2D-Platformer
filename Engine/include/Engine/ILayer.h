@@ -5,6 +5,8 @@
 
 namespace engine {
 
+using LevelId = std::uint16_t;
+
 /// @brief Interface for renderable map layers.
 class ILayer {
 public:

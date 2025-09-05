@@ -10,7 +10,7 @@ TileLayer::TileLayer(
     const ITileClassifier& tileClassifier,
     Settings& settings,
     Type type,
-    size_t level) 
+    LevelId level) 
     : _mapTextures(mapTextures),
       _tileClassifier(tileClassifier),
       _settings(settings),

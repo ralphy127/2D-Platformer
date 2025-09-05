@@ -2,11 +2,11 @@
 
 namespace game {
 
-std::pair<int, int> TileClassifier::classify(int tileId) const {
-    if (tileId >= 0 && tileId < 13)
-        return { 0, tileId }; // ground
-    if (tileId >= 100 && tileId < 161)
-        return { 1, tileId }; // building
+engine::TileClassification TileClassifier::classify(engine::TileId id) const {
+    if (id >= 0 && id < 13)
+        return { 0, id }; // ground
+    if (id >= 100 && id < 161)
+        return { 1, id }; // building
 
     return { -1, -1 };
 }
