@@ -22,11 +22,11 @@ void SpriteData::fetchAnimationsInfo() {
     _targetFrameDuration = _animationsInfo.at(_currentAnimation).second;
 }
 
-void SpriteData::setFrame(size_t frame) {
-    if (frame >= _framesInCurrentAnimation)
-        throw std::invalid_argument("Frames cannot be greater than frames in current animation");
+void SpriteData::setFrame(FrameId id) {
+    if (id >= _framesInCurrentAnimation)
+        throw std::invalid_argument("Frame id cannot be greater than frames in current animation");
 
-    _currentFrame = frame;
+    _currentFrame = id;
     _lastFrameTime = Clock::getTime();
 }
 

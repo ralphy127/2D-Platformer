@@ -92,7 +92,7 @@ engine::DynamicSpriteEntity::Config Player::initAndGetConfig(
 
     config.size = {0.85f * tileSize, 1.8f * tileSize};
     config.pos = {0.3f * windowSize.x, -30.f * tileSize - config.size.y};
-    config.type = static_cast<engine::Entity::Type>(EntityType::PLAYER);
+    config.type = static_cast<engine::Entity::Type>(EntityType::Player);
     config.textureSize = {3.f * tileSize, 3.f * tileSize};
     config.direction = engine::Direction::Right;
     config.maxHealth = 100.f;
@@ -109,38 +109,38 @@ void Player::createAndAddAttacks() {
     const auto size = getSize();
 
     engine::AttackData attack;
-    attack.id = static_cast<engine::AttackId>(State::ATTACK1);
+    attack.id = static_cast<engine::AttackId>(State::Attack1);
     attack.damage = 50.f;
     attack.duration = 4 * std::chrono::milliseconds(120);
     attack.offsetRight = {0.6f * size.x, 0.2f * size.y};
     attack.offsetLeft = {-1.15f * size.x, 0.2f * size.y};
     attack.size = {1.75f * size.x, 0.45f * size.y};
-    attack.animationId = static_cast<size_t>(State::ATTACK1);
+    attack.animationId = static_cast<engine::AnimationId>(State::Attack1);
     attack.onHit = [](){
         SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "Player performed attack 1"); };
     attack.sourceTag = "player";
 
     addAtack(attack);
 
-    attack.id = static_cast<engine::AttackId>(State::ATTACK2);
+    attack.id = static_cast<engine::AttackId>(State::Attack2);
     attack.damage = 70.f;
     attack.duration = 5 * std::chrono::milliseconds(120);
     attack.offsetRight = {0.15f * size.x, -0.45f * size.y};
     attack.offsetLeft = {-1.3f * size.x, -0.45f * size.y};
     attack.size = {2.3f * size.x, 1.3f * size.y};
-    attack.animationId = static_cast<size_t>(State::ATTACK2);
+    attack.animationId = static_cast<engine::AnimationId>(State::Attack2);
     attack.onHit = [](){
         SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "Player performed attack 2"); };
 
     addAtack(attack);
 
-    attack.id = static_cast<engine::AttackId>(State::ATTACK3);
+    attack.id = static_cast<engine::AttackId>(State::Attack3);
     attack.damage = 35.f;
     attack.duration = 4 * std::chrono::milliseconds(120);
     attack.offsetRight = {-0.1f * size.x, 0.05f * size.y};
     attack.offsetLeft = {-0.95f * size.x, 0.05f * size.y};
     attack.size = {2.1f * size.x, 0.65f * size.y};
-    attack.animationId = static_cast<size_t>(State::ATTACK3);
+    attack.animationId = static_cast<engine::AnimationId>(State::Attack3);
     attack.onHit = [](){
         SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "Player performed attack 3"); };
 
@@ -169,16 +169,16 @@ void Player::handleMovement(float deltaTime) {
     }
     else {
         stop();
-        tryToChangeAnimation(State::IDLE, spriteData);
+        tryToChangeAnimation(State::Idle, spriteData);
     }
 
     if (!isOnGround()) {
-        tryToChangeAnimation(State::JUMPING, spriteData);
+        tryToChangeAnimation(State::Jumping, spriteData);
     }
 
     if(jumpNow && !_jumpPressedLastFrame && isOnGround()) {
         jump();
-        tryToChangeAnimation(State::JUMPING, spriteData);
+        tryToChangeAnimation(State::Jumping, spriteData);
     }
 
     _jumpPressedLastFrame = jumpNow;
@@ -187,48 +187,48 @@ void Player::handleMovement(float deltaTime) {
 void Player::handleLShift(bool shiftPressed, engine::SpriteData& spriteData) {
     if (shiftPressed) {
         sprint();
-        tryToChangeAnimation(State::RUNNING, spriteData);
+        tryToChangeAnimation(State::Running, spriteData);
     } 
     else {
         move();
-        tryToChangeAnimation(State::WALKING, spriteData);
+        tryToChangeAnimation(State::Walking, spriteData);
     }
 }
 
 void Player::tryToChangeAnimation(State state, engine::SpriteData& spriteData) {
-    if (!isAttacking() && spriteData.getAnimation() != static_cast<size_t>(state))
-        spriteData.setAnimation(static_cast<size_t>(state));
+    if (!isAttacking() && spriteData.getAnimation() != static_cast<engine::AnimationId>(state))
+        spriteData.setAnimation(static_cast<engine::AnimationId>(state));
 }
 
 void Player::handleAttacks() {
     const auto& spriteData = getSpriteData();
     if (_eventHandler.isKeyPressed(SDLK_z) &&
-        spriteData.getAnimation() != static_cast<size_t>(State::ATTACK1)) {
+        spriteData.getAnimation() != static_cast<engine::AnimationId>(State::Attack1)) {
             
-        performAttack(static_cast<engine::AttackId>(State::ATTACK1));
+        performAttack(static_cast<engine::AttackId>(State::Attack1));
     }
     else if (_eventHandler.isKeyPressed(SDLK_x) &&
-             spriteData.getAnimation() != static_cast<size_t>(State::ATTACK2)) {
-        performAttack(static_cast<engine::AttackId>(State::ATTACK2));
+             spriteData.getAnimation() != static_cast<engine::AnimationId>(State::Attack2)) {
+        performAttack(static_cast<engine::AttackId>(State::Attack2));
     }
     else if (_eventHandler.isKeyPressed(SDLK_c) &&
-             spriteData.getAnimation() != static_cast<size_t>(State::ATTACK3)) {
-        performAttack(static_cast<engine::AttackId>(State::ATTACK3));
+             spriteData.getAnimation() != static_cast<engine::AnimationId>(State::Attack3)) {
+        performAttack(static_cast<engine::AttackId>(State::Attack3));
     }
 }
 
 std::string Player::stateToString(State state) {
     switch (state) {
-        case State::IDLE:       return "IDLE";
-        case State::WALKING:    return "WALKING";
-        case State::RUNNING:    return "RUNNING";
-        case State::JUMPING:    return "JUMPING";
-        case State::ATTACK1:    return "ATTACK1";
-        case State::ATTACK2:    return "ATTACK2";
-        case State::ATTACK3:    return "ATTACK3";
-        case State::PROTECTING: return "PROTECTING";
-        case State::DEAD:       return "DEAD";
-        case State::HURT:       return "HURT";
+        case State::Idle:       return "Idle";
+        case State::Walking:    return "Walking";
+        case State::Running:    return "Running";
+        case State::Jumping:    return "Jumping";
+        case State::Attack1:    return "Attack1";
+        case State::Attack2:    return "Attack2";
+        case State::Attack3:    return "Attack3";
+        case State::Protecting: return "Protecting";
+        case State::Hurt:       return "HURT";
+        case State::Dead:       return "Dead";
         default:                return "UNKNOWN";
     }
 }

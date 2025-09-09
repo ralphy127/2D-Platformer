@@ -6,16 +6,18 @@
 
 namespace engine {
 
+using Volume = uint8_t;
+
 /// @brief Manages SDL initialization, subsystems, audio and cleanup.
 class SDLManager {
 public:
     SDLManager();
     ~SDLManager();
 
-    void setVolume(size_t volume);
+    void setVolume(Volume);
 
 private:
-    size_t _volume{10UL}; ///< Current volume level
+    Volume _volume{10}; ///< Current volume level
 };
 
 }

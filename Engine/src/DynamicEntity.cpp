@@ -14,11 +14,11 @@ DynamicEntity::DynamicEntity(Settings& settings, const Config& config)
     capHealthIfNeeded(_maxHealth);
 }
 
-void DynamicEntity::update(float32_t deltaTime) {
+void DynamicEntity::update(float deltaTime) {
     ;
 }
 
-void DynamicEntity::applyMovement(float32_t deltaTime) {
+void DynamicEntity::applyMovement(float deltaTime) {
     setPos(getPos() + utils::f2v(_vel.x * deltaTime, _vel.y * deltaTime));
 }
 
@@ -29,7 +29,7 @@ void DynamicEntity::jump() {
     }
 }
 
-void DynamicEntity::capHealthIfNeeded(float32_t health) {
+void DynamicEntity::capHealthIfNeeded(float health) {
     if (health > _maxHealth) {
         _health = _maxHealth;
     }

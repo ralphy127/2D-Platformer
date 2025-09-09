@@ -7,42 +7,42 @@ namespace game {
 
 /// @brief Represents different types of game entities.
 enum class EntityType {
-    NONE,
+    None,
 
-    PLAYER,
-    COMMANDER,
-    ARCHER,
-    SPRITE_END,
+    Player,
+    Commander,
+    Archer,
+    SpriteEnd,
 
-    SIMPLE_END,
+    SimpleEnd,
 };
 
-constexpr size_t simpleCount = static_cast<size_t>(EntityType::SIMPLE_END) -
-                               static_cast<size_t>(EntityType::SPRITE_END) - 1UL;
+constexpr size_t simpleCount = static_cast<size_t>(EntityType::SimpleEnd) -
+                               static_cast<size_t>(EntityType::SpriteEnd) - 1UL;
                               
 constexpr std::array<EntityType, simpleCount> allSimpleTypes = {
 
 };
 
-constexpr size_t spriteCount = static_cast<size_t>(EntityType::SPRITE_END) - 1UL;
+constexpr size_t spriteCount = static_cast<size_t>(EntityType::SpriteEnd) - 1UL;
 
 constexpr std::array<EntityType, spriteCount> allSpriteTypes = {
-    EntityType::PLAYER,
-    EntityType::COMMANDER,
-    EntityType::ARCHER,
+    EntityType::Player,
+    EntityType::Commander,
+    EntityType::Archer,
 };
 
 inline std::string toString(EntityType type) {
     switch (type) {
-        case EntityType::PLAYER:
-            return std::string("player");
-        case EntityType::COMMANDER:
-            return std::string("commander");
-        case EntityType::ARCHER:
-            return std::string("archer");
-        case EntityType::NONE:
-        case EntityType::SIMPLE_END:
-        case EntityType::SPRITE_END:
+        case EntityType::Player:
+            return std::string("Player");
+        case EntityType::Commander:
+            return std::string("Commander");
+        case EntityType::Archer:
+            return std::string("Archer");
+        case EntityType::None:
+        case EntityType::SimpleEnd:
+        case EntityType::SpriteEnd:
             throw std::runtime_error("wrong entity type (helper)");
         default:
             return std::string("unknown");

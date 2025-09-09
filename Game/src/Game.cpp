@@ -21,7 +21,7 @@ Game::Game()
     const auto windowSize = _windowManager.getWindowSize();
     _settings.setWindowSize(windowSize);
     
-    const auto tileSize = static_cast<size_t>(windowSize.y / 40.f);
+    const auto tileSize = static_cast<uint32_t>(windowSize.y / 40.f);
     _settings.setTileSize(tileSize);
 
     _physicsHandler.setGAcceleration(20.f * tileSize);
@@ -83,20 +83,6 @@ void Game::run() {
     }
 }
 
-engine::Settings::Config Game::createDefaultSettingsConfig() {
-    engine::Settings::Config config{};
-    config.fullscreen = true;
-    config.title = "2D Platformer";
-    config.targetFps = 60.f;
-    config.showHitboxes = true;
-    config.showTextureHitboxes = true;
-    config.windowSize = utils::i2v(720, 460);
-    config.windowPos = utils::i2v(SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
-    config.tileSize = 0UL;
-
-    return config;
-}
-
 void Game::handleEvents() {
     _eventHandler.pollEvents();
 
@@ -155,6 +141,20 @@ void Game::render() {
     }
 
     _renderManager.present();
+}
+
+engine::Settings::Config Game::createDefaultSettingsConfig() {
+    engine::Settings::Config config{};
+    config.fullscreen = true;
+    config.title = "2D Platformer";
+    config.targetFps = 60.f;
+    config.showHitboxes = true;
+    config.showTextureHitboxes = true;
+    config.windowSize = utils::i2v(720, 460);
+    config.windowPos = utils::i2v(SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
+    config.tileSize = 0UL;
+
+    return config;
 }
 
 }

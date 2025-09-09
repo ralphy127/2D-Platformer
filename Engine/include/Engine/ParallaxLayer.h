@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstdint>
 #include <Utils/SDLUtils.h>
 #include "Engine/ILayer.h"
 #include "Engine/TexturesManager.h"
@@ -13,7 +14,7 @@ public:
     /// @brief Types of parallax layers with different depth levels.
     enum class Type { BACKGROUND, FAR, NEAR };
 
-    ParallaxLayer(Settings&, SDL_Renderer&, Type, LevelId, float32_t parallaxSpeed);
+    ParallaxLayer(Settings&, SDL_Renderer&, Type, LevelId, float parallaxSpeed);
     ~ParallaxLayer() { _settings.unregisterObserver(*this); }
 
     /// @brief Renders the parallax layer with camera-based scrolling.
@@ -29,7 +30,7 @@ private:
 
     Type _type;               ///< Layer depth type.
     LevelId _levelId;         ///< Level identifier for texture.
-    float32_t _parallaxSpeed; ///< Speed multiplier for scrolling.
+    float _parallaxSpeed; ///< Speed multiplier for scrolling.
     uint32_t _tileSize;       ///< Size of tiles for scaling.
     utils::SDLUtils::TexturePtr _texture{nullptr, SDL_DestroyTexture}; ///< Layer texture.
 };

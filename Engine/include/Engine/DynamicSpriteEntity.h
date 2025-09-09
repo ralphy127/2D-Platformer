@@ -12,7 +12,7 @@ using AttackId = uint8_t;
 /// @brief Data structure defining attack properties and behavior.
 struct AttackData {
     AttackId id;                                  ///< Unique attack identifier.
-    float32_t damage;                             ///< Damage dealt by this attack.
+    float damage;                             ///< Damage dealt by this attack.
     std::chrono::steady_clock::duration duration; ///< How long attack lasts.
     utils::f2v offsetRight;                       ///< Hitbox offset when facing right.
     utils::f2v offsetLeft;                        ///< Hitbox offset when facing left.
@@ -33,7 +33,7 @@ public:
     DynamicSpriteEntity(Settings&, ISpriteTextures&, const Config&);
 
     /// @brief Updates entity's logic based on the elapsed time.
-    void update(float32_t deltaTime) override;
+    void update(float deltaTime) override;
 
     void render(SDL_Renderer&, Camera&) const override;
 

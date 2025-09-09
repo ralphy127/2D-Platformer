@@ -5,6 +5,9 @@
 
 namespace engine {
 
+using SpriteAnimation = uint16_t;
+using SpriteFrame = uint16_t;
+
 /// @brief Interface for animated textures provider (for sprite-type entities).
 class ISpriteTextures {
 public:
@@ -15,7 +18,7 @@ public:
     /// @param animation Index of the animation.
     /// @param frame Index of the frame within the animation.
     /// @return Reference to the SDL_Texture for the specified animation frame.
-    virtual SDL_Texture& getTexture(Entity::Type, size_t animation, size_t frame) = 0;
+    virtual SDL_Texture& getTexture(Entity::Type, SpriteAnimation, SpriteFrame) = 0;
 };
 
 }

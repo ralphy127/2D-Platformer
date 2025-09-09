@@ -16,21 +16,21 @@ public:
 private:
     /// @brief Defines various archer states controlling animations and behavior.
     enum class State {
-        IDLE,
-        WALKING,
-        RUNNING,
-        ATTACK1,
-        ATTACK2,
-        ATTACK3,
-        ATTACK4,
-        JUMPING,
-        HURT,
-        DEAD
+        Idle,
+        Walking,
+        Running,
+        Attack1,
+        Attack2,
+        Attack3,
+        Attack4,
+        Jumping,
+        Hurt,
+        Dead
     };
 
     engine::DynamicSpriteEntity::Config initAndGetConfig(const engine::Settings&) const;
 
-    State _state{State::IDLE};
+    State _state{State::Idle};
 
     engine::Clock::Type::time_point _lastBehaviorChange{engine::Clock::getTime()};
     engine::Clock::Type::duration _interval{std::chrono::seconds(4)};

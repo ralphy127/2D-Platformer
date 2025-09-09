@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstdint>
 #include <string>
 #include <vector>
 #include <Utils/i2v.h>
@@ -15,12 +16,12 @@ public:
     struct Config {
         bool fullscreen;          ///< Whether the game runs in fullscreen mode.
         std::string title;        ///< Window title string.
-        float targetFps;          ///< Target frames per second.
+        float targetFps;      ///< Target frames per second.
         bool showHitboxes;        ///< Whether to draw hitboxes for debugging.
         bool showTextureHitboxes; ///< Whether to draw texture hitboxes for debugging.
         utils::i2v windowSize;    ///< Logical resolution of the window.
         utils::i2v windowPos;     ///< Initial position of the window on screen.
-        size_t tileSize;          ///< Size of a single tile in pixels.
+        uint32_t tileSize;        ///< Size of a single tile in pixels.
     };
 
     Settings(const Config& config);
@@ -49,8 +50,8 @@ public:
 
     utils::i2v getWindowPos() const { return _windowPos; }
 
-    size_t getTileSize() const { return _tileSize; }
-    void setTileSize(size_t tileSize) { _tileSize = tileSize; notifyObservers(); }
+    uint32_t getTileSize() const { return _tileSize; }
+    void setTileSize(uint32_t tileSize) { _tileSize = tileSize; notifyObservers(); }
 
 private:
     /// @brief Notifies all registered observers about a settings change.
@@ -60,12 +61,12 @@ private:
 
     bool _fullscreen;          ///< True if fullscreen is enabled.
     std::string _title;        ///< Window title.
-    float _targetFps;          ///< Target frames per second.
+    float _targetFps;      ///< Target frames per second.
     bool _showHitboxes;        ///< Whether to render debug hitboxes.
     bool _showTextureHitboxes; ///< Whether to render debug texture hitboxes.
     utils::i2v _windowPos;     ///< Window position on screen.
     utils::i2v _windowSize;    ///< Logical window resolution.
-    size_t _tileSize;          ///< Size of one tile in pixels.
+    uint32_t _tileSize;        ///< Size of one tile in pixels.
 };
 
 }

@@ -11,18 +11,18 @@ void Commander::update(float deltaTime) {
     const auto now = engine::Clock::getTime();
 
     if (now - _lastBehaviorChange > _interval) {
-        if (_state == State::IDLE) {
+        if (_state == State::Idle) {
             turn();
             move();
-            _state = State::WALKING;
+            _state = State::Walking;
         }
-        else if (_state == State::WALKING) {
+        else if (_state == State::Walking) {
             stop();
-            _state = State::IDLE;
+            _state = State::Idle;
         }
 
         _lastBehaviorChange = now;
-        getSpriteData().setAnimation(static_cast<size_t>(_state));
+        getSpriteData().setAnimation(static_cast<engine::AnimationId>(_state));
     }
 
     DynamicSpriteEntity::update(deltaTime);
@@ -56,7 +56,7 @@ engine::DynamicSpriteEntity::Config Commander::initAndGetConfig(
 
     config.size = {1.33f * 0.85f * tileSize, 1.33f * 1.8f * tileSize};
     config.pos = {0.3f * windowSize.x, -30.f * tileSize - config.size.y};
-    config.type = static_cast<engine::Entity::Type>(EntityType::COMMANDER);
+    config.type = static_cast<engine::Entity::Type>(EntityType::Commander);
     config.textureSize = {1.33f * 3.f * tileSize, 1.33f * 3.f * tileSize};
     config.direction = engine::Direction::Right;
     config.maxHealth = 100.f;

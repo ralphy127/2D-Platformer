@@ -18,16 +18,16 @@ public:
 
 private:
     enum class State {
-        IDLE,
-        WALKING,
-        RUNNING,
-        ATTACK1,
-        ATTACK2,
-        ATTACK3,
-        PROTECTING,
-        JUMPING,
-        HURT,
-        DEAD
+        Idle,
+        Walking,
+        Running,
+        Attack1,
+        Attack2,
+        Attack3,
+        Protecting,
+        Jumping,
+        Hurt,
+        Dead
     };
 
     engine::DynamicSpriteEntity::Config initAndGetConfig(const engine::Settings&) const;
@@ -48,8 +48,8 @@ private:
     std::string stateToString(State);
     
     const engine::EventHandler& _eventHandler; ///< Reference to input event handler.
-    bool _jumpPressedLastFrame{false}; ///< Jumping guard
-    State _state{State::IDLE}; ///< Current player state.
+    bool _jumpPressedLastFrame{false};         ///< Jumping guard
+    State _state{State::Idle};                 ///< Current player state.
 };
 
 }

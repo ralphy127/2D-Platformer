@@ -18,7 +18,7 @@ DynamicSpriteEntity::DynamicSpriteEntity(
     updateHealthBar();
 }
 
-void DynamicSpriteEntity::update(float32_t deltaTime) {
+void DynamicSpriteEntity::update(float deltaTime) {
     _spriteData.updateFrame();
 
     handleAttack();

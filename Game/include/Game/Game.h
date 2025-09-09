@@ -52,7 +52,7 @@ private:
 
     bool _running{true};                    ///< Indicates if the game loop is active.
 
-    size_t _currentLevel{0UL};              ///< Active level index
+    engine::LevelId _currentLevel{0UL};     ///< Active level index
     std::vector<std::unique_ptr<engine::Level>> _levels{}; ///< Stores loaded levels.
 
     std::unique_ptr<Player> player{};       ///< Entity controlled by player

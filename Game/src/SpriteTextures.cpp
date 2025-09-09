@@ -22,8 +22,8 @@ SpriteTextures::SpriteTextures(SDL_Renderer& renderer)
 
 SDL_Texture& SpriteTextures::getTexture(
     engine::Entity::Type typeId,
-    size_t animation,
-    size_t frame) {
+    engine::SpriteAnimation animation,
+    engine::SpriteFrame frame) {
 
     const auto type = static_cast<EntityType>(typeId);
     const auto it = _cache.find(type);
@@ -38,7 +38,7 @@ SDL_Texture& SpriteTextures::getTexture(
     catch (const std::out_of_range&) {
         throw std::runtime_error(
             std::string("Sprite texture not found - Type: ") + toString(type) +
-            " Anim: " + std::to_string(animation) + 
+            " Animation: " + std::to_string(animation) + 
             " Frame: " + std::to_string(frame)
         );
     }
@@ -85,21 +85,21 @@ void SpriteTextures::defineSprites() {
         utils::i2v(128, 128),
         utils::i2v(0, 0)
     };
-    _spriteDefinitions[EntityType::PLAYER] = std::move(playerDef);
+    _spriteDefinitions[EntityType::Player] = std::move(playerDef);
 
     TextureDefinition commanderDef {
         {6, 9, 8, 4, 5, 4, 2, 9, 3, 6},
         utils::i2v(128, 128),
         utils::i2v(0, 0)
     };
-    _spriteDefinitions[EntityType::COMMANDER] = std::move(commanderDef);
+    _spriteDefinitions[EntityType::Commander] = std::move(commanderDef);
 
     TextureDefinition archerDef {
         {9, 8, 8, 5, 5, 6, 14, 9, 3, 5},
         utils::i2v(128, 128),
         utils::i2v(0, 0)
     };
-    _spriteDefinitions[EntityType::ARCHER] = std::move(archerDef);
+    _spriteDefinitions[EntityType::Archer] = std::move(archerDef);
 };
 
 }

@@ -11,18 +11,18 @@ void Archer::update(float deltaTime) {
     const auto now = engine::Clock::getTime();
 
     if (now - _lastBehaviorChange > _interval) {
-        if (_state == State::IDLE) {
+        if (_state == State::Idle) {
             sprint();
-            _state = State::RUNNING;
+            _state = State::Running;
         }
-        else if (_state == State::RUNNING) {
+        else if (_state == State::Running) {
             stop();
             turn();
-            _state = State::IDLE;
+            _state = State::Idle;
         }
 
         _lastBehaviorChange = now;
-        getSpriteData().setAnimation(static_cast<size_t>(_state));
+        getSpriteData().setAnimation(static_cast<engine::AnimationId>(_state));
     }
 
     DynamicSpriteEntity::update(deltaTime);
@@ -56,7 +56,7 @@ engine::DynamicSpriteEntity::Config Archer::initAndGetConfig(
 
     config.size = {1.1f * 0.85f * tileSize, 1.1f * 1.8f * tileSize};
     config.pos = {0.4f * windowSize.x, -30.f * tileSize - config.size.y};
-    config.type = static_cast<engine::Entity::Type>(EntityType::ARCHER);
+    config.type = static_cast<engine::Entity::Type>(EntityType::Archer);
     config.textureSize = {1.1f * 3.f * tileSize, 1.1f * 3.f * tileSize};
     config.direction = engine::Direction::Right;
     config.maxHealth = 60.f;

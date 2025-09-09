@@ -57,7 +57,7 @@ utils::SDLUtils::TexturePtr TexturesManager::loadClippedFromFile(
 std::vector<utils::SDLUtils::TexturePtr> TexturesManager::loadSequenceFromPattern(
     SDL_Renderer& renderer,
     const std::string& pattern,
-    const uint32_t count,
+    uint32_t count,
     std::string extension) {
 
     std::vector<utils::SDLUtils::TexturePtr> textures;

@@ -24,14 +24,17 @@ public:
     SpriteTextures(SDL_Renderer& renderer);
     ~SpriteTextures() { SDL_LogDebug(utils::LOG_CATEGORY_CLEANUP, "Sprite textures destroyed"); }
     
-    SDL_Texture& getTexture(engine::Entity::Type type, size_t animation, size_t frame) override;
+    SDL_Texture& getTexture(
+        engine::Entity::Type,
+        engine::SpriteAnimation,
+        engine::SpriteFrame) override;
 
 private:
     /// @brief Loads all default sprite sheets and slices them into frames.
     void loadDefaultSprites();
 
     /// @brief Loads and processes sprite sheet for a specific entity type.
-    void loadSprite(EntityType type);
+    void loadSprite(EntityType);
 
     /// @brief Defines frame counts, sizes, and margins for each sprite sheet.
     void defineSprites();

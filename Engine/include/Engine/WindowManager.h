@@ -27,7 +27,7 @@ private:
     void initFullScreenWindowDimensions();
 
     /// @brief Resets the SDL window with the specified parameters.
-    void resetWindow(const std::string& title, int x, int y, int w, int h, Uint32 flags);
+    void resetWindow(const std::string& title, uint32_t x, uint32_t y, uint32_t w, uint32_t h, uint32_t flags);
     
     Settings& _settings;    ///< Reference to game settings
 

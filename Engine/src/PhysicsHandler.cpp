@@ -19,7 +19,7 @@ PhysicsHandler::~PhysicsHandler() {
     SDL_LogDebug(utils::LOG_CATEGORY_CLEANUP, "Physics handler destroyed"); 
 }
 
-void PhysicsHandler::applyGravity(DynamicEntity& entity, float32_t deltaTime) const {
+void PhysicsHandler::applyGravity(DynamicEntity& entity, float deltaTime) const {
     auto vel = entity.getVel();
     const auto deltaVy = _gAcceleration * deltaTime;
 
@@ -41,7 +41,7 @@ void PhysicsHandler::applyGravity(DynamicEntity& entity, float32_t deltaTime) co
 void PhysicsHandler::handleMapCollisions(
     DynamicEntity& entity,
     const TileLayer::Grid& map,
-    float32_t deltaTime) const 
+    float deltaTime) const 
 {
     auto velocity = entity.getVel();
     auto hitbox = entity.getHitbox();
@@ -62,7 +62,7 @@ bool PhysicsHandler::AABBcast(
     const SDL_Rect& target,
     const utils::f2v& vel,
     collisionHit& outhit,
-    float32_t deltaTime) const {
+    float deltaTime) const {
 
     if (std::abs(vel.length()) <= std::numeric_limits<float>::epsilon())
         return false;
@@ -138,7 +138,7 @@ void PhysicsHandler::handleAttacksCollisions(
 
 void PhysicsHandler::checkHorizontalCollision(
     const TileLayer::Grid& map,
-    float32_t deltaTime,
+    float deltaTime,
     utils::f2v& velocity,
     const SDL_FRect& hitbox) const
 {
@@ -181,7 +181,7 @@ void PhysicsHandler::checkHorizontalCollision(
 
 void PhysicsHandler::checkVerticalCollision(
     const TileLayer::Grid& map,
-    float32_t deltaTime,
+    float deltaTime,
     utils::f2v& velocity,
     const SDL_FRect& hitbox,
     bool& landed) const
@@ -229,7 +229,7 @@ void PhysicsHandler::checkVerticalCollision(
 void PhysicsHandler::checkIfStillOnGround(
     DynamicEntity& entity,
     const TileLayer::Grid& map,
-    float32_t deltaTime,
+    float deltaTime,
     const SDL_FRect& hitbox,
     const utils::f2v& velocity) const
 {
@@ -262,7 +262,7 @@ void PhysicsHandler::onSettingsChanged() {
 
     _tileSize = _settings.getTileSize();
 
-    const auto tileSizeRatio = (static_cast<float32_t>(oldTileSize) / _tileSize);
+    const auto tileSizeRatio = (static_cast<float>(oldTileSize) / _tileSize);
 
     _gAcceleration *= tileSizeRatio;
     _fallGMultiplier *= tileSizeRatio;

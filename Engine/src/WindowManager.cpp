@@ -68,13 +68,14 @@ void WindowManager::onSettingsChanged() {
     }
     else if(oldWindowSize != _windowSize) {
         auto windowPos = _settings.getWindowPos();
+        uint32_t flags = 0;
         resetWindow(
             _settings.getTitle(),
             windowPos.x,
             windowPos.y,
             _windowSize.x,
             _windowSize.y,
-            0);
+            flags);
     }
 }
 
@@ -93,11 +94,11 @@ void WindowManager::initFullScreenWindowDimensions() {
 
 void WindowManager::resetWindow(
     const std::string& title,
-    int x,
-    int y,
-    int w,
-    int h,
-    Uint32 flags) {
+    uint32_t x,
+    uint32_t y,
+    uint32_t w,
+    uint32_t h,
+    uint32_t flags) {
 
     _window.reset(SDL_CreateWindow(title.c_str(), x, y, w, h, flags));
 
