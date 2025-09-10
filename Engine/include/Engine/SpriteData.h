@@ -38,6 +38,10 @@ public:
     /// @brief Resets the current animation to its first frame and resets timing.
     void resetAnimation();
 
+    void lockFrame() { _frameLocked = true; }
+    void unlockFrame() { _frameLocked = false; }
+    bool isFrameLocked() { return _frameLocked; }
+
 private:
     /// @brief Updates information about frames count and target frame duration.
     void fetchAnimationsInfo();
@@ -48,6 +52,7 @@ private:
     uint32_t _framesInCurrentAnimation{};         ///< Number of frames in the current animation.
     Clock::Type::duration _targetFrameDuration{}; ///< Duration to display each frame.
     Clock::Type::time_point _lastFrameTime;       ///< Time point of last frame update.
+    bool _frameLocked{};                          ///< True if should not update frame.
 };
 
 }

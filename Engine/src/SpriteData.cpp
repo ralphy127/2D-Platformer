@@ -31,6 +31,9 @@ void SpriteData::setFrame(FrameId id) {
 }
 
 void SpriteData::updateFrame() {
+    if (_frameLocked)
+        return;
+        
     auto now = Clock::getTime();
 
     if (now - _lastFrameTime < _targetFrameDuration)

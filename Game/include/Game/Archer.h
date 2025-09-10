@@ -28,6 +28,8 @@ private:
         Dead
     };
 
+    void handleDeath() override;
+
     engine::DynamicSpriteEntity::Config initAndGetConfig(const engine::Settings&) const;
 
     State _state{State::Idle};

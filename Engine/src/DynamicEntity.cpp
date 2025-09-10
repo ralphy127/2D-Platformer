@@ -15,7 +15,8 @@ DynamicEntity::DynamicEntity(Settings& settings, const Config& config)
 }
 
 void DynamicEntity::update(float deltaTime) {
-    ;
+    if (isDead()) 
+        handleDeath();
 }
 
 void DynamicEntity::applyMovement(float deltaTime) {

@@ -53,6 +53,8 @@ protected:
     void handleAttack();
     SpriteData& getSpriteData() { return _spriteData; }
 
+    void tryToChangeAnimation(AnimationId);
+
 private:
     void updateHealthBar();
 

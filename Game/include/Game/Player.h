@@ -39,9 +39,6 @@ private:
 
     /// @brief Handles sprinting state based on whether shift key is pressed.
     void handleLShift(bool shiftPressed, engine::SpriteData& spriteData);
-    
-    /// @brief Changes state and animation to desired if possible
-    void tryToChangeAnimation(State, engine::SpriteData&);
 
     void handleAttacks();
 

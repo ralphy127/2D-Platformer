@@ -8,24 +8,40 @@ Commander::Commander(engine::Settings& settings, engine::ISpriteTextures& textur
     : DynamicSpriteEntity(settings, textures, initAndGetConfig(settings)) {}
 
 void Commander::update(float deltaTime) {
-    const auto now = engine::Clock::getTime();
+    auto& spriteData = getSpriteData();
 
-    if (now - _lastBehaviorChange > _interval) {
-        if (_state == State::Idle) {
-            turn();
-            move();
-            _state = State::Walking;
-        }
-        else if (_state == State::Walking) {
-            stop();
-            _state = State::Idle;
-        }
+    if (_state == State::Dead) {
+        tryToChangeAnimation(static_cast<engine::AnimationId>(_state));
 
-        _lastBehaviorChange = now;
-        getSpriteData().setAnimation(static_cast<engine::AnimationId>(_state));
+        if (spriteData.getFrame() == spriteData.getFramesInCurrentAnimation() - 1 &&
+            !spriteData.isFrameLocked())
+            spriteData.lockFrame();
+    }
+    else {
+        const auto now = engine::Clock::getTime();
+
+        if (now - _lastBehaviorChange > _interval) {
+            if (_state == State::Idle) {
+                turn();
+                move();
+                _state = State::Walking;
+            }
+            else if (_state == State::Walking) {
+                stop();
+                _state = State::Idle;
+            }
+
+            _lastBehaviorChange = now;
+            spriteData.setAnimation(static_cast<engine::AnimationId>(_state));
+        }
     }
 
     DynamicSpriteEntity::update(deltaTime);
+}
+
+void Commander::handleDeath() {
+    setVel({0.f, getVel().y});
+    _state = State::Dead;
 }
 
 engine::DynamicSpriteEntity::Config Commander::initAndGetConfig(

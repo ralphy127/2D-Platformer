@@ -20,6 +20,7 @@ private:
         Attack1,
         Attack2,
         Attack3,
+        Protecting,
         Jumping,
         Hurt,
         Dead
@@ -27,8 +28,9 @@ private:
 
     engine::DynamicSpriteEntity::Config initAndGetConfig(const engine::Settings&) const;
 
-    State _state{State::Idle};
+    void handleDeath() override;
 
+    State _state{State::Idle};
     engine::Clock::Type::time_point _lastBehaviorChange{engine::Clock::getTime()};
     engine::Clock::Type::duration _interval{std::chrono::seconds(3)};
 };

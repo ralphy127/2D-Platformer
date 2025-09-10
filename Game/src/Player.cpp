@@ -169,16 +169,16 @@ void Player::handleMovement(float deltaTime) {
     }
     else {
         stop();
-        tryToChangeAnimation(State::Idle, spriteData);
+        tryToChangeAnimation(static_cast<engine::AnimationId>(State::Idle));
     }
 
     if (!isOnGround()) {
-        tryToChangeAnimation(State::Jumping, spriteData);
+        tryToChangeAnimation(static_cast<engine::AnimationId>(State::Jumping));
     }
 
     if(jumpNow && !_jumpPressedLastFrame && isOnGround()) {
         jump();
-        tryToChangeAnimation(State::Jumping, spriteData);
+        tryToChangeAnimation(static_cast<engine::AnimationId>(State::Jumping));
     }
 
     _jumpPressedLastFrame = jumpNow;
@@ -187,17 +187,12 @@ void Player::handleMovement(float deltaTime) {
 void Player::handleLShift(bool shiftPressed, engine::SpriteData& spriteData) {
     if (shiftPressed) {
         sprint();
-        tryToChangeAnimation(State::Running, spriteData);
+        tryToChangeAnimation(static_cast<engine::AnimationId>(State::Running));
     } 
     else {
         move();
-        tryToChangeAnimation(State::Walking, spriteData);
+        tryToChangeAnimation(static_cast<engine::AnimationId>(State::Walking));
     }
-}
-
-void Player::tryToChangeAnimation(State state, engine::SpriteData& spriteData) {
-    if (!isAttacking() && spriteData.getAnimation() != static_cast<engine::AnimationId>(state))
-        spriteData.setAnimation(static_cast<engine::AnimationId>(state));
 }
 
 void Player::handleAttacks() {

@@ -186,4 +186,9 @@ void DynamicSpriteEntity::renderHealthBar(SDL_Renderer& renderer, Camera& camera
     SDL_RenderFillRect(&renderer, &barRect);
 }
 
+void DynamicSpriteEntity::tryToChangeAnimation(AnimationId animationId) {
+    if (!isAttacking() && _spriteData.getAnimation() != animationId)
+        _spriteData.setAnimation(animationId);
+}
+
 }

@@ -50,6 +50,9 @@ public:
     void setDefaultSpeed(float speed) { if (speed > 0.f) _defaultSpeed = speed; }
 
 protected:
+    /// @brief Death handler, does nothing by default.
+    virtual void handleDeath() {};
+
     /// @brief Renders the entity's main hitbox (red rectangle).
     void renderEntityHitbox(SDL_Renderer&, Camera&) const;
 
@@ -67,6 +70,7 @@ protected:
 
     /// @brief Jumps if possible with default jumping speed.
     void jump();
+
 private:
     /// @brief Makes sure health is between 0 and max health.
     void capHealthIfNeeded(float health);
