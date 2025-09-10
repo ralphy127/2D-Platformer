@@ -47,7 +47,9 @@ engine::DynamicSpriteEntity::Config Archer::initAndGetConfig(
         {5, framesDuration}
     };
 
-    engine::SpriteData spriteData{std::move(animationsInfo), static_cast<engine::AnimationId>(_state)};
+    engine::SpriteData spriteData{
+        std::move(animationsInfo),
+        static_cast<engine::AnimationId>(_state)};
 
     const auto windowSize = settings.getWindowSize();
     const auto tileSize = settings.getTileSize();

@@ -27,8 +27,6 @@ void DynamicSpriteEntity::update(float deltaTime) {
 
     updateHealthBar();
 
-    setHealth(getHealth() - 0.2f);
-
     calculateWeaponHitbox();
 
     DynamicEntity::update(deltaTime);
@@ -48,12 +46,14 @@ void DynamicSpriteEntity::render(SDL_Renderer& renderer, Camera& camera) const {
     
     const auto textureRect = camera.worldToViewport(texturePos, textureSize);
 
-    if (getSettings().showHitboxes()) {
+    const auto& settings = getSettings();
+
+    if (settings.showHitboxes()) {
         renderEntityHitbox(renderer, camera);
         renderWeaponHitbox(renderer, camera);
     }
 
-    if (getSettings().showTextureHitboxes())
+    if (settings.showTextureHitboxes())
         renderTextureHitbox(renderer, camera, textureRect);
 
     if (SDL_RenderCopyEx(&renderer, &texture, nullptr, &textureRect, 0, nullptr, flip) < 0)
@@ -65,7 +65,7 @@ void DynamicSpriteEntity::render(SDL_Renderer& renderer, Camera& camera) const {
 
 const AttackData& DynamicSpriteEntity::getCurrentAttackDataView() const {
     if (!_currentAttack.has_value())
-        throw std::runtime_error("Entitie is not performing an attack");
+        throw std::runtime_error("Entity is not performing an attack");
     
     return _attacks.at(_currentAttack.value());
 }
@@ -103,6 +103,9 @@ void DynamicSpriteEntity::calculateWeaponHitbox() {
 }
 
 void DynamicSpriteEntity::performAttack(AttackId id) {
+    if (_currentAttack.has_value())
+        return;
+
     const auto it = _attacks.find(id);
     if (it == _attacks.cend())
         throw std::runtime_error("Tried to perform attack of unknown id: " + std::to_string(id));
