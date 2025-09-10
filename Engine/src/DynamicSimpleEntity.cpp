@@ -13,15 +13,10 @@ DynamicSimpleEntity::DynamicSimpleEntity(
 
 void DynamicSimpleEntity::render(SDL_Renderer& renderer, Camera& camera) const {
     const auto type = getType();
-
     auto& texture = _textures.getTexture(type);
-
     const auto flip = getDirection() == Direction::Right ? SDL_FLIP_NONE : SDL_FLIP_HORIZONTAL;
-
     const auto pos = getPos();
-
     const auto size = getSize();
-
     const auto textureSize = getTextureSize();
 
     const utils::f2v texturePos(

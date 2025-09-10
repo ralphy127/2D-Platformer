@@ -6,7 +6,8 @@ Entity::Entity(Settings& settings, const Config& config)
     : _settings(settings),
       _pos(config.pos),
       _size(config.size),
-      _type(config.type) {
+      _type(config.type),
+      _id{nextId++} {
 
     _settings.registerObserver(*this);
     _tileSize = _settings.getTileSize();

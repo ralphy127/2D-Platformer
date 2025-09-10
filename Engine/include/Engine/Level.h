@@ -1,5 +1,6 @@
 #pragma once
 
+#include <array>
 #include <Utils/Logging.h>
 #include "Engine/TileLayer.h"
 #include "Engine/Settings.h"
@@ -18,8 +19,9 @@ public:
     const TileLayer::Grid& getMapView() const;
 
 private:
-    LevelId _id;                                    ///< id of the level
-    std::vector<std::unique_ptr<ILayer>> _layers{}; ///< List of layers in the level.
+    LevelId _id;                                                   ///< id of the level.
+    static constexpr std::size_t numberOfLayers{6};                ///< Number of layers in level.
+    std::array<std::unique_ptr<ILayer>, numberOfLayers> _layers{}; ///< List of layers in level.
 };
 
 }

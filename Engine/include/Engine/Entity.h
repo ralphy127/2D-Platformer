@@ -9,6 +9,7 @@ namespace engine {
 class Entity : public ISettingsObserver {
 public:
     using Type = uint16_t;
+    using Id = uint16_t;
 
     /// @brief Configuration structure used for constructing entities.
     struct Config {
@@ -29,6 +30,8 @@ public:
     SDL_FRect getHitbox() const;
     void setHitbox(SDL_Rect hitbox);
 
+    Id getId() const { return _id; }
+    
     void onSettingsChanged() override;
 
 protected:
@@ -39,11 +42,14 @@ protected:
     const Settings& getSettings() const { return _settings; }
 
 private:
-    Settings& _settings; ///< Reference to shared engine settings.
-    uint32_t _tileSize;  ///< Cached tile size.
-    utils::f2v _pos;     ///< Current position of the entity.
-    utils::f2v _size;    ///< Current size of the entity.
-    Type _type;          ///< Identifier for the type of entity.
+    Settings& _settings;        ///< Reference to shared engine settings.
+    uint32_t _tileSize;         ///< Cached tile size.
+    utils::f2v _pos;            ///< Current position of the entity.
+    utils::f2v _size;           ///< Current size of the entity.
+    Type _type;                 ///< Identifier for the type of entity.
+    Id _id;                     ///< Unique id of entity.
+
+    static inline Id nextId{0}; ///< Unique id of next created entity
 };
 
 }

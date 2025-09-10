@@ -110,7 +110,9 @@ void PhysicsHandler::handleAttacksCollisions(
         const auto& playerAttackData = player.getCurrentAttackDataView();
 
         const auto entityHitbox = entity.getHitbox();
-        if (SDL_HasIntersectionF(&playerWeaponHitbox.value(), &entityHitbox)) {
+        if (SDL_HasIntersectionF(&playerWeaponHitbox.value(), &entityHitbox) &&
+            player.registerHit(entity.getId())) {
+
             entity.dealDamage(playerAttackData.damage);
 
             if (playerAttackData.onHit)
@@ -124,7 +126,9 @@ void PhysicsHandler::handleAttacksCollisions(
             if (!entityWeaponHitbox.has_value())
                 throw std::runtime_error("entity is attacking, but has no weapon hitbox");
 
-            if (SDL_HasIntersectionF(&entityWeaponHitbox.value(), &playerHitbox)) {
+            if (SDL_HasIntersectionF(&entityWeaponHitbox.value(), &playerHitbox) &&
+                dse->registerHit(player.getId())) {
+                    
                 const auto& attackData = dse->getCurrentAttackDataView();
 
                 player.dealDamage(attackData.damage);

@@ -13,34 +13,26 @@ Level::Level(
     : _id(id) {
         
     try {
-        _layers.push_back(std::make_unique<ParallaxLayer>(
+        _layers.at(0) = std::make_unique<ParallaxLayer>(
             settings,
             renderer,
             ParallaxLayer::Type::BACKGROUND,
             _id,
-            0.f
-        ));
-
-        _layers.push_back(std::make_unique<ParallaxLayer>(
+            0.f);
+        _layers.at(1) = std::make_unique<ParallaxLayer>(
             settings,
             renderer,
             ParallaxLayer::Type::FAR,
             _id,
-            0.f
-        ));
-
-        _layers.push_back(nullptr);
-        _layers.push_back(nullptr);
-
-        _layers.push_back(std::make_unique<TileLayer>(
+            0.f);
+        _layers.at(4) = std::make_unique<TileLayer>(
             mapTextures,
             tileClassifier,
             settings,
             TileLayer::Type::MAP,
-            _id
-        ));
+            _id);
 
-        _layers.push_back(nullptr);
+        // TODO 2, 3, 5 initialization
 
         SDL_LogDebug(utils::LOG_CATEGORY_SETUP, "Level %hu created", _id);
     }
@@ -51,9 +43,7 @@ Level::Level(
 
 void Level::render(SDL_Renderer& renderer, Camera& camera) const {
     for(const auto& layer : _layers) 
-        // TODO if to be removed
-        if (layer)
-            layer->render(renderer, camera);
+        if (layer) layer->render(renderer, camera);
 }
 
 const TileLayer::Grid& Level::getMapView() const {

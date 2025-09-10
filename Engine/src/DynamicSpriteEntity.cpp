@@ -1,5 +1,7 @@
 #include "Engine/DynamicSpriteEntity.h"
 
+#include "Engine/Colors.h"
+
 namespace engine {
 
 DynamicSpriteEntity::DynamicSpriteEntity(
@@ -34,16 +36,17 @@ void DynamicSpriteEntity::update(float deltaTime) {
 
 void DynamicSpriteEntity::render(SDL_Renderer& renderer, Camera& camera) const {
     const auto type = getType();
-
     auto& texture = _textures.getTexture(type, _spriteData.getAnimation(), _spriteData.getFrame());
-    
     const auto flip = getDirection() == Direction::Right ? SDL_FLIP_NONE : SDL_FLIP_HORIZONTAL;
+    const auto pos = getPos();
+    const auto size = getSize();
+    const auto textureSize = getTextureSize();
     
     const utils::f2v texturePos(
-        getPos().x - (getTextureSize().x - getSize().x) / 2.,
-        getPos().y - (getTextureSize().y - getSize().y));
+        pos.x - (textureSize.x - size.x) / 2.,
+        pos.y - (textureSize.y - size.y));
     
-    const auto textureRect = camera.worldToViewport(texturePos, getTextureSize());
+    const auto textureRect = camera.worldToViewport(texturePos, textureSize);
 
     if (getSettings().showHitboxes()) {
         renderEntityHitbox(renderer, camera);
@@ -70,9 +73,8 @@ const AttackData& DynamicSpriteEntity::getCurrentAttackDataView() const {
 void DynamicSpriteEntity::updateHealthBar() {
     const auto pos = getPos();
     const auto size = getSize();
-    const auto tileSize = getTileSize();
 
-    _healthBarPos = {pos.x + 0.5f * size.x - 0.5f * _healthBarSize.x, pos.y - tileSize * 0.2f};
+    _healthBarPos = {pos.x + 0.5f * size.x - 0.5f * _healthBarSize.x, pos.y - getTileSize() * 0.2f};
 }
 
 void DynamicSpriteEntity::calculateWeaponHitbox() {
@@ -87,15 +89,16 @@ void DynamicSpriteEntity::calculateWeaponHitbox() {
             std::to_string(_currentAttack.value()) + "not found");
     
     const auto attack = it->second;
+    const auto posOffset = getDirection() == Direction::Right ? attack.offsetRight : attack.offsetLeft;
+    const auto weaponSize = attack.size;
 
-    const auto offset = getDirection() == Direction::Right ? attack.offsetRight : attack.offsetLeft;
-    const auto size = attack.size;
+    const auto pos = getPos();
     
     _weaponHitbox = {
-        getPos().x + offset.x,
-        getPos().y + offset.y,
-        size.x,
-        size.y
+        pos.x + posOffset.x,
+        pos.y + posOffset.y,
+        weaponSize.x,
+        weaponSize.y
     };
 }
 
@@ -106,6 +109,7 @@ void DynamicSpriteEntity::performAttack(AttackId id) {
 
     _currentAttack = id;
     _lastAttackStartTime = Clock::getTime();
+    _alreadyHitThisAttack.clear();
 
     const auto attack = it->second;
     getSpriteData().setAnimation(attack.animationId);
@@ -124,13 +128,18 @@ void DynamicSpriteEntity::renderWeaponHitbox(SDL_Renderer& renderer, Camera& cam
     if (!_currentAttack.has_value() || !_weaponHitbox.has_value())
         return;
     
-    const auto weaponRect = camera.worldToViewport(
+    const auto weaponHitbox = camera.worldToViewport(
         {_weaponHitbox->x, _weaponHitbox->y},
         {_weaponHitbox->w, _weaponHitbox->h}
     );
     
-    SDL_SetRenderDrawColor(&renderer, 0, 255, 0, 255); // green
-    SDL_RenderDrawRect(&renderer, &weaponRect);
+    SDL_SetRenderDrawColor(
+        &renderer,
+        color_green.r,
+        color_green.g,
+        color_green.b,
+        SDL_ALPHA_OPAQUE);
+    SDL_RenderDrawRect(&renderer, &weaponHitbox);
 }
 
 void DynamicSpriteEntity::renderHealthBar(SDL_Renderer& renderer, Camera& camera) const {
@@ -138,7 +147,12 @@ void DynamicSpriteEntity::renderHealthBar(SDL_Renderer& renderer, Camera& camera
     
     const auto backgroundRect = camera.worldToViewport(_healthBarPos, _healthBarSize);
 
-    SDL_SetRenderDrawColor(&renderer, 50, 50, 50, 255); // dark grey
+    SDL_SetRenderDrawColor(
+        &renderer,
+        color_dark_grey.r,
+        color_dark_grey.g,
+        color_dark_grey.b,
+        SDL_ALPHA_OPAQUE);
     SDL_RenderFillRect(&renderer, &backgroundRect);
 
     const utils::i2v healthSize = {
@@ -150,12 +164,22 @@ void DynamicSpriteEntity::renderHealthBar(SDL_Renderer& renderer, Camera& camera
     barRect.w = static_cast<int>(hpPercent * backgroundRect.w);
 
     if (isHealthy())
-        SDL_SetRenderDrawColor(&renderer, 0, 255, 0, 255); // green
+        SDL_SetRenderDrawColor(
+            &renderer,
+            color_green.r,
+            color_green.g,
+            color_green.b,
+            SDL_ALPHA_OPAQUE);
     else if (isWounded())
-        SDL_SetRenderDrawColor(&renderer, 255, 165, 0, 255); // orange
+        SDL_SetRenderDrawColor(
+            &renderer,
+            color_orange.r,
+            color_orange.g,
+            color_orange.b,
+            SDL_ALPHA_OPAQUE);
     else if (isCritical())
-        SDL_SetRenderDrawColor(&renderer, 255, 0, 0, 255); // red
-    
+        SDL_SetRenderDrawColor(&renderer, color_red.r, color_red.g, color_red.b, SDL_ALPHA_OPAQUE);
+
     SDL_RenderFillRect(&renderer, &barRect);
 }
 
